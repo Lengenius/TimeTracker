@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TimeTracker</string>
+    <string name="start_tracker">Start TimeTracker</string>
+    <string name="end_tracker">End TimeTracker</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_tracker">Tracker</string>
+</resources>
