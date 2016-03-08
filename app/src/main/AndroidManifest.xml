@@ -22,10 +22,6 @@
             android:name=".activity.Tracker"
             android:label="@string/title_activity_tracker"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action  />
-                <category />
-            </intent-filter>
         </activity>
     </application>
 
