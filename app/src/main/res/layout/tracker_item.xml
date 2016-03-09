@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/tracker_img"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tracker_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="This is a tracker item title."
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/tracker_item_content"
+
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:text="This is a item description"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tracker_item_timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Timer now"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnStart"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="@string/start_tracker_item" />
+
+            <Button
+                android:id="@+id/btnStop"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="@string/end_tracker_item" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

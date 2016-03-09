@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">TimeTracker</string>
-    <string name="start_tracker">Start TimeTracker</string>
-    <string name="end_tracker">End TimeTracker</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_tracker">Tracker</string>
+    <string name="tracker_time">This is time</string>
+    <string name="start_tracker_item">start</string>
+    <string name="end_tracker_item">stop</string>
 </resources>

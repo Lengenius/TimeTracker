@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
@@ -19,8 +18,8 @@ public class Tracker extends Activity {
 
     private final static int MSG_SHOW_TIME = 1;
     private TextView timerText;
-    private ImageButton btnStart;
-    private ImageButton btnStop;
+    private Button btnStart;
+    private Button btnStop;
     private int timerSeconds = 0;
 
     private Timer timer = new Timer();
@@ -30,24 +29,25 @@ public class Tracker extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.list_item_tracker);
+        setContentView(R.layout.tracker_item);
 
-        btnStart = (ImageButton) findViewById(R.id.timer_component_start);
-        btnStop = (ImageButton) findViewById(R.id.timer_component_stop);
+        btnStart = (Button) findViewById(R.id.btnStart);
+        btnStop = (Button) findViewById(R.id.btnStop);
         timerText = (TextView) findViewById(R.id.list_item_timer);
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("btnStart","btnStart clicked");
-                timerText.setText("Changed");
+                startTimer();
+                btnStart.setEnabled(false);
             }
         });
 
-        btnStart.setOnClickListener(new View.OnClickListener() {
+        btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 stopTimer();
+                btnStart.setEnabled(true);
             }
         });
 
@@ -57,7 +57,7 @@ public class Tracker extends Activity {
         public void handleMessage(Message msg){
             switch (msg.what){
                 case MSG_SHOW_TIME:
-                    timerText.setText("Timer Begin");
+                    timerText.setText(String.format("%d:%d:%d",timerSeconds/60/60,timerSeconds/60%60,timerSeconds%60));
                     break;
                 default:
                     break;
@@ -67,11 +67,11 @@ public class Tracker extends Activity {
 
 //    String.format("%d:%d:%d",timerSeconds/60/60,timerSeconds/60%60,timerSeconds%60)
     private void startTimer() {
-        if (timerTask != null) {
+        if (timerTask == null) {
             timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    timerSeconds+=1;
+                    timerSeconds++;
                 }
             };
         }
@@ -81,8 +81,8 @@ public class Tracker extends Activity {
                 handler.sendEmptyMessage(MSG_SHOW_TIME);
             }
         };
-        timer.schedule(showTimerTask,1000);
-        timer.schedule(timerTask,1000);
+        timer.schedule(showTimerTask,1000,1000);
+        timer.schedule(timerTask,1000,1000);
     }
 
     private  void stopTimer(){
