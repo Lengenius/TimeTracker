@@ -24,23 +24,24 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:text="This is a tracker item title."
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textSize="24sp"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/tracker_item_content"
 
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:text="This is a item description"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:orientation="vertical">
 
         <TextView
@@ -48,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="Timer now"
+            android:text="00:00:00"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -59,13 +60,13 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnStart"
+                android:id="@+id/trackerBtnStart"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:text="@string/start_tracker_item" />
 
             <Button
-                android:id="@+id/btnStop"
+                android:id="@+id/trackerBtnStop"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:text="@string/end_tracker_item" />

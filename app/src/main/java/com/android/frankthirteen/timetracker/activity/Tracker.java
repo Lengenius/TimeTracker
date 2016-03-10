@@ -31,9 +31,9 @@ public class Tracker extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.tracker_item);
 
-        btnStart = (Button) findViewById(R.id.btnStart);
-        btnStop = (Button) findViewById(R.id.btnStop);
-        timerText = (TextView) findViewById(R.id.list_item_timer);
+        btnStart = (Button) findViewById(R.id.trackerBtnStart);
+        btnStop = (Button) findViewById(R.id.trackerBtnStop);
+        timerText = (TextView) findViewById(R.id.tracker_item_timer);
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
