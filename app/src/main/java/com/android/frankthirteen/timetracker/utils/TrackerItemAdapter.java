@@ -1,8 +1,6 @@
 package com.android.frankthirteen.timetracker.utils;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,26 +61,7 @@ public class TrackerItemAdapter extends ArrayAdapter<TrackerItem> {
             }
         });
 
-      /*  Handler handler = new Handler(){
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case TrackerItem.MSG_SHOW_TIMER:
-                        viewHolder.trackerTimerView.setText("changed");
-                }
-            }
-        };*/
-
         return view;
     }
 
-
-    class ViewHolder {
-        ImageView trackerImageView;
-        TextView trackerTitleView;
-        TextView trackerContentView;
-        TextView trackerTimerView;
-
-        Button trackerBtnStart;
-        Button trackerBtnStop;
-    }
 }
