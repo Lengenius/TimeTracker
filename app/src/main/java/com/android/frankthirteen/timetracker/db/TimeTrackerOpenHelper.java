@@ -20,13 +20,25 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        return;
+        db.execSQL(CREATE_TIMER_SAVED);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        return;
+        switch (oldVersion){
+            case 1:
+                db.execSQL(CREATE_TIMER_SAVED);
+            default:
+        }
     }
 
     Date date = new Date();
+
+    public static final String CREATE_TIMER_SAVED = "create table timer("
+            + "id integer primary key autoincrement,"
+            + "title text,"
+            + "content text,"
+            + "idImg integer,"
+            + "starttime integer)";
+
 }

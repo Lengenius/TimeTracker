@@ -71,6 +71,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/end_tracker_item" />
 
+            <Button
+                android:id="@+id/trackerBtnPause"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="@string/pause_tracker_item" />
+
+
         </LinearLayout>
 
     </LinearLayout>

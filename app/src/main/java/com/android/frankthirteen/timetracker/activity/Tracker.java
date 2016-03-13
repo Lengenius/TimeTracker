@@ -10,16 +10,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.db.TimeTrackerOpenHelper;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Tracker extends Activity {
-
+    private TimeTrackerOpenHelper timeTrackerOpenHelper;
     private final static int MSG_SHOW_TIME = 1;
     private TextView timerText;
     private Button btnStart;
     private Button btnStop;
+    private Button btnPause;
     private int timerSeconds = 0;
 
     private Timer timer = new Timer();
@@ -31,25 +33,39 @@ public class Tracker extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.tracker_item);
 
+        timeTrackerOpenHelper = new TimeTrackerOpenHelper(this, "TimeTracker.db", null, 1);
+
         btnStart = (Button) findViewById(R.id.trackerBtnStart);
         btnStop = (Button) findViewById(R.id.trackerBtnStop);
+        btnPause = (Button) findViewById(R.id.trackerBtnPause);
+        btnPause.setVisibility(View.INVISIBLE);
         timerText = (TextView) findViewById(R.id.tracker_item_timer);
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startTimer();
-                btnStart.setEnabled(false);
+                btnStart.setVisibility(View.INVISIBLE);
+                btnPause.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopTimer();
             }
         });
 
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopTimer();
-                btnStart.setEnabled(true);
+                saveTimer();
+                btnStart.setVisibility(View.VISIBLE);
             }
         });
+
+
 
     }
 
@@ -65,7 +81,13 @@ public class Tracker extends Activity {
         }
     };
 
-//    String.format("%d:%d:%d",timerSeconds/60/60,timerSeconds/60%60,timerSeconds%60)
+    @Override
+    protected void onDestroy() {
+        timerTask.cancel();
+        super.onDestroy();
+    }
+
+    //    String.format("%d:%d:%d",timerSeconds/60/60,timerSeconds/60%60,timerSeconds%60)
     private void startTimer() {
         if (timerTask == null) {
             timerTask = new TimerTask() {
@@ -81,8 +103,8 @@ public class Tracker extends Activity {
                 handler.sendEmptyMessage(MSG_SHOW_TIME);
             }
         };
-        timer.schedule(showTimerTask,1000,1000);
-        timer.schedule(timerTask,1000,1000);
+        timer.schedule(showTimerTask, 1000, 1000);
+        timer.schedule(timerTask, 1000, 1000);
     }
 
     private  void stopTimer(){
@@ -92,9 +114,12 @@ public class Tracker extends Activity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        timerTask.cancel();
-        super.onDestroy();
+    private void saveTimer(){
+        if (timerTask!=null){
+            timerTask.cancel();
+            timerTask = null;
+        }
     }
+
+
 }

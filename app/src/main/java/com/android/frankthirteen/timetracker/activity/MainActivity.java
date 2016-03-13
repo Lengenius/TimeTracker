@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.utils.TrackerItem;
+import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.utils.TrackerItemAdapter;
 
 import java.util.ArrayList;
