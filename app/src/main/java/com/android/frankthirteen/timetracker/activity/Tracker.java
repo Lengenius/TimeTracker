@@ -45,7 +45,7 @@ public class Tracker extends Activity {
             @Override
             public void onClick(View v) {
                 startTimer();
-                btnStart.setVisibility(View.INVISIBLE);
+                btnStart.setVisibility(View.GONE);
                 btnPause.setVisibility(View.VISIBLE);
             }
         });
@@ -54,6 +54,7 @@ public class Tracker extends Activity {
             @Override
             public void onClick(View v) {
                 stopTimer();
+                btnStart.setVisibility(View.VISIBLE);
             }
         });
 
@@ -64,8 +65,6 @@ public class Tracker extends Activity {
                 btnStart.setVisibility(View.VISIBLE);
             }
         });
-
-
 
     }
 
@@ -87,7 +86,6 @@ public class Tracker extends Activity {
         super.onDestroy();
     }
 
-    //    String.format("%d:%d:%d",timerSeconds/60/60,timerSeconds/60%60,timerSeconds%60)
     private void startTimer() {
         if (timerTask == null) {
             timerTask = new TimerTask() {
@@ -115,6 +113,8 @@ public class Tracker extends Activity {
     }
 
     private void saveTimer(){
+        //save timeDuration into db it should bind to trackerDuration
+
         if (timerTask!=null){
             timerTask.cancel();
             timerTask = null;

@@ -2,7 +2,6 @@ package com.android.frankthirteen.timetracker.utils;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,8 @@ public class TrackerItemAdapter extends ArrayAdapter<TrackerItem> {
 
             viewHolder.trackerBtnStart = (Button) view.findViewById(R.id.trackerBtnStart);
             viewHolder.trackerBtnStop = (Button) view.findViewById(R.id.trackerBtnStop);
-
+            viewHolder.trackerBtnPause = (Button) view.findViewById(R.id.trackerBtnPause);
+            viewHolder.trackerBtnPause.setVisibility(View.GONE);
 
             view.setTag(viewHolder);
         } else {
@@ -62,13 +62,8 @@ public class TrackerItemAdapter extends ArrayAdapter<TrackerItem> {
         viewHolder.trackerBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTimer();
-                TimerTask timerTask = new TimerTask() {
-                    @Override
-                    public void run() {
-
-                    }
-                };
+                viewHolder.trackerTimerView.setText("changed");
+//                startTimer();
             }
         });
 
@@ -80,36 +75,46 @@ public class TrackerItemAdapter extends ArrayAdapter<TrackerItem> {
         return view;
 
     }
-private int tmp = 0;
+
+    private int tmp = 0;
     private static final int MSG_SHOW_TIME = 1;
     private static final int MSG_STOP_TIME = 2;
     private int resourceId;
 
-    private Timer timer = new Timer();
 
-    private void startTimer(){
+    private void startTimer() {
+        Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                tmp += 1;
+                tmp = tmp + 1;
+                handler.post(updateTimer);
             }
         };
-        timer.schedule(timerTask,1000,1000);
+        timer.schedule(timerTask, 1000, 1000);
     }
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler();
+    private Runnable updateTimer = new Runnable() {
         @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case MSG_SHOW_TIME:
-                    viewHolder.trackerTimerView.setText(tmp);
-                    break;
-                case MSG_STOP_TIME:
-                    viewHolder.trackerTimerView.setText("Stoped");
-                default:
-                    break;
-            }
+        public void run() {
+            viewHolder.showTimer(tmp);
         }
     };
 
+/*
+    private class ViewHolder {
+        ImageView trackerImageView;
+        TextView trackerTitleView;
+        TextView trackerContentView;
+        TextView trackerTimerView;
+
+        Button trackerBtnStart;
+        Button trackerBtnStop;
+        Button trackerBtnPause;
+
+        public void showTimer(int tmp){
+            trackerTimerView.setText(tmp);
+        }
+    }*/
 }

@@ -15,4 +15,9 @@ public class ViewHolder {
 
     Button trackerBtnStart;
     Button trackerBtnStop;
+    Button trackerBtnPause;
+
+    public void showTimer(int tmp){
+        trackerTimerView.setText(tmp);
+    }
 }

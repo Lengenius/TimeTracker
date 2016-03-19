@@ -20,25 +20,29 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TIMER_SAVED);
+        db.execSQL(CREATE_TRACKER_ITEM);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion){
             case 1:
-                db.execSQL(CREATE_TIMER_SAVED);
+                db.execSQL(CREATE_TRACKER_ITEM);
             default:
         }
     }
 
     Date date = new Date();
 
-    public static final String CREATE_TIMER_SAVED = "create table timer("
+    public static final String CREATE_TRACKER_ITEM = "create table tracker_item("
             + "id integer primary key autoincrement,"
             + "title text,"
             + "content text,"
-            + "idImg integer,"
-            + "starttime integer)";
+            + "idImage integer,"
+            + "trueId integer)";
 
+    public static final String CREATE_TRACKER_DURATION = "create table tracker_duration("
+            + "id integer primary key autoincrement,"
+            + "trueId integer,"
+            + "dstart integer)";
 }
