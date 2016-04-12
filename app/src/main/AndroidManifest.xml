@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>-->
         <activity
-            android:name=".activity.Tracker"
+            android:name=".activity.TrackerDetail"
             android:label="@string/title_activity_tracker"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

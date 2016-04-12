@@ -7,6 +7,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
@@ -15,13 +16,11 @@ import com.android.frankthirteen.timetracker.db.TimeTrackerOpenHelper;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Tracker extends Activity {
+public class TrackerDetail extends Activity {
     private TimeTrackerOpenHelper timeTrackerOpenHelper;
     private final static int MSG_SHOW_TIME = 1;
     private TextView timerText;
-    private Button btnStart;
-    private Button btnStop;
-    private Button btnPause;
+    private ImageButton btnStart,btnStop,btnPause;
     private int timerSeconds = 0;
 
     private Timer timer = new Timer();
@@ -31,15 +30,15 @@ public class Tracker extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.tracker_item);
+        setContentView(R.layout.listitem_tracker);
 
         timeTrackerOpenHelper = new TimeTrackerOpenHelper(this, "TimeTracker.db", null, 1);
 
-        btnStart = (Button) findViewById(R.id.trackerBtnStart);
-        btnStop = (Button) findViewById(R.id.trackerBtnStop);
-        btnPause = (Button) findViewById(R.id.trackerBtnPause);
+        btnStart = (ImageButton) findViewById(R.id.listitem_tracker_btnStart);
+        btnStop = (ImageButton) findViewById(R.id.listitem_tracker_btnStop);
+        btnPause = (ImageButton) findViewById(R.id.listitem_tracker_btnPause);
         btnPause.setVisibility(View.INVISIBLE);
-        timerText = (TextView) findViewById(R.id.tracker_item_timer);
+        timerText = (TextView) findViewById(R.id.listitem_tracker_duration);
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +61,7 @@ public class Tracker extends Activity {
             @Override
             public void onClick(View v) {
                 saveTimer();
+                //popup a dialog, stop timer, save data, in the dialog confirm to delete list item.
                 btnStart.setVisibility(View.VISIBLE);
             }
         });
