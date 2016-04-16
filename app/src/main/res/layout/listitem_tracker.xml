@@ -62,6 +62,7 @@
                 android:id="@+id/listitem_tracker_btnStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 android:src="@android:drawable/ic_media_play" />
 
             <ImageButton
@@ -77,6 +78,7 @@
                 android:src="@android:drawable/ic_input_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 android:text="@string/pause_tracker_item" />
 
 

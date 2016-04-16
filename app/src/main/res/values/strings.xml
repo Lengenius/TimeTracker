@@ -6,4 +6,6 @@
     <string name="start_tracker_item">start</string>
     <string name="end_tracker_item">stop</string>
     <string name="pause_tracker_item">pause</string>
+    <string name="new_tracker_item">NewTracker</string>
+    <string name="delete_tracker_iemt">DeleteTracker</string>
 </resources>

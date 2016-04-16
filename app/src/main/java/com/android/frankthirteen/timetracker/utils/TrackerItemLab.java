@@ -17,6 +17,7 @@ public class TrackerItemLab {
     private TrackerItemLab(Context appContext){
         //Singleton
         mAppContex = appContext;
+        trackerItems = new ArrayList<TrackerItem>();
     }
 
     public static TrackerItemLab getsTrackerItemLab(Context context){
