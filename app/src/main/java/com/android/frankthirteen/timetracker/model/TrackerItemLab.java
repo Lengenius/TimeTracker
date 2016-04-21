@@ -1,4 +1,4 @@
-package com.android.frankthirteen.timetracker.utils;
+package com.android.frankthirteen.timetracker.model;
 
 import android.content.Context;
 

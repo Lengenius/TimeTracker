@@ -1,7 +1,6 @@
-package com.android.frankthirteen.timetracker.utils;
+package com.android.frankthirteen.timetracker.model;
 
-import android.util.Log;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -10,25 +9,17 @@ import java.util.UUID;
  */
 public class TrackerItem {
     private UUID mId;
-    private Date mDate;
     private Boolean mIsStarted = false;
     private int mDuration = 0;
     private String mTitle, mContent;
+    private ArrayList<DurationItem> mDurationItems;
 
     public TrackerItem() {
         mId = UUID.randomUUID();
-        mDate = new Date();
+        //Test constructor
         mTitle = "Hello";
         mContent = "Tracker";
-    }
-
-    public TrackerItem(Date date) {
-        mId = UUID.randomUUID();
-        mDate = date;
-    }
-
-    public Date getmDate() {
-        return mDate;
+        mDurationItems = new ArrayList<DurationItem>();
     }
 
     public Boolean isStarted() {
@@ -42,7 +33,7 @@ public class TrackerItem {
 
     public void setmIsStarted(Boolean b) {
         mIsStarted = b;
-        Log.d("Tracker Item", this + "start set");
+//        Log.d("Tracker Item", this + "start set");
     }
 
     public UUID getmId() {
@@ -71,5 +62,27 @@ public class TrackerItem {
 
     public void setmContent(String mContent) {
         this.mContent = mContent;
+    }
+
+    public void saveDuration(){
+        //used when item pause;
+        DurationItem durationItem = new DurationItem(new Date(),mDuration);
+        mDurationItems.add(durationItem);
+    }
+
+    public ArrayList<DurationItem> getmDurationItems() {
+        return mDurationItems;
+    }
+
+    public Date getStartDate(){
+        DurationItem mDurationItem = mDurationItems.get(0);
+        Date endDate = mDurationItem.getmEndDate();
+        int duration = mDurationItem.getmDuration();
+        return new Date(endDate.getTime() + duration);
+    }
+
+    public Date getEndDate(){
+
+        return mDurationItems.get(mDurationItems.size()).getmEndDate();
     }
 }

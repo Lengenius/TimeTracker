@@ -21,6 +21,7 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TRACKER_ITEM);
+        db.execSQL(CREATE_TRACKER_DURATION);
     }
 
     @Override
@@ -31,8 +32,6 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
             default:
         }
     }
-
-    Date date = new Date();
 
     public static final String CREATE_TRACKER_ITEM = "create table tracker_item("
             + "id integer primary key autoincrement,"

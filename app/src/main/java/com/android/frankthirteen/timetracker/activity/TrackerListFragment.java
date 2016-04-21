@@ -1,6 +1,9 @@
 package com.android.frankthirteen.timetracker.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,8 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.utils.TrackerItem;
-import com.android.frankthirteen.timetracker.utils.TrackerItemLab;
+import com.android.frankthirteen.timetracker.model.TrackerItem;
+import com.android.frankthirteen.timetracker.model.TrackerItemLab;
 
 import java.util.ArrayList;
 
@@ -162,9 +165,27 @@ public class TrackerListFragment extends Fragment {
             viewHolder.btnPause.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    stopTimer(trackerItem);
+                    pauseTimer(trackerItem);
                     viewHolder.btnPause.setVisibility(View.GONE);
                     viewHolder.btnStart.setVisibility(View.VISIBLE);
+                }
+            });
+
+            viewHolder.btnStop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    stopTimer(trackerItem);
+                    viewHolder.btnStart.setVisibility(View.GONE);
+                    viewHolder.btnPause.setVisibility(View.GONE);
+//                    Dialog dialog = new AlertDialog.Builder(getActivity())
+//                            .setTitle("Is this activity end?")
+//                            .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//
+//                                }
+//                            })
+//                            .show();
                 }
             });
 
@@ -176,6 +197,14 @@ public class TrackerListFragment extends Fragment {
             Log.d(TAG, trackerItem + trackerItem.isStarted().toString());
             checkAnyStarted();
         }
+
+        private void pauseTimer(TrackerItem trackerItem) {
+            trackerItem.setmIsStarted(false);
+            trackerItem.saveDuration();
+            checkAnyStarted();
+        }
+
+
 
         private void startTimer(TrackerItem item) {
             item.setmIsStarted(true);

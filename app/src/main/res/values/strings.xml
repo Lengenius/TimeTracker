@@ -8,4 +8,5 @@
     <string name="pause_tracker_item">pause</string>
     <string name="new_tracker_item">NewTracker</string>
     <string name="delete_tracker_iemt">DeleteTracker</string>
+    <string name="btn_new_tracker">Add</string>
 </resources>

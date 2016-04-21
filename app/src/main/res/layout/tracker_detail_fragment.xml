@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tracker_detail_fragment"
+    android:padding="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:padding="32dp"
+            android:id="@+id/tracker_detail_image"
+            android:background="@android:color/darker_gray"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_camera"
+            android:contentDescription="timetrack_detail_image" />
+
+        <TextView
+            android:padding="4dp"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:id="@+id/tracker_detail_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/tracker_detail_image"
+            android:text="Tracker Detail title" />
+
+        <TextView
+            android:paddingLeft="4dp"
+            android:paddingTop="2dp"
+            android:paddingRight="4dp"
+            android:paddingBottom="2dp"
+            android:id="@+id/tracker_detail_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tracker_detail_title"
+            android:layout_toRightOf="@id/tracker_detail_image"
+            android:text="Tracker Detail Content" />
+
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1">
+
+        <TableRow android:layout_width="match_parent">
+
+            <TextView
+                android:id="@+id/tracker_detail_startDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test"
+                android:textAlignment="center" />
+
+
+            <TextView
+                android:id="@+id/tracker_detail_endDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test"
+                android:textAlignment="center" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/tracker_detail_totalDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_span="2"
+                android:text="test"
+                android:textAlignment="center" />
+
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:text="Commit"
+        android:id="@+id/tracker_detail_commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
