@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 public class TrackerListFragment extends Fragment {
     private static final String TAG = "Fragment";
     private static final String TAGS = "Started";
+    private static final int REQUEST_DETAIL = 1;
+
     private ArrayList<TrackerItem> trackerItems;
     private TrackerItemAdapter trackerItemAdapter;
     private final Handler mHandler = new Handler();
@@ -98,6 +102,7 @@ public class TrackerListFragment extends Fragment {
         inflater.inflate(R.menu.trackerlist_menu, menu);
     }
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,7 +110,14 @@ public class TrackerListFragment extends Fragment {
         ListView trackerListView = (ListView) rootView.findViewById(R.id.tracker_listview);
         trackerItemAdapter = new TrackerItemAdapter(getActivity(), R.layout.listitem_tracker, trackerItems);
         trackerListView.setAdapter(trackerItemAdapter);
-        Log.d(TAG, "create View");
+//        trackerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                TrackerItem trackerItem = trackerItemAdapter.getItem(position);
+//                Intent i = new Intent(getActivity(), TrackerDetailActivity.class);
+//                i.putExtra(TrackerDetailFragment.EXTRA_TRACKER_ID, trackerItem.getmId());
+//            }
+//        });
         return rootView;
     }
 
@@ -189,12 +201,22 @@ public class TrackerListFragment extends Fragment {
                 }
             });
 
+            viewHolder.mImageImageView.setClickable(true);
+            viewHolder.mImageImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(),TrackerDetailActivity.class);
+                    intent.putExtra(TrackerDetailFragment.EXTRA_TRACKER_ID, trackerItem.getmId());
+                    startActivityForResult(intent,REQUEST_DETAIL);
+                }
+            });
+
             return view;
         }
 
         private void stopTimer(TrackerItem trackerItem) {
             trackerItem.setmIsStarted(false);
-            Log.d(TAG, trackerItem + trackerItem.isStarted().toString());
+            trackerItem.saveDuration();
             checkAnyStarted();
         }
 
@@ -225,11 +247,13 @@ public class TrackerListFragment extends Fragment {
 
 
         public class ViewHolder {
+            public View viewGroup;
             public ImageView mImageImageView;
             public TextView mTitleTextView, mContentTextView, mDurationTextView;
             public ImageButton btnStart, btnPause, btnStop;
 
             public ViewHolder(View view) {
+                viewGroup = view;
                 mImageImageView = (ImageView) view.findViewById(R.id.listitem_tracker_img);
                 mTitleTextView = (TextView) view.findViewById(R.id.listitem_tracker_title);
                 mContentTextView = (TextView) view.findViewById(R.id.listitem_tracker_content);

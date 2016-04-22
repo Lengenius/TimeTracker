@@ -10,12 +10,14 @@ import java.util.UUID;
 public class TrackerItem {
     private UUID mId;
     private Boolean mIsStarted = false;
+    private Date defaultDate;
     private int mDuration = 0;
-    private String mTitle, mContent;
+    private String mTitle, mContent, mCommit;
     private ArrayList<DurationItem> mDurationItems;
 
     public TrackerItem() {
         mId = UUID.randomUUID();
+        defaultDate = new Date();
         //Test constructor
         mTitle = "Hello";
         mContent = "Tracker";
@@ -24,11 +26,6 @@ public class TrackerItem {
 
     public Boolean isStarted() {
         return mIsStarted;
-    }
-
-    @Override
-    public String toString() {
-        return mTitle;
     }
 
     public void setmIsStarted(Boolean b) {
@@ -64,9 +61,17 @@ public class TrackerItem {
         this.mContent = mContent;
     }
 
-    public void saveDuration(){
+    public void setmCommit(String mCommit) {
+        this.mCommit = mCommit;
+    }
+
+    public String getmCommit() {
+        return mCommit;
+    }
+
+    public void saveDuration() {
         //used when item pause;
-        DurationItem durationItem = new DurationItem(new Date(),mDuration);
+        DurationItem durationItem = new DurationItem(new Date(), mDuration);
         mDurationItems.add(durationItem);
     }
 
@@ -74,15 +79,27 @@ public class TrackerItem {
         return mDurationItems;
     }
 
-    public Date getStartDate(){
-        DurationItem mDurationItem = mDurationItems.get(0);
-        Date endDate = mDurationItem.getmEndDate();
-        int duration = mDurationItem.getmDuration();
-        return new Date(endDate.getTime() + duration);
+    public Date getStartDate() {
+        Date startDate;
+        if (mDurationItems.get(0) == null) {
+            startDate = defaultDate;
+        } else {
+            DurationItem mDurationItem = mDurationItems.get(0);
+            Date endDate = mDurationItem.getmEndDate();
+            int duration = mDurationItem.getmDuration();
+            startDate = new Date(endDate.getTime() - duration);
+        }
+        return startDate;
     }
 
-    public Date getEndDate(){
-
-        return mDurationItems.get(mDurationItems.size()).getmEndDate();
+    public Date getEndDate() {
+        Date endDate;
+        if (mDurationItems.size() == 0) {
+            endDate = defaultDate;
+        } else {
+            endDate = mDurationItems.get(mDurationItems.size() - 1).getmEndDate();
+        }
+        return endDate;
     }
+
 }
