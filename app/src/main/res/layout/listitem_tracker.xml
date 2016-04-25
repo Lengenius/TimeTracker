@@ -6,8 +6,9 @@
 
     <ImageView
         android:id="@+id/listitem_tracker_img"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="80dp"
+        android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher" />
 
     <LinearLayout
@@ -62,8 +63,8 @@
                 android:id="@+id/listitem_tracker_btnStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:src="@android:drawable/ic_media_play" />
+                android:src="@android:drawable/ic_media_play"
+                android:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/listitem_tracker_btnPause"
@@ -75,11 +76,11 @@
 
             <ImageButton
                 android:id="@+id/listitem_tracker_btnStop"
-                android:src="@android:drawable/ic_input_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:text="@string/pause_tracker_item" />
+                android:src="@android:drawable/ic_input_add"
+                android:text="@string/pause_tracker_item"
+                android:visibility="visible" />
 
 
         </LinearLayout>

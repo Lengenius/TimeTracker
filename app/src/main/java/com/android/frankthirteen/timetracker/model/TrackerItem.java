@@ -14,6 +14,7 @@ public class TrackerItem {
     private int mDuration = 0;
     private String mTitle, mContent, mCommit;
     private ArrayList<DurationItem> mDurationItems;
+    private Photo mPhoto = null;
 
     public TrackerItem() {
         mId = UUID.randomUUID();
@@ -23,6 +24,7 @@ public class TrackerItem {
         mContent = "Tracker";
         mDurationItems = new ArrayList<DurationItem>();
     }
+
 
     public Boolean isStarted() {
         return mIsStarted;
@@ -71,7 +73,7 @@ public class TrackerItem {
 
     public void saveDuration() {
         //used when item pause;
-        DurationItem durationItem = new DurationItem(new Date(), mDuration);
+        DurationItem durationItem = new DurationItem(new Date(), mDuration, mId);
         mDurationItems.add(durationItem);
     }
 
@@ -81,7 +83,7 @@ public class TrackerItem {
 
     public Date getStartDate() {
         Date startDate;
-        if (mDurationItems.get(0) == null) {
+        if (mDurationItems.size() == 0) {
             startDate = defaultDate;
         } else {
             DurationItem mDurationItem = mDurationItems.get(0);
@@ -102,4 +104,11 @@ public class TrackerItem {
         return endDate;
     }
 
+    public Photo getmPhoto() {
+        return mPhoto;
+    }
+
+    public void setmPhoto(Photo mPhoto) {
+        this.mPhoto = mPhoto;
+    }
 }

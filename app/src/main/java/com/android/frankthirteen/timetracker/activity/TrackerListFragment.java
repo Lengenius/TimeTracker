@@ -1,10 +1,12 @@
 package com.android.frankthirteen.timetracker.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.model.TrackerItemLab;
+import com.android.frankthirteen.timetracker.utils.PictureUtils;
 
 import java.util.ArrayList;
 
@@ -32,7 +35,7 @@ import java.util.ArrayList;
  * Created by Frank on 4/10/16.
  */
 public class TrackerListFragment extends Fragment {
-    private static final String TAG = "Fragment";
+    private static final String TAG = "List Fragment";
     private static final String TAGS = "Started";
     private static final int REQUEST_DETAIL = 1;
 
@@ -132,6 +135,25 @@ public class TrackerListFragment extends Fragment {
         trackerItems.add(t2);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        trackerItemAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //TODO Bug fix picture didn't show when back.
+        if (resultCode == Activity.RESULT_OK){
+            Log.d(TAG, "detail result OK");
+            trackerItemAdapter.notifyDataSetChanged();
+            switch (requestCode) {
+                case REQUEST_DETAIL:
+
+            }
+        }
+    }
+
     private class TrackerItemAdapter extends ArrayAdapter<TrackerItem> {
         private int resourceId;
 
@@ -187,7 +209,6 @@ public class TrackerListFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     stopTimer(trackerItem);
-                    viewHolder.btnStart.setVisibility(View.GONE);
                     viewHolder.btnPause.setVisibility(View.GONE);
 //                    Dialog dialog = new AlertDialog.Builder(getActivity())
 //                            .setTitle("Is this activity end?")
@@ -202,6 +223,10 @@ public class TrackerListFragment extends Fragment {
             });
 
             viewHolder.mImageImageView.setClickable(true);
+            if (trackerItem.getmPhoto()!=null){
+                BitmapDrawable bitmap = PictureUtils.getScaledPic(getActivity(),trackerItem.getmPhoto().getmPhotoPath());
+                viewHolder.mImageImageView.setImageDrawable(bitmap);
+            }
             viewHolder.mImageImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -225,7 +250,6 @@ public class TrackerListFragment extends Fragment {
             trackerItem.saveDuration();
             checkAnyStarted();
         }
-
 
 
         private void startTimer(TrackerItem item) {

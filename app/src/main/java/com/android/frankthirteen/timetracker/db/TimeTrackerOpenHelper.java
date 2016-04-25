@@ -10,6 +10,20 @@ import java.util.Date;
  * Created by Frank on 2/28/16.
  */
 public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
+    private static final String CREATE_TRACKER_ITEM = "create table tracker_item("
+            + "id integer primary key autoincrement,"
+            + "UUID text,"
+            + "title text,"
+            + "content text,"
+            + "commit text,"
+            + "totalDuration integer,"
+            + "photoName text)";
+
+    private static final String CREATE_TRACKER_DURATION = "create table tracker_duration("
+            + "id integer primary key autoincrement,"
+            + "UUID text,"
+            + "duration integer,"
+            + "endDate integer)";
 
     private Context mContext;
 
@@ -33,15 +47,5 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
         }
     }
 
-    public static final String CREATE_TRACKER_ITEM = "create table tracker_item("
-            + "id integer primary key autoincrement,"
-            + "title text,"
-            + "content text,"
-            + "idImage integer,"
-            + "trueId integer)";
 
-    public static final String CREATE_TRACKER_DURATION = "create table tracker_duration("
-            + "id integer primary key autoincrement,"
-            + "trueId integer,"
-            + "dstart integer)";
 }
