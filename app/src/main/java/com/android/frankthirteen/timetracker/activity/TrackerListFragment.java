@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -30,50 +31,20 @@ import com.android.frankthirteen.timetracker.model.TrackerItemLab;
 import com.android.frankthirteen.timetracker.utils.PictureUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Frank on 4/10/16.
  */
 public class TrackerListFragment extends Fragment {
-    private static final String TAG = "List Fragment";
+    private static final String TAG = "ListFragment";
     private static final String TAGS = "Started";
     private static final int REQUEST_DETAIL = 1;
 
-    private ArrayList<TrackerItem> trackerItems;
+    private List<TrackerItem> trackerItems;
     private TrackerItemAdapter trackerItemAdapter;
     private final Handler mHandler = new Handler();
     private Boolean anyStarted;
-//    {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch (msg.what) {
-//                case START_TRACKER:
-//                    trackerItemAdapter.notifyDataSetChanged();
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    };
-
-//    final private Runnable mRunnable = new Runnable() {
-//        @Override
-//        public void run() {
-//            if ((trackerItems != null) && anyStarted) {
-//                for (TrackerItem i :
-//                        trackerItems) {
-//                    if (i.isStarted()) {
-//                        i.increase();
-//                        Log.d(TAG, i + String.format("%d",i.getmDuration()));
-//                        trackerItemAdapter.notifyDataSetChanged();
-//                    }
-//                }
-////                Log.d(TAG, "Adapter changed");
-////                Log.d(TAGS,anyStarted.toString());
-//                mHandler.postDelayed(this, 1000);
-//            }
-//        }
-//    };
 
     public class TimerRunnable implements Runnable {
         private TrackerItem i;
@@ -96,7 +67,20 @@ public class TrackerListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         trackerItems = TrackerItemLab.getsTrackerItemLab(getActivity()).getTrackerItems();
-        initialData();
+        if (trackerItems.size() == 0) {
+            initialData();
+            Log.d(TAG, "onCreate initialData");
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        for (TrackerItem ti :trackerItems
+             ) {
+
+        TrackerItemLab.getsTrackerItemLab(getContext()).saveTrackerItems(ti);
+        }
     }
 
     @Override
@@ -121,18 +105,28 @@ public class TrackerListFragment extends Fragment {
 //                i.putExtra(TrackerDetailFragment.EXTRA_TRACKER_ID, trackerItem.getmId());
 //            }
 //        });
+        Button btnAdd = (Button) rootView.findViewById(R.id.add_item);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TrackerItem item = new TrackerItem();
+                item.setmTitle("new");
+                trackerItems.add(item);
+            }
+        });
         return rootView;
     }
 
     public void initialData() {
         TrackerItem t1, t2;
-        t1 = new TrackerItem();
+        t1 = new TrackerItem(getActivity());
         t1.setmTitle("ta ");
-        t2 = new TrackerItem();
-        t2.setmTitle("tb ");
+//        t2 = new TrackerItem(getActivity());
+//        t2.setmTitle("tb ");
 
-        trackerItems.add(t1);
-        trackerItems.add(t2);
+        //They references to the same object.
+        TrackerItemLab.getsTrackerItemLab(getContext()).addTrackItem(t1);
+//        trackerItems.add(t2);
     }
 
     @Override
@@ -142,9 +136,15 @@ public class TrackerListFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //TODO bug when device is rotated.
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //TODO Bug fix picture didn't show when back.
-        if (resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "detail result OK");
             trackerItemAdapter.notifyDataSetChanged();
             switch (requestCode) {
@@ -157,7 +157,7 @@ public class TrackerListFragment extends Fragment {
     private class TrackerItemAdapter extends ArrayAdapter<TrackerItem> {
         private int resourceId;
 
-        public TrackerItemAdapter(Context context, int layoutResourceId, ArrayList<TrackerItem> trackerItems) {
+        public TrackerItemAdapter(Context context, int layoutResourceId, List<TrackerItem> trackerItems) {
             super(context, layoutResourceId, trackerItems);
             resourceId = layoutResourceId;
         }
@@ -223,16 +223,16 @@ public class TrackerListFragment extends Fragment {
             });
 
             viewHolder.mImageImageView.setClickable(true);
-            if (trackerItem.getmPhoto()!=null){
-                BitmapDrawable bitmap = PictureUtils.getScaledPic(getActivity(),trackerItem.getmPhoto().getmPhotoPath());
+            if (trackerItem.getmPhoto() != null) {
+                BitmapDrawable bitmap = PictureUtils.getScaledPic(getActivity(), trackerItem.getmPhoto().getmPhotoPath());
                 viewHolder.mImageImageView.setImageDrawable(bitmap);
             }
             viewHolder.mImageImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(),TrackerDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), TrackerDetailActivity.class);
                     intent.putExtra(TrackerDetailFragment.EXTRA_TRACKER_ID, trackerItem.getmId());
-                    startActivityForResult(intent,REQUEST_DETAIL);
+                    startActivityForResult(intent, REQUEST_DETAIL);
                 }
             });
 
