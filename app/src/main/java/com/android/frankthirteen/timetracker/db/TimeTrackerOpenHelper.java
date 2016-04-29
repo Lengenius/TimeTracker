@@ -11,6 +11,7 @@ import java.util.Date;
  * Created by Frank on 2/28/16.
  */
 public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
+
     private static final String TAG = "TTOpenHelper";
 
     private static final String CREATE_TRACKER_ITEM = "create table tracker_item("
@@ -23,16 +24,6 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
             + "totalDuration integer,"
             + "trackingState text,"
             + "photoName text)";
-    public static final String TABLE_TRACKER = "tracker_item";
-    public static final String START_DATE = "startDate";
-    public static final String END_DATE = "endDate";
-    public static final String TRACKING_ID = "trackingId";
-    public static final String TITLE = "title";
-    public static final String CONTENT = "content";
-    public static final String TOTAL_DURATION = "totalDuration";
-    public static final String TRACKING_STATE = "trackingState";
-    public static final String PHOTO_NAME = "photoName";
-    public static final String TABLE_DURATION = "tracker_duration";
 
     private static final String CREATE_TABLE_DURATION = "create table tracker_duration("
             + "id integer primary key autoincrement,"
@@ -45,15 +36,6 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
 //            + "references tracker_item(trackingId),"
             + "duration integer,"
             + "endDate integer)";
-
-
-//    public static final String DURATION_TRACKING_ID = "itemTrackingId";
-//    public static final String DURATION_YEAR = "year";
-//    public static final String DURATION_MONTH_OF_YEAR = "monthOfYear";
-//    public static final String DURATION_WEEK_OF_YEAR = "weekOfYear";
-//    public static final String DURATION_DAY = "DAY";
-//    public static final String DURATION_DAY_OF_MONTH = "dayOfMonth";
-//    public static final String DURATION_DURATION = "duration";
 
 //    private static final String CREATE_TABLE_DURATION = "create table tracker_duration("
 //            + "id integer primary key autoincrement,"

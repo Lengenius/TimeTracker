@@ -114,7 +114,7 @@ public class TrackerListFragment extends Fragment {
     }
 
     public void initialData() {
-        TrackerItem t1, t2;
+        TrackerItem t1;
         t1 = new TrackerItem(getActivity());
         t1.setmTitle("ta ");
 //        t2 = new TrackerItem(getActivity());
@@ -135,6 +135,7 @@ public class TrackerListFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         saveTrackerItemToDB();
+
     }
 
     @Override
@@ -294,8 +295,6 @@ public class TrackerListFragment extends Fragment {
     private void saveTrackerItemToDB(){
         for (TrackerItem ti :trackerItems) {
             TrackerItemLab.getsTrackerItemLab(getContext()).saveTrackerItems(ti);
-            Log.d(TAG, "onPause");
-            Log.d(TAG,""+trackerItems.size());
         }
     }
 }

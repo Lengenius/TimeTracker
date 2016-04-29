@@ -23,6 +23,26 @@ public class TimeTrackerDB {
     public static final String DB_NAME = "TimeTracker";
     public static int VERSION = 1;
 
+    private static final String TABLE_TRACKER = "tracker_item";
+    private static final String TABLE_DURATION = "tracker_duration";
+
+    private static final String ITEM_START_DATE = "startDate";
+    private static final String ITEM_END_DATE = "endDate";
+    private static final String ITEM_TRACKING_ID = "trackingId";
+    private static final String ITEM_TITLE = "title";
+    private static final String ITEM_CONTENT = "content";
+    private static final String ITEM_TOTAL_DURATION = "totalDuration";
+    private static final String ITEM_TRACKING_STATE = "trackingState";
+    private static final String ITEM_PHOTO_NAME = "photoName";
+
+    private static final String DURATION_TRACKING_ID = "itemTrackingId";
+    private static final String DURATION_YEAR = "year";
+    private static final String DURATION_MONTH_OF_YEAR = "monthOfYear";
+    private static final String DURATION_WEEK_OF_YEAR = "weekOfYear";
+    private static final String DURATION_DAY = "day";
+    private static final String DURATION_END_DATE = "endDate";
+    private static final String DURATION_DAY_OF_MONTH = "dayOfMonth";
+    private static final String DURATION_DURATION = "duration";
 
     private static TimeTrackerDB timeTrackerDB;
     private Context mContext;
@@ -53,22 +73,21 @@ public class TimeTrackerDB {
         Cursor c = dbRead.query("tracker_item", new String[]{"trackingId"}, "trackingId=?",
                 new String[]{trackerItem.getmId().toString()}, null, null, null);
 
-        Log.d(TAG, "saving tracker " + String.valueOf(c.moveToFirst()));
-//        Log.d(TAG, "there are " + c.getCount() + " items in tracker_item");
         if (!c.moveToFirst()) {
             c.close();
             ContentValues values = new ContentValues();
-            values.put("trackingId", trackerItem.getmId().toString());
-            values.put("title", trackerItem.getmTitle());
-            values.put("content", trackerItem.getmContent());
-            values.put("totalDuration", trackerItem.getmDuration());
-            values.put("startDate", trackerItem.getStartDate().getTime());
-            values.put("endDate", trackerItem.getEndDate().getTime());
-            values.put("trackingState", trackerItem.getTrackingState());
+            values.put(ITEM_TRACKING_ID, trackerItem.getmId().toString());
+            values.put(ITEM_TITLE, trackerItem.getmTitle());
+            values.put(ITEM_CONTENT, trackerItem.getmContent());
+            values.put(ITEM_TOTAL_DURATION, trackerItem.getmDuration());
+            values.put(ITEM_START_DATE, trackerItem.getStartDate().getTime());
+            values.put(ITEM_END_DATE, trackerItem.getEndDate().getTime());
+            values.put(ITEM_TRACKING_STATE, trackerItem.getTrackingState());
             Log.d(TAG, String.valueOf(values));
             dbWrite.insert("tracker_item", null, values);
             Cursor cursor = dbWrite.query("tracker_item",null,null,null,null,null,null);
             Log.d(TAG,"After inserting there are " + cursor.getCount() + " items in table tracker_item.");
+            cursor.close();
 
         }
     }
@@ -78,64 +97,40 @@ public class TimeTrackerDB {
      *
      * @param durationItem tracking some specific duration in an activity.
      */
-//    public void saveDurationItem(DurationItem durationItem) {
-//        if (durationItem != null) {
-//            ContentValues values = new ContentValues();
-//            values.put("item_trackingId", durationItem.getTrackId().toString());
-//            Log.d(TAG, durationItem.getTrackId().toString());
-//            values.put("duration", durationItem.getmDuration());
-//            values.put("endDate", durationItem.getmEndDate().getTime());
-//            values.put("year", durationItem.getYear());
-//            values.put("monthOfYear", durationItem.getMonthOfYear());
-//            values.put("weekOfYear", durationItem.getWeekOfYear());
-//            values.put("day", durationItem.getDay());
-//            values.put("dayOfMonth", durationItem.getDayOfMonth());
-//            Log.d(TAG, String.valueOf(values));
-//            dbWrite.insert(TimeTrackerOpenHelper.TABLE_DURATION, null, values);
-//            Cursor cursor = dbWrite.query(TimeTrackerOpenHelper.TABLE_DURATION,null,null,null,null,null,null);
-//            Log.d(TAG,"After inserting there are " + cursor.getCount() + " items in table duration.");
-//            cursor.close();
-//        }
-//    }
-
     public void saveDurationItem(DurationItem durationItem) {
         if (durationItem != null) {
             ContentValues values = new ContentValues();
-            values.put("item_trackingId", durationItem.getTrackId().toString());
+            values.put(DURATION_TRACKING_ID , durationItem.getTrackId().toString());
             Log.d(TAG, durationItem.getTrackId().toString());
-            values.put("duration", 12);
-            values.put("endDate", 9999999);
-            values.put("year", 2016);
-            values.put("monthOfYear", 3);
-            values.put("weekOfYear", 5);
-            values.put("day", 29);
-            values.put("dayOfMonth", 29);
-//            Log.d(TAG, String.valueOf(values));
-            dbWrite.insert(TimeTrackerOpenHelper.TABLE_DURATION, null, values);
-            Cursor cursor = dbWrite.query(TimeTrackerOpenHelper.TABLE_DURATION,null,null,null,null,null,null);
+            values.put(DURATION_DURATION, durationItem.getmDuration());
+            values.put(DURATION_END_DATE, durationItem.getmEndDate().getTime());
+            values.put(DURATION_YEAR, durationItem.getYear());
+            values.put(DURATION_MONTH_OF_YEAR, durationItem.getMonthOfYear());
+            values.put(DURATION_WEEK_OF_YEAR, durationItem.getWeekOfYear());
+            values.put(DURATION_DAY, durationItem.getDay());
+            values.put(DURATION_DAY_OF_MONTH, durationItem.getDayOfMonth());
+            Log.d(TAG, String.valueOf(values));
+            dbWrite.insert(TABLE_DURATION, null, values);
+            Cursor cursor = dbWrite.query(TABLE_DURATION,null,null,null,null,null,null);
             Log.d(TAG,"After inserting there are " + cursor.getCount() + " items in table duration.");
             cursor.close();
         }
     }
 
+
+
     public List<DurationItem> loadDuration(TrackerItem trackerItem) {
         Log.d(TAG, "loading Duration");
         List<DurationItem> durationItems = trackerItem.getmDurationItems();
-//        try {
-        Cursor cursor = dbRead.query("tracker_duration", null,
-                null,
-                null,
-//                TimeTrackerOpenHelper.DURATION_TRACKING_ID + "=?",
-//                new String[]{trackerItem.getmId().toString()},
+        Cursor cursor = dbRead.query(TABLE_DURATION, null,
+                DURATION_TRACKING_ID + "=?",
+                new String[]{trackerItem.getmId().toString()},
                 null, null, null);
         Log.d(TAG, "There are " + cursor.getCount() + " items.");
         if (cursor.moveToFirst()) {
             do {
-                Date durationEndDate = new Date(cursor.getLong(cursor.getColumnIndex("endDate")));
-                Log.d(TAG, "" + cursor.getColumnIndex("duration"));
-                Log.d(TAG, "duration item cursor" + cursor.toString());
-                int duration = cursor.getInt(cursor.getColumnIndex("duration"));
-                Log.d(TAG, "" + duration);
+                Date durationEndDate = new Date(cursor.getLong(cursor.getColumnIndex(DURATION_END_DATE)));
+                int duration = cursor.getInt(cursor.getColumnIndex(DURATION_DURATION));
                 DurationItem durationItem = new DurationItem(durationEndDate, duration, trackerItem.getmId());
                 durationItems.add(durationItem);
 
@@ -151,7 +146,7 @@ public class TimeTrackerDB {
      */
     public List<TrackerItem> loadTrackerItem() {
         List<TrackerItem> trackerItemList = new ArrayList<TrackerItem>();
-        Cursor cursor = dbRead.query(TimeTrackerOpenHelper.TABLE_TRACKER, null, null, null, null, null, null);
+        Cursor cursor = dbRead.query(TABLE_TRACKER, null, null, null, null, null, null);
         Log.d(TAG, "loading Tracker Item");
         Log.d(TAG, String.valueOf(cursor.moveToFirst()));
         if (cursor.moveToFirst()) {

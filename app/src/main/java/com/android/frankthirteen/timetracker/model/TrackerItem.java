@@ -13,6 +13,7 @@ import java.util.UUID;
 /**
  * Created by Frank on 4/12/16.
  * As this class is becoming bigger and bigger, I feel like to abstract it and break into small pieces.
+ * TrackerItem should be called in service. Will fix it later.
  */
 public class TrackerItem {
     private int mDuration = 0;
@@ -140,15 +141,12 @@ public class TrackerItem {
     }
 
     public void saveDuration() {
-
         DurationItem durationItem = new DurationItem(new Date(), tempDuration, mId);
-        Log.d("adding", "adding duration" + durationItem);
-        Log.d("adding", "adding to " + mDurationItems);
         mDurationItems.add(durationItem);
+        //TODO only save all durations when activity/service is destroyed.
         TimeTrackerDB db = TimeTrackerDB.getInstance(mContext);
         db.saveDurationItem(durationItem);
     }
-
 
     public Date getStartDate() {
         Date startDate;
