@@ -16,6 +16,7 @@ import java.util.UUID;
 public class TrackerItemLab {
     private static TrackerItemLab sTrackerItemLab;
     private static final String TAG = "TrackerItemLab";
+    private TimeTrackerDB timeTrackerDB;
     private Context mAppContext;
 
     private List<TrackerItem> trackerItems;
@@ -23,7 +24,7 @@ public class TrackerItemLab {
     private TrackerItemLab(Context appContext) {
         //Singleton
         mAppContext = appContext;
-        TimeTrackerDB timeTrackerDB = TimeTrackerDB.getInstance(mAppContext);
+        timeTrackerDB = TimeTrackerDB.getInstance(mAppContext);
         if (timeTrackerDB != null) {
             Log.d(TAG, "loading db");
             trackerItems = timeTrackerDB.loadTrackerItem();
@@ -63,12 +64,12 @@ public class TrackerItemLab {
     }
 
     public boolean saveTrackerItems(TrackerItem ti) {
-        TimeTrackerDB db = TimeTrackerDB.getInstance(mAppContext);
         try {
-            db.saveTrackerItem(ti);
+            timeTrackerDB.saveTrackerItem(ti);
             Log.d(TAG, "save a TrackerItem");
             return true;
         } catch (Exception e) {
+            Log.d(TAG,"error saving trackerItem");
             return false;
         }
     }

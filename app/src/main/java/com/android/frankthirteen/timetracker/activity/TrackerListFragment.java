@@ -76,11 +76,7 @@ public class TrackerListFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        for (TrackerItem ti :trackerItems
-             ) {
 
-        TrackerItemLab.getsTrackerItemLab(getContext()).saveTrackerItems(ti);
-        }
     }
 
     @Override
@@ -133,6 +129,12 @@ public class TrackerListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         trackerItemAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        saveTrackerItemToDB();
     }
 
     @Override
@@ -286,6 +288,14 @@ public class TrackerListFragment extends Fragment {
                 btnPause = (ImageButton) view.findViewById(R.id.listitem_tracker_btnPause);
                 btnStop = (ImageButton) view.findViewById(R.id.listitem_tracker_btnStop);
             }
+        }
+    }
+
+    private void saveTrackerItemToDB(){
+        for (TrackerItem ti :trackerItems) {
+            TrackerItemLab.getsTrackerItemLab(getContext()).saveTrackerItems(ti);
+            Log.d(TAG, "onPause");
+            Log.d(TAG,""+trackerItems.size());
         }
     }
 }

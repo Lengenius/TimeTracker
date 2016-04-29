@@ -21,7 +21,7 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
             + "title text,"
             + "content text,"
             + "totalDuration integer,"
-            + "trackingState blob,"
+            + "trackingState text,"
             + "photoName text)";
     public static final String TABLE_TRACKER = "tracker_item";
     public static final String START_DATE = "startDate";
@@ -32,23 +32,38 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
     public static final String TOTAL_DURATION = "totalDuration";
     public static final String TRACKING_STATE = "trackingState";
     public static final String PHOTO_NAME = "photoName";
+    public static final String TABLE_DURATION = "tracker_duration";
 
-    private static final String CREATE_TRACKER_DURATION = "create table tracker_duration("
+    private static final String CREATE_TABLE_DURATION = "create table tracker_duration("
             + "id integer primary key autoincrement,"
             + "year integer,"
             + "monthOfYear integer,"
             + "weekOfYear integer,"
             + "day integer,"
             + "dayOfMonth integer,"
-            + "item_trackingId text references tracker_item(trackingId),"
+            + "itemTrackingId text,"
+//            + "references tracker_item(trackingId),"
             + "duration integer,"
             + "endDate integer)";
-    public static final String DURATION_YEAR = "year";
-    public static final String DURATION_MONTH_OF_YEAR = "monthOfYear";
-    public static final String DURATION_WEEK_OF_YEAR = "weekOfYear";
-    public static final String DURATION_DAY = "DAY";
-    public static final String DURATION_DAY_OF_MONTH = "dayOfMonth";
-    public static final String DURATION_DURATION = "duration";
+
+
+//    public static final String DURATION_TRACKING_ID = "itemTrackingId";
+//    public static final String DURATION_YEAR = "year";
+//    public static final String DURATION_MONTH_OF_YEAR = "monthOfYear";
+//    public static final String DURATION_WEEK_OF_YEAR = "weekOfYear";
+//    public static final String DURATION_DAY = "DAY";
+//    public static final String DURATION_DAY_OF_MONTH = "dayOfMonth";
+//    public static final String DURATION_DURATION = "duration";
+
+//    private static final String CREATE_TABLE_DURATION = "create table tracker_duration("
+//            + "id integer primary key autoincrement,"
+//            + "tracking_id integer,"
+//            + "endDate integer,"
+//            + "year integer,"
+//            + "monthOfYear integer,"
+//            + "weekOfYear integer,"
+//            + "day integer,"
+//            + "dayOfMonth integer)";
 
     private Context mContext;
 
@@ -60,8 +75,9 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TRACKER_ITEM);
-        Log.d(TAG,"table create");
-        db.execSQL(CREATE_TRACKER_DURATION);
+        Log.d(TAG, "table tracker create");
+        db.execSQL(CREATE_TABLE_DURATION);
+        Log.d(TAG, "table duration create");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.android.frankthirteen.timetracker.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.frankthirteen.timetracker.db.TimeTrackerDB;
 
@@ -36,7 +37,7 @@ public class TrackerItem {
         mDurationItems = new ArrayList<DurationItem>();
     }
 
-    public TrackerItem(){
+    public TrackerItem() {
         mId = UUID.randomUUID();
         defaultDate = new Date();
         trackingState = "Tracking";
@@ -48,6 +49,7 @@ public class TrackerItem {
 
     /**
      * Check if the trackerItem is started.
+     *
      * @return
      */
     public Boolean isStarted() {
@@ -64,6 +66,7 @@ public class TrackerItem {
 
     /**
      * get the
+     *
      * @return trackerItem id.
      */
     public UUID getmId() {
@@ -72,6 +75,7 @@ public class TrackerItem {
 
     /**
      * get the total duration of the whole trackerItem.
+     *
      * @return
      */
     public int getmDuration() {
@@ -88,11 +92,12 @@ public class TrackerItem {
 
     /**
      * start or stop the tracker item depends on the argument passed in.
+     *
      * @param b
      */
     public void setmIsStarted(Boolean b) {
         mIsStarted = b;
-        if (b){
+        if (b) {
             tempDuration = 0;
         }
     }
@@ -103,6 +108,7 @@ public class TrackerItem {
 
     public void setmDurationItems(List<DurationItem> mDurationItems) {
         this.mDurationItems = mDurationItems;
+        setTotalDuration();
     }
 
     public void setmContent(String mContent) {
@@ -134,8 +140,10 @@ public class TrackerItem {
     }
 
     public void saveDuration() {
-        //used when item pause;
+
         DurationItem durationItem = new DurationItem(new Date(), tempDuration, mId);
+        Log.d("adding", "adding duration" + durationItem);
+        Log.d("adding", "adding to " + mDurationItems);
         mDurationItems.add(durationItem);
         TimeTrackerDB db = TimeTrackerDB.getInstance(mContext);
         db.saveDurationItem(durationItem);
@@ -171,5 +179,16 @@ public class TrackerItem {
 
     public String getTrackingState() {
         return trackingState;
+    }
+
+    private void setTotalDuration() {
+        if (mDurationItems.size() != 0) {
+            for (DurationItem i :
+                    mDurationItems) {
+                mDuration += i.getmDuration();
+            }
+        } else {
+            mDuration = 0;
+        }
     }
 }
