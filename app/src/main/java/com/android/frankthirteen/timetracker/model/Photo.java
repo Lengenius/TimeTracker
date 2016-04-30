@@ -18,7 +18,12 @@ public class Photo {
     }
 
     public Photo(UUID filename) {
-        mPhotoName = filename.toString();
+        mPhotoName = "JPG_" + filename.toString();
+    }
+
+    public Photo(UUID fileName,String photoPath){
+        mPhotoName = fileName.toString();
+        mPhotoPath = photoPath;
     }
 
     public File createPhotoFile(Photo mPhotoName) throws IOException {

@@ -22,16 +22,16 @@ public class TrackerItem {
     private UUID mId;
     private Boolean mIsStarted = false;
     private Date defaultDate;
-    private Photo mPhoto = null;
+    private Photo mPhoto;
     private String mTitle, mContent, mCommit;
-    private String trackingState;
+    private boolean trackingState;
     private List<DurationItem> mDurationItems;
 
     public TrackerItem(Context context) {
         mId = UUID.randomUUID();
         mContext = context;
         defaultDate = new Date();
-        trackingState = "Tracking";
+        trackingState = true;
         //Test constructor
         mTitle = "Hello";
         mContent = "Tracker";
@@ -41,7 +41,7 @@ public class TrackerItem {
     public TrackerItem() {
         mId = UUID.randomUUID();
         defaultDate = new Date();
-        trackingState = "Tracking";
+        trackingState = true;
         //Test constructor
         mTitle = "Hello";
         mContent = "Tracker";
@@ -124,7 +124,7 @@ public class TrackerItem {
         this.mPhoto = mPhoto;
     }
 
-    public void setTrackingState(String trackingState) {
+    public void setTrackingState(boolean trackingState) {
         this.trackingState = trackingState;
     }
 
@@ -175,7 +175,7 @@ public class TrackerItem {
         return mPhoto;
     }
 
-    public String getTrackingState() {
+    public boolean getTrackingState() {
         return trackingState;
     }
 

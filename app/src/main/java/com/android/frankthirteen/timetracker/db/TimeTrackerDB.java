@@ -33,7 +33,7 @@ public class TimeTrackerDB {
     private static final String ITEM_CONTENT = "content";
     private static final String ITEM_TOTAL_DURATION = "totalDuration";
     private static final String ITEM_TRACKING_STATE = "trackingState";
-    private static final String ITEM_PHOTO_NAME = "photoName";
+    private static final String ITEM_PHOTO_PATH = "photoPath";
 
     private static final String DURATION_TRACKING_ID = "itemTrackingId";
     private static final String DURATION_YEAR = "year";
@@ -82,12 +82,24 @@ public class TimeTrackerDB {
             values.put(ITEM_TOTAL_DURATION, trackerItem.getmDuration());
             values.put(ITEM_START_DATE, trackerItem.getStartDate().getTime());
             values.put(ITEM_END_DATE, trackerItem.getEndDate().getTime());
+            if (trackerItem.getmPhoto() != null) {
+                values.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
+                Log.d(TAG, "gathering photo together to values");
+            }
             values.put(ITEM_TRACKING_STATE, trackerItem.getTrackingState());
-            Log.d(TAG, String.valueOf(values));
+            Log.d(TAG, "tracker item" + String.valueOf(values));
             dbWrite.insert("tracker_item", null, values);
-            Cursor cursor = dbWrite.query("tracker_item",null,null,null,null,null,null);
-            Log.d(TAG,"After inserting there are " + cursor.getCount() + " items in table tracker_item.");
+            Cursor cursor = dbWrite.query("tracker_item", null, null, null, null, null, null);
+            Log.d(TAG, "After inserting there are " + cursor.getCount() + " items in table tracker_item.");
             cursor.close();
+        } else {
+            if (trackerItem.getmPhoto() != null) {
+                ContentValues values = new ContentValues();
+                values.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
+                Log.d(TAG, "gathering photo together to values PhotoPath: " + trackerItem.getmPhoto().getmPhotoPath());
+                dbWrite.update(TABLE_TRACKER, values,
+                        ITEM_TRACKING_ID + "=?", new String[]{trackerItem.getmId().toString()});
+            }
 
         }
     }
@@ -100,7 +112,7 @@ public class TimeTrackerDB {
     public void saveDurationItem(DurationItem durationItem) {
         if (durationItem != null) {
             ContentValues values = new ContentValues();
-            values.put(DURATION_TRACKING_ID , durationItem.getTrackId().toString());
+            values.put(DURATION_TRACKING_ID, durationItem.getTrackId().toString());
             Log.d(TAG, durationItem.getTrackId().toString());
             values.put(DURATION_DURATION, durationItem.getmDuration());
             values.put(DURATION_END_DATE, durationItem.getmEndDate().getTime());
@@ -111,12 +123,11 @@ public class TimeTrackerDB {
             values.put(DURATION_DAY_OF_MONTH, durationItem.getDayOfMonth());
             Log.d(TAG, String.valueOf(values));
             dbWrite.insert(TABLE_DURATION, null, values);
-            Cursor cursor = dbWrite.query(TABLE_DURATION,null,null,null,null,null,null);
-            Log.d(TAG,"After inserting there are " + cursor.getCount() + " items in table duration.");
+            Cursor cursor = dbWrite.query(TABLE_DURATION, null, null, null, null, null, null);
+            Log.d(TAG, "After inserting there are " + cursor.getCount() + " items in table duration.");
             cursor.close();
         }
     }
-
 
 
     public List<DurationItem> loadDuration(TrackerItem trackerItem) {
@@ -153,15 +164,20 @@ public class TimeTrackerDB {
             do {
                 Log.d(TAG, "new item start loading.");
                 TrackerItem trackerItem = new TrackerItem(mContext);
-                Log.d(TAG, "new trackerItem loading durationItems " + trackerItem.getmDurationItems());
-                trackerItem.setmId(UUID.fromString(cursor.getString(cursor.getColumnIndex("trackingId"))));
-                Log.d(TAG, "new trackerItem loading trackerItem " + trackerItem.getmId().toString());
+                trackerItem.setmId(UUID.fromString(cursor.getString(cursor.getColumnIndex(ITEM_TRACKING_ID))));
+                Log.d(TAG, "trackerItem loading trackerItem " + trackerItem.getmId().toString());
                 List<DurationItem> durationItems;
                 durationItems = loadDuration(trackerItem);
                 trackerItem.setmDurationItems(durationItems);
-                trackerItem.setmTitle(cursor.getString(cursor.getColumnIndex("title")));
-                trackerItem.setmContent(cursor.getString(cursor.getColumnIndex("content")));
-                trackerItem.setTrackingState(cursor.getString(cursor.getColumnIndex("trackingState")));
+                Log.d(TAG, "photoPath " + cursor.getString(cursor.getColumnIndex(ITEM_PHOTO_PATH)));
+                if (cursor.getString(cursor.getColumnIndex(ITEM_PHOTO_PATH)) != null) {
+                    String photoPath = cursor.getString(cursor.getColumnIndex(ITEM_PHOTO_PATH));
+                    trackerItem.setmPhoto(new Photo(trackerItem.getmId(), photoPath));
+                    Log.d(TAG, "if tracker has photo" + trackerItem.getmPhoto().getmPhotoPath());
+                }
+                trackerItem.setmTitle(cursor.getString(cursor.getColumnIndex(ITEM_TITLE)));
+                trackerItem.setmContent(cursor.getString(cursor.getColumnIndex(ITEM_CONTENT)));
+                trackerItem.setTrackingState(cursor.getInt(cursor.getColumnIndex(ITEM_TRACKING_STATE)) != 0);
 
                 trackerItemList.add(trackerItem);
             } while (cursor.moveToNext());

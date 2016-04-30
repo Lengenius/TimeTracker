@@ -22,7 +22,8 @@ public class TimeTrackerOpenHelper extends SQLiteOpenHelper {
             + "title text,"
             + "content text,"
             + "totalDuration integer,"
-            + "trackingState text,"
+            + "photoPath text,"
+            + "trackingState integer,"
             + "photoName text)";
 
     private static final String CREATE_TABLE_DURATION = "create table tracker_duration("
