@@ -70,7 +70,7 @@ public class TimeTrackerDB {
      * @param trackerItem tracking some specific activity.
      */
     public void saveTrackerItem(TrackerItem trackerItem) {
-        Cursor c = dbRead.query("tracker_item", new String[]{"trackingId"}, "trackingId=?",
+        Cursor c = dbRead.query(TABLE_TRACKER, new String[]{"trackingId"}, "trackingId=?",
                 new String[]{trackerItem.getmId().toString()}, null, null, null);
 
         if (!c.moveToFirst()) {
@@ -84,24 +84,31 @@ public class TimeTrackerDB {
             values.put(ITEM_END_DATE, trackerItem.getEndDate().getTime());
             if (trackerItem.getmPhoto() != null) {
                 values.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
-                Log.d(TAG, "gathering photo together to values");
+//                Log.d(TAG, "gathering photo together to values");
             }
             values.put(ITEM_TRACKING_STATE, trackerItem.getTrackingState());
-            Log.d(TAG, "tracker item" + String.valueOf(values));
-            dbWrite.insert("tracker_item", null, values);
+            dbWrite.insert(TABLE_TRACKER, null, values);
             Cursor cursor = dbWrite.query("tracker_item", null, null, null, null, null, null);
-            Log.d(TAG, "After inserting there are " + cursor.getCount() + " items in table tracker_item.");
+//            Log.d(TAG, "After inserting there are " + cursor.getCount() + " items in table tracker_item.");
             cursor.close();
         } else {
-            if (trackerItem.getmPhoto() != null) {
-                ContentValues values = new ContentValues();
-                values.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
-                Log.d(TAG, "gathering photo together to values PhotoPath: " + trackerItem.getmPhoto().getmPhotoPath());
-                dbWrite.update(TABLE_TRACKER, values,
-                        ITEM_TRACKING_ID + "=?", new String[]{trackerItem.getmId().toString()});
-            }
+            c.close();
+            updateTrackerItem(trackerItem);
 
         }
+    }
+
+    public void updateTrackerItem(TrackerItem trackerItem){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ITEM_TRACKING_ID, trackerItem.getmId().toString());
+        contentValues.put(ITEM_TITLE, trackerItem.getmTitle());
+        contentValues.put(ITEM_CONTENT, trackerItem.getmContent());
+        contentValues.put(ITEM_TOTAL_DURATION, trackerItem.getmDuration());
+        contentValues.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
+        contentValues.put(ITEM_START_DATE, trackerItem.getStartDate().getTime());
+        contentValues.put(ITEM_END_DATE, trackerItem.getEndDate().getTime());
+        dbWrite.update(TABLE_TRACKER, contentValues, ITEM_TRACKING_ID + "=?", new String[]{trackerItem.getmId().toString()});
+
     }
 
     /**
@@ -124,20 +131,20 @@ public class TimeTrackerDB {
             Log.d(TAG, String.valueOf(values));
             dbWrite.insert(TABLE_DURATION, null, values);
             Cursor cursor = dbWrite.query(TABLE_DURATION, null, null, null, null, null, null);
-            Log.d(TAG, "After inserting there are " + cursor.getCount() + " items in table duration.");
+//            Log.d(TAG, "After inserting there are " + cursor.getCount() + " items in table duration.");
             cursor.close();
         }
     }
 
 
     public List<DurationItem> loadDuration(TrackerItem trackerItem) {
-        Log.d(TAG, "loading Duration");
+//        Log.d(TAG, "loading Duration");
         List<DurationItem> durationItems = trackerItem.getmDurationItems();
         Cursor cursor = dbRead.query(TABLE_DURATION, null,
                 DURATION_TRACKING_ID + "=?",
                 new String[]{trackerItem.getmId().toString()},
                 null, null, null);
-        Log.d(TAG, "There are " + cursor.getCount() + " items.");
+//        Log.d(TAG, "There are " + cursor.getCount() + " items.");
         if (cursor.moveToFirst()) {
             do {
                 Date durationEndDate = new Date(cursor.getLong(cursor.getColumnIndex(DURATION_END_DATE)));

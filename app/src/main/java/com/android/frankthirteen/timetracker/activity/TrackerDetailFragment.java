@@ -8,22 +8,38 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.model.DurationItem;
 import com.android.frankthirteen.timetracker.model.Photo;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.model.TrackerItemLab;
 import com.android.frankthirteen.timetracker.utils.PictureUtils;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -34,11 +50,15 @@ public class TrackerDetailFragment extends Fragment {
     private static final String TAG = "TrackerDetailFragment";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CROP = 2;
     private TrackerItem trackerItem;
 
     private ImageButton mImageBtn;
     private ImageView mImageView;
-    private TextView mTitle, mContent, mStartDate, mEndDate, mDuration, mCommit;
+    private EditText mTitle, mContent, mCommit;
+    private TextView mDuration;
+    private Button mStartDate,mEndDate;
+    private LineChart detailLineChart;
 
     public static TrackerDetailFragment newInstance(UUID trackerItemId) {
 
@@ -67,26 +87,80 @@ public class TrackerDetailFragment extends Fragment {
 
         setDetailPic(view);
 
-        //TODO get camera to save photo.
+        detailLineChart = (LineChart) view.findViewById(R.id.detail_chart);
+        detailLineChart.setData(buildLineChart());
 
-        mTitle = (TextView) view.findViewById(R.id.tracker_detail_title);
+        mTitle = (EditText) view.findViewById(R.id.tracker_detail_title);
         mTitle.setText(trackerItem.getmTitle());
+        mTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //
+            }
 
-        mContent = (TextView) view.findViewById(R.id.tracker_detail_content);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                trackerItem.setmTitle(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                //
+            }
+        });
+
+        mContent = (EditText) view.findViewById(R.id.tracker_detail_content);
+        mContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                trackerItem.setmContent(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         mContent.setText(trackerItem.getmContent());
-        //TODO transform this date to prefer date format.
-        mStartDate = (TextView) view.findViewById(R.id.tracker_detail_startDate);
+        //TODO transform this date to preferred date format.
+        mStartDate = (Button) view.findViewById(R.id.tracker_detail_startDate);
         mStartDate.setText(trackerItem.getStartDate().toString());
 
-        mEndDate = (TextView) view.findViewById(R.id.tracker_detail_endDate);
+        mEndDate = (Button) view.findViewById(R.id.tracker_detail_endDate);
         mEndDate.setText(trackerItem.getEndDate().toString());
 
         mDuration = (TextView) view.findViewById(R.id.tracker_detail_totalDuration);
         //TODO turn int duration into time format.
         mDuration.setText(String.valueOf(trackerItem.getmDuration()));
 
-        mCommit = (TextView) view.findViewById(R.id.tracker_detail_commit);
+        mCommit = (EditText) view.findViewById(R.id.tracker_detail_commit);
         mCommit.setText(trackerItem.getmCommit());
+        mCommit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                trackerItem.setmCommit(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         return view;
     }
@@ -97,18 +171,16 @@ public class TrackerDetailFragment extends Fragment {
         if (resultCode != Activity.RESULT_OK) return;
         switch (requestCode) {
             case REQUEST_IMAGE_CAPTURE:
-//This is a method to set thumbnail pic;
-//                Bundle b = data.getExtras();
-//                Bitmap imageBitmap = (Bitmap) b.get("data");
-//                mImageView.setImageBitmap(imageBitmap);
-//
-//                Log.d(TAG, "set pic");
                 Photo photo = trackerItem.getmPhoto();
                 BitmapDrawable bitmapDrawable = PictureUtils.getScaledPic(getActivity(), photo.getmPhotoPath());
                 mImageBtn.setVisibility(View.GONE);
                 mImageBtn.setEnabled(false);
                 mImageView.setImageDrawable(bitmapDrawable);
-//                galleryAddPic();
+                break;
+            case REQUEST_IMAGE_CROP:
+                //TODO crop the photo to fit the screen and decrease its size.
+
+
                 break;
             default:
                 break;
@@ -117,12 +189,11 @@ public class TrackerDetailFragment extends Fragment {
 
     private void setDetailPic(View view) {
         mImageView = (ImageView) view.findViewById(R.id.tracker_detail_image);
-        //Button visibility may be set somewhere else to avoid collision;
         mImageBtn = (ImageButton) view.findViewById(R.id.tracker_detail_image_button);
-        if (trackerItem.getmPhoto()!=null){
+        if (trackerItem.getmPhoto() != null) {
             mImageBtn.setVisibility(View.GONE);
         }
-        Log.d(TAG,String.valueOf(mImageView.getWidth()));
+        Log.d(TAG, String.valueOf(mImageView.getWidth()));
         mImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +207,7 @@ public class TrackerDetailFragment extends Fragment {
                         Log.d(TAG, "photo created");
                         Log.d(TAG, mPhotoFile.getAbsolutePath());
                     } catch (IOException e) {
-                        Log.i(TAG,"file creating failed",e);
+                        Log.i(TAG, "file creating failed", e);
                     }
                     if (mPhotoFile != null) {
                         i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mPhotoFile));
@@ -145,18 +216,50 @@ public class TrackerDetailFragment extends Fragment {
                 }
             }
         });
-        if (trackerItem.getmPhoto()!=null){
+        if (trackerItem.getmPhoto() != null) {
             Photo photo = trackerItem.getmPhoto();
             BitmapDrawable bitmapDrawable = PictureUtils.getScaledPic(getActivity(), photo.getmPhotoPath());
             mImageView.setImageDrawable(bitmapDrawable);
         }
     }
 
-//    private void galleryAddPic() {
-//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        File f = new File(trackerItem.getmPhoto().getmPhotoPath());
-//        Uri contentUri = Uri.fromFile(f);
-//        mediaScanIntent.setData(contentUri);
-//        getActivity().sendBroadcast(mediaScanIntent);
-//    }
+    private LineData buildLineChart() {
+        ArrayList<Entry> valsItem = new ArrayList<Entry>();
+        prepareFakeData();
+        List<DurationItem> durationItems = trackerItem.getmDurationItems();
+        ArrayList<String> xVals = new ArrayList<String>();
+        int x = 0;
+        for (DurationItem dItem :
+                durationItems) {
+            Entry data = new Entry(dItem.getmDuration(), x++);
+            xVals.add(String.valueOf(dItem.getDay()));
+            valsItem.add(data);
+        }
+        LineDataSet trackedActivity = new LineDataSet(valsItem, trackerItem.getmTitle());
+        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(trackedActivity);
+
+        return new LineData(xVals, dataSets);
+    }
+
+    private void prepareFakeData() {
+        Date mDate = trackerItem.getStartDate();
+        List<DurationItem> fakeDuration = trackerItem.getmDurationItems();
+
+        Calendar calendar = GregorianCalendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_YEAR);
+        Random r = new Random();
+        r.setSeed(0);
+
+        calendar.setTime(mDate);
+
+        for (int i = 0; i < 5; i++) {
+            Date fakeDate = new GregorianCalendar(year,month,day++).getTime();
+            DurationItem di = new DurationItem(fakeDate, r.nextInt(),trackerItem.getmId());
+            fakeDuration.add(di);
+        }
+    }
+
 }

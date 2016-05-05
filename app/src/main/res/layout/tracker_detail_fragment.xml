@@ -21,15 +21,15 @@
                 android:layout_height="96dp"
                 android:background="@android:color/darker_gray"
                 android:clickable="true"
-                android:contentDescription="timetrack_detail_image"
+                android:contentDescription="timeTrack_detail_image"
                 android:scaleType="centerCrop" />
 
             <ImageButton
-                android:src="@android:drawable/ic_menu_camera"
                 android:id="@+id/tracker_detail_image_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_menu_camera" />
         </FrameLayout>
 
         <LinearLayout
@@ -38,23 +38,25 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
+            <EditText
                 android:id="@+id/tracker_detail_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4dp"
-                android:text="Tracker Detail title"
+                android:hint="Tracker Detail title"
                 android:textAppearance="?android:textAppearanceLarge" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tracker_detail_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:lines="3"
+                android:maxLines="3"
                 android:paddingBottom="2dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:paddingTop="2dp"
-                android:text="Tracker Detail Content" />
+                android:hint="Tracker Detail Content" />
         </LinearLayout>
     </LinearLayout>
 
@@ -68,22 +70,22 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <Button
                 android:id="@+id/tracker_detail_startDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="test"
-                android:textAlignment="center" />
+                android:gravity="center"
+                android:hint="test" />
 
 
-            <TextView
+            <Button
                 android:id="@+id/tracker_detail_endDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="test"
-                android:textAlignment="center" />
+                android:gravity="center"
+                android:hint="test" />
         </LinearLayout>
 
         <LinearLayout
@@ -94,18 +96,28 @@
                 android:id="@+id/tracker_detail_totalDuration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="test"
-                android:textAlignment="center" />
+                android:gravity="center"
+                android:hint="test" />
 
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
+    <EditText
         android:id="@+id/tracker_detail_commit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Commit"
+        android:lines="3"
+        android:maxLines="3"
+        android:scrollbars="vertical"
+        android:hint="Commit"
         android:textAppearance="?android:textAppearanceMedium" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/detail_chart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="24dp" />
+
 
 </LinearLayout>

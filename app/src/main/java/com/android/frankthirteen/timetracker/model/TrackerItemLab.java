@@ -59,9 +59,28 @@ public class TrackerItemLab {
         trackerItems.remove(trackerItem);
     }
 
-    public List<TrackerItem> getTrackerItems() {
-        return trackerItems;
+    public List<TrackerItem> getTrackingItems() {
+        List<TrackerItem> trackingItems = new ArrayList<TrackerItem>();
+        for (TrackerItem ti :
+                trackerItems) {
+            if (ti.getTrackingState()) {
+                trackingItems.add(ti);
+            }
+        }
+        return trackingItems;
     }
+
+    public List<TrackerItem> getTrackedItems() {
+        List<TrackerItem> trackedItems = new ArrayList<TrackerItem>();
+        for (TrackerItem ti :
+                trackerItems) {
+            if (!ti.getTrackingState()) {
+                trackedItems.add(ti);
+            }
+        }
+        return trackedItems;
+    }
+
 
     public boolean saveTrackerItems(TrackerItem ti) {
         try {
@@ -69,7 +88,7 @@ public class TrackerItemLab {
             Log.d(TAG, "save a TrackerItem");
             return true;
         } catch (Exception e) {
-            Log.d(TAG,"error saving trackerItem");
+            Log.d(TAG, "error saving trackerItem");
             return false;
         }
     }
