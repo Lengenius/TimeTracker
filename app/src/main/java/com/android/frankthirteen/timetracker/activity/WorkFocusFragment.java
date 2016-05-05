@@ -139,8 +139,9 @@ public class WorkFocusFragment extends Fragment {
                 mTrackerItem.increase();
                 Message message = Message.obtain(mHandler,UPDATE_CLOCK);
                 message.sendToTarget();
+                //if you move the handler post outside if, it will create multi thread.
+                mHandler.postDelayed(this, 1000);
             }
-            mHandler.postDelayed(this, 1000);
         }
     }
 

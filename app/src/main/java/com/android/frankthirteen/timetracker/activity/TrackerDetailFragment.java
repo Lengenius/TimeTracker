@@ -25,6 +25,7 @@ import com.android.frankthirteen.timetracker.model.DurationItem;
 import com.android.frankthirteen.timetracker.model.Photo;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.model.TrackerItemLab;
+import com.android.frankthirteen.timetracker.utils.FormatUtils;
 import com.android.frankthirteen.timetracker.utils.PictureUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -140,7 +141,7 @@ public class TrackerDetailFragment extends Fragment {
 
         mDuration = (TextView) view.findViewById(R.id.tracker_detail_totalDuration);
         //TODO turn int duration into time format.
-        mDuration.setText(String.valueOf(trackerItem.getmDuration()));
+        mDuration.setText(FormatUtils.formatDuration(trackerItem.getmDuration()));
 
         mCommit = (EditText) view.findViewById(R.id.tracker_detail_commit);
         mCommit.setText(trackerItem.getmCommit());

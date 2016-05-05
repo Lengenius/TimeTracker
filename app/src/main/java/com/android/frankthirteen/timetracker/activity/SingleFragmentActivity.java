@@ -12,7 +12,7 @@ import com.android.frankthirteen.timetracker.R;
 /**
  * Created by Frank on 4/10/16.
  */
-public abstract class SingleFragmentActivity extends AppCompatActivity {
+public abstract class SingleFragmentActivity extends BaseActivity {
     /**
      * get the Activity a fragment to hold;
      * @return fragment
