@@ -1,5 +1,6 @@
 package com.android.frankthirteen.timetracker.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.model.TrackerItemLab;
+import com.android.frankthirteen.timetracker.service.PlaySounds;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
 
 import java.util.Timer;
@@ -30,8 +32,6 @@ public class WorkFocusFragment extends Fragment {
     private static Handler mHandler;
     private static final int UPDATE_CLOCK = 0;
     private static final int STOP_CLOCK = 1;
-    private TimerTask focusClock, showFocusClock;
-    private Timer timer = new Timer();
 
     private TrackerItem mTrackerItem;
     private TextView workFocusTitle, workFocusContent, workFocusClock;
@@ -113,12 +113,16 @@ public class WorkFocusFragment extends Fragment {
     private void startClock() {
         mTrackerItem.setmIsStarted(true);
         mHandler.post(new WorkFocusTimer());
+        Intent intent = new Intent(getActivity(), PlaySounds.class);
+        getActivity().startService(intent);
 
     }
 
     private void pauseClock() {
         mTrackerItem.setmIsStarted(false);
         mTrackerItem.saveDuration();
+        Intent intent = new Intent(getActivity(),PlaySounds.class);
+        getActivity().stopService(intent);
 
     }
 
@@ -129,8 +133,6 @@ public class WorkFocusFragment extends Fragment {
             btnStart.setEnabled(true);
         }
     }
-
-    private int id = 0;
 
     private class WorkFocusTimer implements Runnable {
         @Override

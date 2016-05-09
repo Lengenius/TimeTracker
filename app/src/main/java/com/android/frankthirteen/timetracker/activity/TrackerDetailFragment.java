@@ -27,11 +27,13 @@ import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.model.TrackerItemLab;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
 import com.android.frankthirteen.timetracker.utils.PictureUtils;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +42,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 
@@ -58,8 +61,8 @@ public class TrackerDetailFragment extends Fragment {
     private ImageView mImageView;
     private EditText mTitle, mContent, mCommit;
     private TextView mDuration;
-    private Button mStartDate,mEndDate;
-    private LineChart detailLineChart;
+    private Button mStartDate, mEndDate;
+    private BarChart detailBarChart;
 
     public static TrackerDetailFragment newInstance(UUID trackerItemId) {
 
@@ -88,8 +91,9 @@ public class TrackerDetailFragment extends Fragment {
 
         setDetailPic(view);
 
-        detailLineChart = (LineChart) view.findViewById(R.id.detail_chart);
-        detailLineChart.setData(buildLineChart());
+        detailBarChart = (BarChart) view.findViewById(R.id.detail_chart);
+        formatBarChart();
+
 
         mTitle = (EditText) view.findViewById(R.id.tracker_detail_title);
         mTitle.setText(trackerItem.getmTitle());
@@ -224,41 +228,68 @@ public class TrackerDetailFragment extends Fragment {
         }
     }
 
-    private LineData buildLineChart() {
-        ArrayList<Entry> valsItem = new ArrayList<Entry>();
+    private BarData buildBarChart() {
+        ArrayList<BarEntry> valsItem = new ArrayList<BarEntry>();
         prepareFakeData();
         List<DurationItem> durationItems = trackerItem.getmDurationItems();
         ArrayList<String> xVals = new ArrayList<String>();
         int x = 0;
         for (DurationItem dItem :
                 durationItems) {
-            Entry data = new Entry(dItem.getmDuration(), x++);
-            xVals.add(String.valueOf(dItem.getDay()));
+            BarEntry data = new BarEntry(dItem.getmDuration() / 60, x++);
+            Calendar c = Calendar.getInstance();
+            c.setTime(dItem.getmEndDate());
+            Log.d(TAG, "calendar " + c.toString());
+//            getDisplayName(Calendar.DAY_OF_MONTH,Calendar.SHORT, Locale.getDefault())); will return null.
+            xVals.add(c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
+            Log.d(TAG, "days " + xVals.toString());
             valsItem.add(data);
         }
-        LineDataSet trackedActivity = new LineDataSet(valsItem, trackerItem.getmTitle());
-        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(trackedActivity);
+        BarDataSet item1 = new BarDataSet(valsItem, trackerItem.getmTitle());
+        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        dataSets.add(item1);
 
-        return new LineData(xVals, dataSets);
+        return new BarData(xVals, dataSets);
+    }
+
+    private void formatBarChart() {
+        BarData barData = buildBarChart();
+
+        detailBarChart.setData(buildBarChart());
+        detailBarChart.invalidate();
+        detailBarChart.setVisibleXRangeMinimum(7);
+        detailBarChart.setVisibleXRangeMaximum(14);
+        detailBarChart.moveViewToX(barData.getXValCount() - 8);
+
+
+        detailBarChart.setDrawGridBackground(false);
+        XAxis xAxis = detailBarChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        YAxis yAxisLeft = detailBarChart.getAxisLeft();
+        yAxisLeft.setLabelCount(5, false);
+        YAxis yAxisRight = detailBarChart.getAxisRight();
+        yAxisRight.setDrawLabels(false);
     }
 
     private void prepareFakeData() {
         Date mDate = trackerItem.getStartDate();
         List<DurationItem> fakeDuration = trackerItem.getmDurationItems();
 
-        Calendar calendar = GregorianCalendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(trackerItem.getEndDate());
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_YEAR);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
         Random r = new Random();
         r.setSeed(0);
 
         calendar.setTime(mDate);
 
-        for (int i = 0; i < 5; i++) {
-            Date fakeDate = new GregorianCalendar(year,month,day++).getTime();
-            DurationItem di = new DurationItem(fakeDate, r.nextInt(),trackerItem.getmId());
+        for (int i = 0; i < 10; i++) {
+            Date fakeDate = new GregorianCalendar(year, month, day++).getTime();
+            Log.d(TAG, "Fake data" + fakeDate.toString());
+            DurationItem di = new DurationItem(fakeDate, r.nextInt(1440) * 60, trackerItem.getmId());
             fakeDuration.add(di);
         }
     }

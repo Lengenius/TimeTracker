@@ -3,127 +3,140 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fillViewport="true"
     tools:context=".activity.TrackerDetailActivity">
-<LinearLayout
-    android:id="@+id/tracker_detail_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp">
 
     <LinearLayout
+        android:id="@+id/tracker_detail_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="96dp"
-            android:layout_height="96dp">
-
-            <ImageView
-                android:id="@+id/tracker_detail_image"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:background="@android:color/darker_gray"
-                android:clickable="true"
-                android:contentDescription="timeTrack_detail_image"
-                android:scaleType="centerCrop" />
-
-            <ImageButton
-                android:id="@+id/tracker_detail_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_camera" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/tracker_detail_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:hint="Tracker Detail title"
-                android:textAppearance="?android:textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/tracker_detail_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:lines="3"
-                android:maxLines="3"
-                android:paddingBottom="2dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingTop="2dp"
-                android:hint="Tracker Detail Content" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/tracker_detail_startDate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:hint="test" />
+            <FrameLayout
+                android:layout_width="96dp"
+                android:layout_height="96dp">
 
+                <ImageView
+                    android:id="@+id/tracker_detail_image"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:background="@android:color/darker_gray"
+                    android:clickable="true"
+                    android:contentDescription="timeTrack_detail_image"
+                    android:scaleType="centerCrop" />
 
-            <Button
-                android:id="@+id/tracker_detail_endDate"
+                <ImageButton
+                    android:id="@+id/tracker_detail_image_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/ic_menu_camera" />
+            </FrameLayout>
+
+            <TableLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:hint="test" />
+                android:layout_height="match_parent"
+                android:stretchColumns="1"
+                android:layout_weight="1">
+
+                <TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Title:"/>
+
+                    <EditText
+                        android:id="@+id/tracker_detail_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Tracker Detail title"
+                        android:padding="4dp"
+                        android:textAppearance="?android:textAppearanceLarge" />
+
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:text="Content:"
+                        android:layout_height="match_parent"/>
+                    <EditText
+                        android:id="@+id/tracker_detail_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Tracker Detail Content"
+                        android:lines="3"
+                        android:maxLines="3"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:paddingTop="2dp" />
+                </TableRow>
+            </TableLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tracker_detail_totalDuration"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:hint="test" />
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/tracker_detail_startDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:hint="test" />
+
+
+                <Button
+                    android:id="@+id/tracker_detail_endDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:hint="test" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tracker_detail_totalDuration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="test" />
+
+            </LinearLayout>
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/tracker_detail_commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Commit"
+            android:lines="3"
+            android:maxLines="3"
+            android:scrollbars="vertical"
+            android:textAppearance="?android:textAppearanceMedium" />
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/detail_chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/tracker_detail_commit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:lines="3"
-        android:maxLines="3"
-        android:scrollbars="vertical"
-        android:hint="Commit"
-        android:textAppearance="?android:textAppearanceMedium" />
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/detail_chart"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="24dp" />
-
-
-</LinearLayout>
 </ScrollView>

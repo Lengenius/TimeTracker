@@ -37,24 +37,6 @@ public class TrackerListFragment extends Fragment {
 
     private List<TrackerItem> trackerItems;
     private TrackerItemAdapter trackerItemAdapter;
-//    private final Handler mHandler = new Handler();
-//
-//    private class TimerRunnable implements Runnable {
-//        private TrackerItem i;
-//
-//        TimerRunnable(TrackerItem item) {
-//            i = item;
-//        }
-//
-//        @Override
-//        public void run() {
-//            if (i.isStarted()) {
-//                i.increase();
-//                trackerItemAdapter.notifyDataSetChanged();
-//                mHandler.postDelayed(this, 1000);
-//            }
-//        }
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

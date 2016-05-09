@@ -1,0 +1,3 @@
+##Developing Diary
+
+This document recorded what did I think during the developing.
