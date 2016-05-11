@@ -12,8 +12,16 @@ public class FormatUtils {
         mins = totalDuration/60%60;
         seconds = totalDuration%60;
 
-
-
         return String.format("%02d:%02d:%02d", hours, mins,seconds);
+    }
+
+    public static String formatDurationInHour(int duration){
+        int hours, mins;
+        int totalDuration;
+        totalDuration = duration;
+        hours = totalDuration/60/60;
+        mins = totalDuration/60%60;
+
+        return String.format("%02d:%02d", hours, mins);
     }
 }

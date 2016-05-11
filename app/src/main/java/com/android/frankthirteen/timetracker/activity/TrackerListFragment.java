@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,16 +43,11 @@ public class TrackerListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         trackerItems = TrackerItemLab.getsTrackerItemLab(getActivity()).getTrackingItems();
-        if (trackerItems.size() == 0) {
-            initialData();
-            Log.d(TAG, "onCreate initialData");
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        saveTrackerItemToDB();
     }
 
     @Override
@@ -60,12 +56,16 @@ public class TrackerListFragment extends Fragment {
         inflater.inflate(R.menu.trackerlist_menu, menu);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tracker_list_container, container, false);
-        ListView trackerListView = (ListView) rootView.findViewById(R.id.tracker_listview);
+        ListView trackerListView = (ListView) rootView.findViewById(R.id.tracker_listView);
 
         trackerItemAdapter = new TrackerItemAdapter(getActivity(), R.layout.listitem_tracker, trackerItems);
         trackerListView.setAdapter(trackerItemAdapter);
@@ -74,27 +74,17 @@ public class TrackerListFragment extends Fragment {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TrackerItem item = new TrackerItem();
-                item.setmTitle("new");
-                trackerItems.add(item);
-                trackerItemAdapter.notifyDataSetChanged();
+                createNewTracker();
             }
         });
         return rootView;
     }
 
-    public void initialData() {
-        TrackerItem t1;
-        t1 = new TrackerItem(getActivity());
-        t1.setmTitle("ta ");
-        TrackerItemLab.getsTrackerItemLab(getContext()).addTrackItem(t1);
-
-    }
 
     @Override
     public void onResume() {
         super.onResume();
-        trackerItemAdapter.notifyDataSetChanged();
+//        trackerItemAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -113,7 +103,9 @@ public class TrackerListFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_DETAIL:
+                    Log.d(TAG,"add new item");
                     trackerItemAdapter.notifyDataSetChanged();
+                    TrackerItemLab.getsTrackerItemLab(getActivity()).saveTrackerItemToDB();
                     break;
                 case REQUEST_DURATION:
                     break;
@@ -192,9 +184,13 @@ public class TrackerListFragment extends Fragment {
         }
     }
 
-    private void saveTrackerItemToDB() {
-        for (TrackerItem ti : trackerItems) {
-            TrackerItemLab.getsTrackerItemLab(getContext()).saveTrackerItems(ti);
-        }
+
+
+    private void createNewTracker(){
+        TrackerItem item = new TrackerItem();
+        TrackerItemLab.getsTrackerItemLab(getActivity()).addTrackItem(item);
+        Intent intent = new Intent(getActivity(),TrackerDetailActivity.class);
+        intent.putExtra(TrackerDetailFragment.EXTRA_TRACKER_ID,item.getmId());
+        startActivityForResult(intent,REQUEST_DETAIL);
     }
 }

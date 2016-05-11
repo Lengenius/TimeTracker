@@ -107,6 +107,7 @@ public class TrackerDetailFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 trackerItem.setmTitle(s.toString());
+                getActivity().setResult(Activity.RESULT_OK);
             }
 
             @Override
@@ -127,6 +128,7 @@ public class TrackerDetailFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 trackerItem.setmContent(s.toString());
+                getActivity().setResult(Activity.RESULT_OK);
             }
 
             @Override
@@ -159,6 +161,7 @@ public class TrackerDetailFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 trackerItem.setmCommit(s.toString());
+                getActivity().setResult(Activity.RESULT_OK);
             }
 
             @Override
@@ -236,7 +239,8 @@ public class TrackerDetailFragment extends Fragment {
         int x = 0;
         for (DurationItem dItem :
                 durationItems) {
-            BarEntry data = new BarEntry(dItem.getmDuration() / 60, x++);
+//            FormatUtils.formatDurationInHour(dItem.getmDuration());
+            BarEntry data = new BarEntry(dItem.getmDuration()/60, x++);
             Calendar c = Calendar.getInstance();
             c.setTime(dItem.getmEndDate());
             Log.d(TAG, "calendar " + c.toString());

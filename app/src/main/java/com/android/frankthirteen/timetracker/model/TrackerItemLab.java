@@ -85,11 +85,17 @@ public class TrackerItemLab {
     public boolean saveTrackerItems(TrackerItem ti) {
         try {
             timeTrackerDB.saveTrackerItem(ti);
-            Log.d(TAG, "save a TrackerItem");
+            Log.d(TAG, "save a TrackerItem" + ti.getmTitle());
             return true;
         } catch (Exception e) {
-            Log.d(TAG, "error saving trackerItem");
+            Log.d(TAG, "error saving trackerItem" + ti.getmTitle());
             return false;
+        }
+    }
+
+    public void saveTrackerItemToDB() {
+        for (TrackerItem ti : trackerItems) {
+            saveTrackerItems(ti);
         }
     }
 }
