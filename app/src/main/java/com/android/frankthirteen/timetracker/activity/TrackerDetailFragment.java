@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,6 +28,7 @@ import com.android.frankthirteen.timetracker.model.Photo;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.model.TrackerItemLab;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 import com.android.frankthirteen.timetracker.utils.PictureUtils;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -77,6 +80,7 @@ public class TrackerDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        Log.d(TAG, "creating new item");
 
         UUID mItemId = (UUID) getArguments().getSerializable(EXTRA_TRACKER_ID);
         trackerItem = TrackerItemLab.getsTrackerItemLab(getActivity()).getTrackerItem(mItemId);
@@ -96,7 +100,9 @@ public class TrackerDetailFragment extends Fragment {
 
 
         mTitle = (EditText) view.findViewById(R.id.tracker_detail_title);
-        mTitle.setText(trackerItem.getmTitle());
+        if (trackerItem.getmTitle() != null) {
+            mTitle.setText(trackerItem.getmTitle());
+        }
         mTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -107,7 +113,6 @@ public class TrackerDetailFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 trackerItem.setmTitle(s.toString());
-                getActivity().setResult(Activity.RESULT_OK);
             }
 
             @Override
@@ -128,7 +133,6 @@ public class TrackerDetailFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 trackerItem.setmContent(s.toString());
-                getActivity().setResult(Activity.RESULT_OK);
             }
 
             @Override
@@ -137,7 +141,9 @@ public class TrackerDetailFragment extends Fragment {
             }
         });
 
-        mContent.setText(trackerItem.getmContent());
+        if (trackerItem.getmContent() != null) {
+            mContent.setText(trackerItem.getmContent());
+        }
         //TODO transform this date to preferred date format.
         mStartDate = (Button) view.findViewById(R.id.tracker_detail_startDate);
         mStartDate.setText(trackerItem.getStartDate().toString());
@@ -146,7 +152,6 @@ public class TrackerDetailFragment extends Fragment {
         mEndDate.setText(trackerItem.getEndDate().toString());
 
         mDuration = (TextView) view.findViewById(R.id.tracker_detail_totalDuration);
-        //TODO turn int duration into time format.
         mDuration.setText(FormatUtils.formatDuration(trackerItem.getmDuration()));
 
         mCommit = (EditText) view.findViewById(R.id.tracker_detail_commit);
@@ -161,12 +166,22 @@ public class TrackerDetailFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 trackerItem.setmCommit(s.toString());
-                getActivity().setResult(Activity.RESULT_OK);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        CheckBox ensure = (CheckBox) view.findViewById(R.id.detail_ensure);
+        ensure.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    LogUtils.d(TAG, "check box checked");
+                    getActivity().setResult(Activity.RESULT_OK);
+                }
             }
         });
 
@@ -239,14 +254,14 @@ public class TrackerDetailFragment extends Fragment {
         int x = 0;
         for (DurationItem dItem :
                 durationItems) {
-//            FormatUtils.formatDurationInHour(dItem.getmDuration());
-            BarEntry data = new BarEntry(dItem.getmDuration()/60, x++);
+//            FormatUtils.formatDurationInHour(dItem.getmDuration()); only float is allowed in Entry.
+            BarEntry data = new BarEntry(dItem.getmDuration() / 60, x++);
             Calendar c = Calendar.getInstance();
             c.setTime(dItem.getmEndDate());
-            Log.d(TAG, "calendar " + c.toString());
+            LogUtils.d(TAG, "calendar " + c.toString());
 //            getDisplayName(Calendar.DAY_OF_MONTH,Calendar.SHORT, Locale.getDefault())); will return null.
             xVals.add(c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
-            Log.d(TAG, "days " + xVals.toString());
+            LogUtils.d(TAG, "days " + xVals.toString());
             valsItem.add(data);
         }
         BarDataSet item1 = new BarDataSet(valsItem, trackerItem.getmTitle());

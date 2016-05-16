@@ -18,7 +18,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <FrameLayout
                 android:layout_width="96dp"
@@ -30,7 +31,7 @@
                     android:layout_height="96dp"
                     android:background="@android:color/darker_gray"
                     android:clickable="true"
-                    android:contentDescription="timeTrack_detail_image"
+                    android:contentDescription="@string/detail_img_description"
                     android:scaleType="centerCrop" />
 
                 <ImageButton
@@ -38,10 +39,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:contentDescription="@string/detail_img_btn_description"
                     android:src="@android:drawable/ic_menu_camera" />
             </FrameLayout>
 
             <TableLayout
+                android:padding="4dp"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:stretchColumns="1"
@@ -51,13 +54,13 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:text="Title:"/>
+                        android:text="@string/title_title"/>
 
                     <EditText
                         android:id="@+id/tracker_detail_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Tracker Detail title"
+                        android:hint="@string/title_hint"
                         android:padding="4dp"
                         android:textAppearance="?android:textAppearanceLarge" />
 
@@ -65,13 +68,13 @@
 
                 <TableRow>
                     <TextView
-                        android:text="Content:"
+                        android:text="@string/content_title"
                         android:layout_height="match_parent"/>
                     <EditText
                         android:id="@+id/tracker_detail_content"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="Tracker Detail Content"
+                        android:hint="@string/content_hint"
                         android:lines="3"
                         android:maxLines="3"
                         android:paddingBottom="2dp"
@@ -98,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:hint="test" />
+                    android:hint="@string/start_date" />
 
 
                 <Button
@@ -107,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:hint="test" />
+                    android:hint="@string/end_date" />
             </LinearLayout>
 
             <LinearLayout
@@ -119,7 +122,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:hint="test" />
+                    android:hint="@string/detail_total_duration" />
 
             </LinearLayout>
         </LinearLayout>
@@ -128,11 +131,16 @@
             android:id="@+id/tracker_detail_commit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Commit"
+            android:hint="@string/commit_hint"
             android:lines="3"
             android:maxLines="3"
             android:scrollbars="vertical"
             android:textAppearance="?android:textAppearanceMedium" />
+        <CheckBox
+            android:id="@+id/detail_ensure"
+            android:text="@string/detail_checkbox_ensure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/detail_chart"

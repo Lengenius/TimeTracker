@@ -84,9 +84,10 @@ public class WorkFocusFragment extends Fragment {
             }
         };
 
+        workFocusContent = (TextView) rootView.findViewById(R.id.workFocus_content);
+        workFocusContent.setText(mTrackerItem.getmContent());
         workFocusTitle = (TextView) rootView.findViewById(R.id.workFocus_title);
         workFocusTitle.setText(mTrackerItem.getmTitle());
-        workFocusContent = (TextView) rootView.findViewById(R.id.workFocus_content);
         workFocusClock = (TextView) rootView.findViewById(R.id.workFocus_Clock);
         workFocusClock.setText(FormatUtils.formatDuration(mTrackerItem.getmDuration()));
         btnStart = (Button) rootView.findViewById(R.id.workFocus_start);
@@ -94,7 +95,7 @@ public class WorkFocusFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startClock();
-                btnStart.setEnabled(false);
+                setButton();
             }
         });
         btnPause = (Button) rootView.findViewById(R.id.workFocus_pause);
@@ -142,7 +143,7 @@ public class WorkFocusFragment extends Fragment {
                 Message message = Message.obtain(mHandler,UPDATE_CLOCK);
                 message.sendToTarget();
                 //if you move the handler post outside if, it will create multi thread.
-                mHandler.postDelayed(this, 1000);
+                mHandler.postDelayed(this, 10);
             }
         }
     }

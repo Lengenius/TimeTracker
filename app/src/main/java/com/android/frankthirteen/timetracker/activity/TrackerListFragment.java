@@ -1,30 +1,26 @@
 package com.android.frankthirteen.timetracker.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.model.TrackerItemLab;
-import com.android.frankthirteen.timetracker.utils.FormatUtils;
-import com.android.frankthirteen.timetracker.utils.PictureUtils;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.List;
 
@@ -33,8 +29,8 @@ import java.util.List;
  */
 public class TrackerListFragment extends Fragment {
     private static final String TAG = "ListFragment";
-    private static final int REQUEST_DETAIL = 1;
-    private static final int REQUEST_DURATION = 2;
+    public static final int REQUEST_DETAIL = 1;
+    public static final int REQUEST_DURATION = 2;
 
     private List<TrackerItem> trackerItems;
     private TrackerItemAdapter trackerItemAdapter;
@@ -43,6 +39,7 @@ public class TrackerListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         trackerItems = TrackerItemLab.getsTrackerItemLab(getActivity()).getTrackingItems();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -57,26 +54,87 @@ public class TrackerListFragment extends Fragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_item_new_tracker:
+                createNewTracker();
+                return true;
+            case R.id.menu_item_delete:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
+        getActivity().getMenuInflater().inflate(R.menu.context_menu, menu);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tracker_list_container, container, false);
-        ListView trackerListView = (ListView) rootView.findViewById(R.id.tracker_listView);
+        final ListView trackerListView = (ListView) rootView.findViewById(R.id.tracker_listView);
 
-        trackerItemAdapter = new TrackerItemAdapter(getActivity(), R.layout.listitem_tracker, trackerItems);
+        trackerItemAdapter = new TrackerItemAdapter(this, getActivity(), R.layout.cell_tracker, trackerItems);
         trackerListView.setAdapter(trackerItemAdapter);
-
-        Button btnAdd = (Button) rootView.findViewById(R.id.add_item);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        trackerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                createNewTracker();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LogUtils.d(TAG, "list item clicked");
             }
         });
+
+
+        //The choice mode mattered.
+        trackerListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        trackerListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater menuInflater = mode.getMenuInflater();
+                menuInflater.inflate(R.menu.context_menu, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.context_menu_delete:
+                        TrackerItemLab trackerItemLab = TrackerItemLab.getsTrackerItemLab(getContext());
+                        for (int i = trackerItemAdapter.getCount() + 1; i >= 0; i--) {
+                            if (trackerListView.isItemChecked(i)) {
+                                LogUtils.d(TAG, i + "");
+                                trackerItemLab.deleteTrackerItem(trackerItemAdapter.getItem(i));
+                            }
+                        }
+                        trackerItemAdapter.notifyDataSetChanged();
+                        mode.finish();
+                        return true;
+                    default:
+                        return true;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        });
+
         return rootView;
     }
 
@@ -84,7 +142,12 @@ public class TrackerListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        trackerItemAdapter.notifyDataSetChanged();
+        trackerItemAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -101,11 +164,12 @@ public class TrackerListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
+            LogUtils.d(TAG, "result ok");
             switch (requestCode) {
                 case REQUEST_DETAIL:
-                    Log.d(TAG,"add new item");
                     trackerItemAdapter.notifyDataSetChanged();
-                    TrackerItemLab.getsTrackerItemLab(getActivity()).saveTrackerItemToDB();
+                    LogUtils.d(TAG, "there items " + trackerItemAdapter.getCount());
+//                    TrackerItemLab.getsTrackerItemLab(getActivity()).saveTrackerItemToDB();
                     break;
                 case REQUEST_DURATION:
                     break;
@@ -115,82 +179,17 @@ public class TrackerListFragment extends Fragment {
         }
     }
 
-    private class TrackerItemAdapter extends ArrayAdapter<TrackerItem> {
-        private int resourceId;
 
-        public TrackerItemAdapter(Context context, int layoutResourceId, List<TrackerItem> trackerItems) {
-            super(context, layoutResourceId, trackerItems);
-            resourceId = layoutResourceId;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final TrackerItem trackerItem = getItem(position);
-            View view;
-            final ViewHolder viewHolder;
-
-            if (convertView == null) {
-                view = LayoutInflater.from(getContext()).inflate(resourceId, null);
-                viewHolder = new ViewHolder(view);
-                view.setTag(viewHolder);
-            } else {
-                view = convertView;
-                viewHolder = (ViewHolder) view.getTag();
-            }
-
-            viewHolder.mDurationTextView.setText(FormatUtils.formatDuration(trackerItem.getmDuration()));
-            viewHolder.mTitleTextView.setText(trackerItem.getmTitle());
-            viewHolder.mDurationTextView.setClickable(true);
-            viewHolder.mDurationTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), WorkFocusActivity.class);
-                    intent.putExtra(TrackerDetailFragment.EXTRA_TRACKER_ID, trackerItem.getmId());
-                    startActivityForResult(intent, REQUEST_DURATION);
-                }
-            });
-            viewHolder.mContentTextView.setText(trackerItem.getmContent());
-
-            viewHolder.mImageImageView.setClickable(true);
-            if (trackerItem.getmPhoto() != null) {
-                BitmapDrawable bitmap = PictureUtils.getScaledPic(getActivity(), trackerItem.getmPhoto().getmPhotoPath());
-                viewHolder.mImageImageView.setImageDrawable(bitmap);
-            }
-            viewHolder.mImageImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), TrackerDetailActivity.class);
-                    intent.putExtra(TrackerDetailFragment.EXTRA_TRACKER_ID, trackerItem.getmId());
-                    startActivityForResult(intent, REQUEST_DETAIL);
-                }
-            });
-
-
-            return view;
-        }
-
-        public class ViewHolder {
-            public View viewGroup;
-            public ImageView mImageImageView;
-            public TextView mTitleTextView, mContentTextView, mDurationTextView;
-
-            public ViewHolder(View view) {
-                viewGroup = view;
-                mImageImageView = (ImageView) view.findViewById(R.id.listitem_tracker_img);
-                mTitleTextView = (TextView) view.findViewById(R.id.listitem_tracker_title);
-                mContentTextView = (TextView) view.findViewById(R.id.listitem_tracker_content);
-                mDurationTextView = (TextView) view.findViewById(R.id.listitem_tracker_duration);
-            }
-        }
-    }
-
-
-
-    private void createNewTracker(){
+    private void createNewTracker() {
         TrackerItem item = new TrackerItem();
         TrackerItemLab.getsTrackerItemLab(getActivity()).addTrackItem(item);
-        Intent intent = new Intent(getActivity(),TrackerDetailActivity.class);
-        intent.putExtra(TrackerDetailFragment.EXTRA_TRACKER_ID,item.getmId());
-        startActivityForResult(intent,REQUEST_DETAIL);
+        trackerItems.add(item);
+        Intent intent = new Intent(getActivity(), TrackerDetailActivity.class);
+        intent.putExtra(TrackerDetailFragment.EXTRA_TRACKER_ID, item.getmId());
+        startActivityForResult(intent, REQUEST_DETAIL);
+    }
+
+    private void deleteTracker() {
+
     }
 }

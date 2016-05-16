@@ -33,8 +33,8 @@ public class TrackerItem {
         defaultDate = new Date();
         trackingState = true;
         //Test constructor
-        mTitle = "Hello";
-        mContent = "Tracker";
+        mTitle = null;
+        mContent = null;
         mDurationItems = new ArrayList<DurationItem>();
     }
 
@@ -43,8 +43,8 @@ public class TrackerItem {
         defaultDate = new Date();
         trackingState = true;
         //Test constructor
-        mTitle = "Hello";
-        mContent = "Tracker";
+        mTitle = null;
+        mContent = null;
         mDurationItems = new ArrayList<DurationItem>();
     }
 
@@ -80,7 +80,7 @@ public class TrackerItem {
      * @return
      */
     public int getmDuration() {
-        return mDuration;
+            return mDuration;
     }
 
     public String getmTitle() {

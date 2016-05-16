@@ -5,6 +5,7 @@ import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.android.frankthirteen.timetracker.R;
 
@@ -29,6 +30,8 @@ public abstract class SingleFragmentActivity extends BaseActivity {
         setContentView(R.layout.activity_fragment);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.base_toolbar);
+//        setSupportActionBar(toolbar);
 
         if (fragment == null){
             fragment = createFragment();

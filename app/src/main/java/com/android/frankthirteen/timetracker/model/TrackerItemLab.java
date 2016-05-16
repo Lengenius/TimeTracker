@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.frankthirteen.timetracker.db.TimeTrackerDB;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ public class TrackerItemLab {
     private List<TrackerItem> trackerItems;
 
     private TrackerItemLab(Context appContext) {
-        //Singleton
         mAppContext = appContext;
         timeTrackerDB = TimeTrackerDB.getInstance(mAppContext);
         if (timeTrackerDB != null) {
@@ -52,11 +52,15 @@ public class TrackerItemLab {
     }
 
     public void addTrackItem(TrackerItem trackerItem) {
+        LogUtils.d(TAG, "add item to lab");
         trackerItems.add(trackerItem);
+        saveTrackerItems(trackerItem);
     }
 
     public void deleteTrackerItem(TrackerItem trackerItem) {
         trackerItems.remove(trackerItem);
+        LogUtils.d(TAG, "there are items: " + trackerItems.size());
+        timeTrackerDB.deleteTrackerItem(trackerItem);
     }
 
     public List<TrackerItem> getTrackingItems() {
@@ -83,14 +87,16 @@ public class TrackerItemLab {
 
 
     public boolean saveTrackerItems(TrackerItem ti) {
-        try {
-            timeTrackerDB.saveTrackerItem(ti);
-            Log.d(TAG, "save a TrackerItem" + ti.getmTitle());
-            return true;
-        } catch (Exception e) {
-            Log.d(TAG, "error saving trackerItem" + ti.getmTitle());
-            return false;
-        }
+        timeTrackerDB.saveTrackerItem(ti);
+        return true;
+//        try {
+//            timeTrackerDB.saveTrackerItem(ti);
+//            Log.d(TAG, "save a TrackerItem" + ti.getmTitle());
+//            return true;
+//        } catch (Exception e) {
+//            Log.d(TAG, "error saving trackerItem" + ti.getmTitle());
+//            return false;
+//        }
     }
 
     public void saveTrackerItemToDB() {

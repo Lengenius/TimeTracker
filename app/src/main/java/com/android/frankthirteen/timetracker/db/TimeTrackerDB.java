@@ -10,6 +10,7 @@ import android.util.Log;
 import com.android.frankthirteen.timetracker.model.DurationItem;
 import com.android.frankthirteen.timetracker.model.Photo;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,8 +71,10 @@ public class TimeTrackerDB {
      * @param trackerItem tracking some specific activity.
      */
     public void saveTrackerItem(TrackerItem trackerItem) {
+        LogUtils.d(TAG, "saving item");
         Cursor c = dbRead.query(TABLE_TRACKER, new String[]{"trackingId"}, "trackingId=?",
                 new String[]{trackerItem.getmId().toString()}, null, null, null);
+
 
         if (!c.moveToFirst()) {
             c.close();
@@ -86,6 +89,7 @@ public class TimeTrackerDB {
                 values.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
             }
             values.put(ITEM_TRACKING_STATE, trackerItem.getTrackingState());
+            LogUtils.d(TAG,"saving item " + values.toString());
             dbWrite.insert(TABLE_TRACKER, null, values);
             Cursor cursor = dbWrite.query("tracker_item", null, null, null, null, null, null);
             cursor.close();
@@ -102,7 +106,9 @@ public class TimeTrackerDB {
         contentValues.put(ITEM_TITLE, trackerItem.getmTitle());
         contentValues.put(ITEM_CONTENT, trackerItem.getmContent());
         contentValues.put(ITEM_TOTAL_DURATION, trackerItem.getmDuration());
-        contentValues.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
+        if (trackerItem.getmPhoto()!=null) {
+            contentValues.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
+        }
         contentValues.put(ITEM_START_DATE, trackerItem.getStartDate().getTime());
         contentValues.put(ITEM_END_DATE, trackerItem.getEndDate().getTime());
         dbWrite.update(TABLE_TRACKER, contentValues, ITEM_TRACKING_ID + "=?", new String[]{trackerItem.getmId().toString()});
@@ -178,7 +184,18 @@ public class TimeTrackerDB {
         }
         cursor.close();
         return trackerItemList;
-
     }
+
+    public boolean deleteTrackerItem(TrackerItem item){
+        Cursor cursor = dbWrite.query(TABLE_TRACKER,null,ITEM_TRACKING_ID+"=?",new String[]{item.getmId().toString()},null,null,null);
+        if (cursor.moveToFirst()){
+            dbWrite.delete(TABLE_TRACKER,ITEM_TRACKING_ID+"=?",new String[]{item.getmId().toString()});
+            dbWrite.delete(TABLE_DURATION,DURATION_TRACKING_ID+"=?",new String[]{item.getmId().toString()});
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 
 }
