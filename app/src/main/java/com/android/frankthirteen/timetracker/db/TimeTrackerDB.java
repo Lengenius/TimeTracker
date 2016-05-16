@@ -161,8 +161,8 @@ public class TimeTrackerDB {
     /**
      * Load tracker items include finished and tracking items.
      */
-    public List<TrackerItem> loadTrackerItem() {
-        List<TrackerItem> trackerItemList = new ArrayList<TrackerItem>();
+    public ArrayList<TrackerItem> loadTrackerItem() {
+        ArrayList<TrackerItem> trackerItemList = new ArrayList<TrackerItem>();
         Cursor cursor = dbRead.query(TABLE_TRACKER, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {

@@ -8,7 +8,6 @@ import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -20,7 +19,7 @@ public class TrackerItemLab {
     private TimeTrackerDB timeTrackerDB;
     private Context mAppContext;
 
-    private List<TrackerItem> trackerItems;
+    private ArrayList<TrackerItem> trackerItems;
 
     private TrackerItemLab(Context appContext) {
         mAppContext = appContext;
@@ -63,8 +62,8 @@ public class TrackerItemLab {
         timeTrackerDB.deleteTrackerItem(trackerItem);
     }
 
-    public List<TrackerItem> getTrackingItems() {
-        List<TrackerItem> trackingItems = new ArrayList<TrackerItem>();
+    public ArrayList<TrackerItem> getTrackingItems() {
+        ArrayList<TrackerItem> trackingItems = new ArrayList<TrackerItem>();
         for (TrackerItem ti :
                 trackerItems) {
             if (ti.getTrackingState()) {
@@ -74,8 +73,8 @@ public class TrackerItemLab {
         return trackingItems;
     }
 
-    public List<TrackerItem> getTrackedItems() {
-        List<TrackerItem> trackedItems = new ArrayList<TrackerItem>();
+    public ArrayList<TrackerItem> getTrackedItems() {
+        ArrayList<TrackerItem> trackedItems = new ArrayList<TrackerItem>();
         for (TrackerItem ti :
                 trackerItems) {
             if (!ti.getTrackingState()) {

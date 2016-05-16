@@ -1,4 +1,4 @@
-package com.android.frankthirteen.timetracker.activity;
+package com.android.frankthirteen.timetracker.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.activity.TrackerDetailActivity;
+import com.android.frankthirteen.timetracker.activity.TrackerDetailFragment;
+import com.android.frankthirteen.timetracker.activity.TrackerListFragment;
+import com.android.frankthirteen.timetracker.activity.WorkFocusActivity;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
 import com.android.frankthirteen.timetracker.utils.PictureUtils;
@@ -21,11 +25,11 @@ import java.util.UUID;
 /**
  * Created by Frank on 5/13/16.
  */
-class TrackerItemAdapter extends ArrayAdapter<TrackerItem> {
+public class ItemListAdapter extends ArrayAdapter<TrackerItem> {
     private TrackerListFragment trackerListFragment;
     private int resourceId;
 
-    public TrackerItemAdapter(TrackerListFragment trackerListFragment, Context context, int layoutResourceId, List<TrackerItem> trackerItems) {
+    public ItemListAdapter(TrackerListFragment trackerListFragment, Context context, int layoutResourceId, List<TrackerItem> trackerItems) {
         super(context, layoutResourceId, trackerItems);
         this.trackerListFragment = trackerListFragment;
         resourceId = layoutResourceId;
@@ -85,7 +89,7 @@ class TrackerItemAdapter extends ArrayAdapter<TrackerItem> {
 
         public ViewHolder(View view) {
             viewGroup = view;
-            mImageImageView = (ImageView) view.findViewById(R.id.listitem_tracker_img);
+            mImageImageView = (ImageView) view.findViewById(R.id.cell_thumbnail);
             mTitleTextView = (TextView) view.findViewById(R.id.listitem_tracker_title);
             mContentTextView = (TextView) view.findViewById(R.id.listitem_tracker_content);
             mDurationTextView = (TextView) view.findViewById(R.id.listitem_tracker_duration);

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Display;
+import android.view.View;
 import android.widget.ImageView;
 
 /**
@@ -40,5 +41,10 @@ public class PictureUtils {
         return new BitmapDrawable(a.getResources(), scaledPic);
     }
 
+    public static BitmapDrawable getThumbnail(View view, String photoPath){
+        float width = view.getWidth();
+        float height = view.getHeight();
 
+        return null;
+    }
 }

@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.adapter.ItemListAdapter;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.model.TrackerItemLab;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
@@ -33,7 +34,7 @@ public class TrackerListFragment extends Fragment {
     public static final int REQUEST_DURATION = 2;
 
     private List<TrackerItem> trackerItems;
-    private TrackerItemAdapter trackerItemAdapter;
+    private ItemListAdapter itemListAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,8 +81,8 @@ public class TrackerListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.tracker_list_container, container, false);
         final ListView trackerListView = (ListView) rootView.findViewById(R.id.tracker_listView);
 
-        trackerItemAdapter = new TrackerItemAdapter(this, getActivity(), R.layout.cell_tracker, trackerItems);
-        trackerListView.setAdapter(trackerItemAdapter);
+        itemListAdapter = new ItemListAdapter(this, getActivity(), R.layout.cell_tracker, trackerItems);
+        trackerListView.setAdapter(itemListAdapter);
         trackerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -115,13 +116,15 @@ public class TrackerListFragment extends Fragment {
                 switch (item.getItemId()) {
                     case R.id.context_menu_delete:
                         TrackerItemLab trackerItemLab = TrackerItemLab.getsTrackerItemLab(getContext());
-                        for (int i = trackerItemAdapter.getCount() + 1; i >= 0; i--) {
+                        for (int i = itemListAdapter.getCount() + 1; i >= 0; i--) {
                             if (trackerListView.isItemChecked(i)) {
                                 LogUtils.d(TAG, i + "");
-                                trackerItemLab.deleteTrackerItem(trackerItemAdapter.getItem(i));
+                                trackerItemLab.deleteTrackerItem(itemListAdapter.getItem(i));
+                                //Also need to remove item from adapter. But why?
+                                itemListAdapter.remove(itemListAdapter.getItem(i));
                             }
                         }
-                        trackerItemAdapter.notifyDataSetChanged();
+                        itemListAdapter.notifyDataSetChanged();
                         mode.finish();
                         return true;
                     default:
@@ -142,7 +145,7 @@ public class TrackerListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        trackerItemAdapter.notifyDataSetChanged();
+        itemListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -167,8 +170,8 @@ public class TrackerListFragment extends Fragment {
             LogUtils.d(TAG, "result ok");
             switch (requestCode) {
                 case REQUEST_DETAIL:
-                    trackerItemAdapter.notifyDataSetChanged();
-                    LogUtils.d(TAG, "there items " + trackerItemAdapter.getCount());
+                    itemListAdapter.notifyDataSetChanged();
+                    LogUtils.d(TAG, "there items " + itemListAdapter.getCount());
 //                    TrackerItemLab.getsTrackerItemLab(getActivity()).saveTrackerItemToDB();
                     break;
                 case REQUEST_DURATION:
@@ -189,7 +192,4 @@ public class TrackerListFragment extends Fragment {
         startActivityForResult(intent, REQUEST_DETAIL);
     }
 
-    private void deleteTracker() {
-
-    }
 }
