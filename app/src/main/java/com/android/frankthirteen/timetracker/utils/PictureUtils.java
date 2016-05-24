@@ -41,10 +41,46 @@ public class PictureUtils {
         return new BitmapDrawable(a.getResources(), scaledPic);
     }
 
-    public static BitmapDrawable getThumbnail(View view, String photoPath){
-        float width = view.getWidth();
-        float height = view.getHeight();
+    public static Bitmap getThumbnail(View view, String photoPath){
+        int viewWidth = view.getLayoutParams().width;
+        int viewHeight = view.getLayoutParams().height;
 
-        return null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoPath, options);
+        int width = options.outWidth;
+        int height = options.outHeight;
+
+        int scaleFactor = Math.max(width/viewWidth,height/viewHeight);
+
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = scaleFactor;
+
+        return BitmapFactory.decodeFile(photoPath,options);
+
+//        return new BitmapDrawable(view.getContext().getResources(),thumbnail);
     }
+
+//    private int calculateInSampleSize(
+//            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+//        // Raw height and width of image
+//        final int height = options.outHeight;
+//        final int width = options.outWidth;
+//        int inSampleSize = 1;
+//
+//        if (height > reqHeight || width > reqWidth) {
+//
+//            final int halfHeight = height / 2;
+//            final int halfWidth = width / 2;
+//
+//            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+//            // height and width larger than the requested height and width.
+//            while ((halfHeight / inSampleSize) > reqHeight
+//                    && (halfWidth / inSampleSize) > reqWidth) {
+//                inSampleSize *= 2;
+//            }
+//        }
+//
+//        return inSampleSize;
+//    }
 }

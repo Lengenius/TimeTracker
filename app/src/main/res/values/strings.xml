@@ -23,4 +23,8 @@
     <string name="detail_img_btn_description">take photo</string>
     <string name="detail_checkbox_ensure">Are you sure to add this item.</string>
     <string name="context_delete">Delete</string>
+    <string name="cell_list_duration">Duration</string>
+    <string name="cell_list_title">This is a tracker item title.</string>
+    <string name="cell_list_content">This is a item description</string>
+    <string name="cell_list_image_description">Block Image for cell</string>
 </resources>

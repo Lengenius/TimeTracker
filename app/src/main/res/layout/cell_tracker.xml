@@ -12,31 +12,31 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="centerCrop"
+        android:contentDescription="@string/cell_list_image_description"
         android:src="@mipmap/ic_launcher" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/listitem_tracker_title"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
             android:maxLines="1"
-            android:text="This is a tracker item title."
+            android:text="@string/cell_list_title"
             android:textSize="24sp" />
 
         <TextView
             android:id="@+id/listitem_tracker_content"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:text="This is a item description"
+            android:layout_height="wrap_content"
+            android:text="@string/cell_list_content"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -52,7 +52,7 @@
             android:layout_height="0dp"
             android:gravity="center"
             android:layout_weight="1"
-            android:text="Duration"/>
+            android:text="@string/cell_list_duration"/>
 
         <TextView
             android:id="@+id/listitem_tracker_duration"

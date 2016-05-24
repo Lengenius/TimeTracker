@@ -6,7 +6,6 @@ import android.util.Log;
 import com.android.frankthirteen.timetracker.db.TimeTrackerDB;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -53,7 +52,7 @@ public class TrackerItemLab {
     public void addTrackItem(TrackerItem trackerItem) {
         LogUtils.d(TAG, "add item to lab");
         trackerItems.add(trackerItem);
-        saveTrackerItems(trackerItem);
+        saveTrackerItem(trackerItem);
     }
 
     public void deleteTrackerItem(TrackerItem trackerItem) {
@@ -85,7 +84,7 @@ public class TrackerItemLab {
     }
 
 
-    public boolean saveTrackerItems(TrackerItem ti) {
+    public boolean saveTrackerItem(TrackerItem ti) {
         timeTrackerDB.saveTrackerItem(ti);
         return true;
 //        try {
@@ -100,7 +99,7 @@ public class TrackerItemLab {
 
     public void saveTrackerItemToDB() {
         for (TrackerItem ti : trackerItems) {
-            saveTrackerItems(ti);
+            saveTrackerItem(ti);
         }
     }
 }

@@ -20,6 +20,11 @@ public class DurationItem {
         devideDate();
     }
 
+    public DurationItem(int day, int duration){
+        this.day = day;
+        mDuration = duration;
+    }
+
 
     public void setmEndDate(Date endDate) {
         mEndDate = endDate;

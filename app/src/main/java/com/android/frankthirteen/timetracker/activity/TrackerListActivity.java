@@ -2,7 +2,8 @@ package com.android.frankthirteen.timetracker.activity;
 
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
+
+import com.android.frankthirteen.timetracker.fragment.TrackerListFragment;
 
 /**
  * Created by Frank on 4/10/16.

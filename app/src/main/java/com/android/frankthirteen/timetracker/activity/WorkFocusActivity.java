@@ -3,6 +3,9 @@ package com.android.frankthirteen.timetracker.activity;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.android.frankthirteen.timetracker.fragment.TrackerDetailFragment;
+import com.android.frankthirteen.timetracker.fragment.WorkFocusFragment;
+
 import java.util.UUID;
 
 /**

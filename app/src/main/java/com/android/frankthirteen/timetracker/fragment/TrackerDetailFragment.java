@@ -1,6 +1,8 @@
-package com.android.frankthirteen.timetracker.activity;
+package com.android.frankthirteen.timetracker.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -180,13 +182,20 @@ public class TrackerDetailFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     LogUtils.d(TAG, "check box checked");
-                    getActivity().setResult(Activity.RESULT_OK);
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(EXTRA_TRACKER_ID, trackerItem.getmId());
+                    getActivity().setResult(Activity.RESULT_OK, resultIntent);
+                } else {
+                    TrackerItemLab.getsTrackerItemLab(getActivity()).deleteTrackerItem(trackerItem);
+                    getActivity().setResult(Activity.RESULT_CANCELED);
                 }
             }
         });
 
         return view;
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,7 +205,8 @@ public class TrackerDetailFragment extends Fragment {
             case REQUEST_IMAGE_CAPTURE:
                 Photo photo = trackerItem.getmPhoto();
                 BitmapDrawable bitmapDrawable = PictureUtils.getScaledPic(getActivity(), photo.getmPhotoPath());
-                mImageBtn.setVisibility(View.GONE);
+                mImageView.setVisibility(View.VISIBLE);
+                getActivity().setResult(Activity.RESULT_OK);
                 mImageBtn.setEnabled(false);
                 mImageView.setImageDrawable(bitmapDrawable);
                 break;
@@ -212,37 +222,38 @@ public class TrackerDetailFragment extends Fragment {
 
     private void setDetailPic(View view) {
         mImageView = (ImageView) view.findViewById(R.id.tracker_detail_image);
-        mImageBtn = (ImageButton) view.findViewById(R.id.tracker_detail_image_button);
         if (trackerItem.getmPhoto() != null) {
-            mImageBtn.setVisibility(View.GONE);
-        }
-        Log.d(TAG, String.valueOf(mImageView.getWidth()));
-        mImageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (i.resolveActivity(getActivity().getPackageManager()) != null) {
-                    File mPhotoFile = null;
-                    try {
-                        Photo photoDetail = new Photo(trackerItem.getmId());
-                        trackerItem.setmPhoto(photoDetail);
-                        mPhotoFile = trackerItem.getmPhoto().createPhotoFile(photoDetail);
-                        Log.d(TAG, "photo created");
-                        Log.d(TAG, mPhotoFile.getAbsolutePath());
-                    } catch (IOException e) {
-                        Log.i(TAG, "file creating failed", e);
-                    }
-                    if (mPhotoFile != null) {
-                        i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mPhotoFile));
-                    }
-                    startActivityForResult(i, REQUEST_IMAGE_CAPTURE);
-                }
-            }
-        });
-        if (trackerItem.getmPhoto() != null) {
+//            mImageBtn.setVisibility(View.GONE);
             Photo photo = trackerItem.getmPhoto();
             BitmapDrawable bitmapDrawable = PictureUtils.getScaledPic(getActivity(), photo.getmPhotoPath());
             mImageView.setImageDrawable(bitmapDrawable);
+        } else {
+            mImageView = (ImageView) view.findViewById(R.id.tracker_detail_image);
+            mImageView.setVisibility(View.GONE);
+            mImageBtn = (ImageButton) view.findViewById(R.id.tracker_detail_image_button);
+            Log.d(TAG, String.valueOf(mImageView.getWidth()));
+            mImageBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (i.resolveActivity(getActivity().getPackageManager()) != null) {
+                        File mPhotoFile = null;
+                        try {
+                            Photo photoDetail = new Photo(trackerItem.getmId());
+                            trackerItem.setmPhoto(photoDetail);
+                            mPhotoFile = trackerItem.getmPhoto().createPhotoFile(photoDetail);
+                            Log.d(TAG, "photo created");
+                            Log.d(TAG, mPhotoFile.getAbsolutePath());
+                        } catch (IOException e) {
+                            Log.i(TAG, "file creating failed", e);
+                        }
+                        if (mPhotoFile != null) {
+                            i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mPhotoFile));
+                        }
+                        startActivityForResult(i, REQUEST_IMAGE_CAPTURE);
+                    }
+                }
+            });
         }
     }
 
@@ -252,17 +263,16 @@ public class TrackerDetailFragment extends Fragment {
         List<DurationItem> durationItems = trackerItem.getmDurationItems();
         ArrayList<String> xVals = new ArrayList<String>();
         int x = 0;
-        for (DurationItem dItem :
-                durationItems) {
-//            FormatUtils.formatDurationInHour(dItem.getmDuration()); only float is allowed in Entry.
+
+        //TODO
+        for (DurationItem dItem : durationItems) {
             BarEntry data = new BarEntry(dItem.getmDuration() / 60, x++);
             Calendar c = Calendar.getInstance();
             c.setTime(dItem.getmEndDate());
-            LogUtils.d(TAG, "calendar " + c.toString());
 //            getDisplayName(Calendar.DAY_OF_MONTH,Calendar.SHORT, Locale.getDefault())); will return null.
             xVals.add(c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
-            LogUtils.d(TAG, "days " + xVals.toString());
             valsItem.add(data);
+
         }
         BarDataSet item1 = new BarDataSet(valsItem, trackerItem.getmTitle());
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();

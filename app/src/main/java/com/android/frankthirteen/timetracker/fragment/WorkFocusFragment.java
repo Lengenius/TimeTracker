@@ -1,4 +1,4 @@
-package com.android.frankthirteen.timetracker.activity;
+package com.android.frankthirteen.timetracker.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,15 +19,13 @@ import com.android.frankthirteen.timetracker.model.TrackerItemLab;
 import com.android.frankthirteen.timetracker.service.PlaySounds;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 /**
  * Created by Frank on 5/5/16.
  */
 public class WorkFocusFragment extends Fragment {
-    private static final String TAG = "WORKFOCUS";
+    private static final String TAG = "WORK_FOCUS";
 
     private static Handler mHandler;
     private static final int UPDATE_CLOCK = 0;

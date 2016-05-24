@@ -2,6 +2,7 @@ package com.android.frankthirteen.timetracker.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,12 @@ import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.activity.TrackerDetailActivity;
-import com.android.frankthirteen.timetracker.activity.TrackerDetailFragment;
-import com.android.frankthirteen.timetracker.activity.TrackerListFragment;
+import com.android.frankthirteen.timetracker.fragment.TrackerDetailFragment;
+import com.android.frankthirteen.timetracker.fragment.TrackerListFragment;
 import com.android.frankthirteen.timetracker.activity.WorkFocusActivity;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 import com.android.frankthirteen.timetracker.utils.PictureUtils;
 
 import java.util.List;
@@ -24,8 +26,10 @@ import java.util.UUID;
 
 /**
  * Created by Frank on 5/13/16.
+ * Adapter to hold tracking items.
  */
 public class ItemListAdapter extends ArrayAdapter<TrackerItem> {
+    private static final String TAG = "list Adapter:";
     private TrackerListFragment trackerListFragment;
     private int resourceId;
 
@@ -65,9 +69,16 @@ public class ItemListAdapter extends ArrayAdapter<TrackerItem> {
         viewHolder.mContentTextView.setText(trackerItem.getmContent());
 
         viewHolder.mImageImageView.setClickable(true);
+        LogUtils.d(TAG,"tracker item"+trackerItem.getmId().toString());
+        LogUtils.d(TAG,"has photo ?" + trackerItem.getmPhoto());
         if (trackerItem.getmPhoto() != null) {
-            BitmapDrawable bitmap = PictureUtils.getScaledPic(trackerListFragment.getActivity(), trackerItem.getmPhoto().getmPhotoPath());
-            viewHolder.mImageImageView.setImageDrawable(bitmap);
+//            BitmapDrawable bitmap = PictureUtils.getScaledPic(trackerListFragment.getActivity(), trackerItem.getmPhoto().getmPhotoPath());
+//            viewHolder.mImageImageView.setImageDrawable(bitmap);
+            Bitmap bitmap = PictureUtils.getThumbnail(viewHolder.mImageImageView,trackerItem.getmPhoto().getmPhotoPath());
+            viewHolder.mImageImageView.setImageBitmap(bitmap);
+        }else{
+            //Block Image.
+            viewHolder.mImageImageView.setImageResource(R.mipmap.ic_launcher);
         }
         viewHolder.mImageImageView.setOnClickListener(new View.OnClickListener() {
             @Override

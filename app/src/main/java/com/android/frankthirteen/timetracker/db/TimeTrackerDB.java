@@ -86,6 +86,7 @@ public class TimeTrackerDB {
             values.put(ITEM_START_DATE, trackerItem.getStartDate().getTime());
             values.put(ITEM_END_DATE, trackerItem.getEndDate().getTime());
             if (trackerItem.getmPhoto() != null) {
+                LogUtils.d(TAG,"this item has photo" + trackerItem.getmPhoto().getmPhotoPath());
                 values.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
             }
             values.put(ITEM_TRACKING_STATE, trackerItem.getTrackingState());
@@ -109,6 +110,7 @@ public class TimeTrackerDB {
         if (trackerItem.getmPhoto()!=null) {
             contentValues.put(ITEM_PHOTO_PATH, trackerItem.getmPhoto().getmPhotoPath());
         }
+        LogUtils.d(TAG,"saving item " + contentValues.toString());
         contentValues.put(ITEM_START_DATE, trackerItem.getStartDate().getTime());
         contentValues.put(ITEM_END_DATE, trackerItem.getEndDate().getTime());
         dbWrite.update(TABLE_TRACKER, contentValues, ITEM_TRACKING_ID + "=?", new String[]{trackerItem.getmId().toString()});

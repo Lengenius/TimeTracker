@@ -1,4 +1,4 @@
-package com.android.frankthirteen.timetracker.activity;
+package com.android.frankthirteen.timetracker.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,12 +18,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.activity.TrackerDetailActivity;
 import com.android.frankthirteen.timetracker.adapter.ItemListAdapter;
 import com.android.frankthirteen.timetracker.model.TrackerItem;
 import com.android.frankthirteen.timetracker.model.TrackerItemLab;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Frank on 4/10/16.
@@ -172,7 +174,12 @@ public class TrackerListFragment extends Fragment {
                 case REQUEST_DETAIL:
                     itemListAdapter.notifyDataSetChanged();
                     LogUtils.d(TAG, "there items " + itemListAdapter.getCount());
-//                    TrackerItemLab.getsTrackerItemLab(getActivity()).saveTrackerItemToDB();
+                    UUID resultID = (UUID) data.getSerializableExtra(TrackerDetailFragment.EXTRA_TRACKER_ID);
+                    TrackerItem refreshItem = TrackerItemLab.getsTrackerItemLab(getActivity()).getTrackerItem(resultID);
+                    TrackerItemLab.getsTrackerItemLab(getActivity()).saveTrackerItem(refreshItem);
+                    if (refreshItem.getmPhoto() != null) {
+                        LogUtils.d(TAG, "photo saved to:" + refreshItem.getmPhoto().getmPhotoPath());
+                    }
                     break;
                 case REQUEST_DURATION:
                     break;
