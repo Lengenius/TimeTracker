@@ -1,7 +1,6 @@
 package com.android.frankthirteen.timetracker.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.model.TrackerItem;
-import com.android.frankthirteen.timetracker.model.TrackerItemLab;
-import com.android.frankthirteen.timetracker.utils.FormatUtils;
-import com.android.frankthirteen.timetracker.utils.PictureUtils;
+import com.android.frankthirteen.timetracker.entities.Tracker;
+import com.android.frankthirteen.timetracker.entities.TrackerLab;
 
 import java.util.ArrayList;
 
@@ -23,7 +20,7 @@ import java.util.ArrayList;
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private Context mContext;
-    private ArrayList<TrackerItem> trackerItems;
+    private ArrayList<Tracker> trackers;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         //TODO initial the viewHolder's object.
@@ -43,12 +40,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public RecyclerViewAdapter(Context context) {
         mContext = context;
-        trackerItems = TrackerItemLab.getsTrackerItemLab(mContext).getTrackedItems();
+        trackers = TrackerLab.getTrackerLab(context).getTrackingTrackers();
     }
 
     @Override
     public int getItemCount() {
-        return trackerItems.size();
+        return trackers.size();
     }
 
     @Override
@@ -62,11 +59,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //TODO bind view and item's content.
-        TrackerItem item = trackerItems.get(position);
+        Tracker item = trackers.get(position);
 
-        holder.mTitle.setText(item.getmTitle());
-        holder.mDuration.setText(FormatUtils.formatDuration(item.getmDuration()));
-        holder.mContent.setText(item.getmContent());
+        holder.mTitle.setText(item.getmTrackerTitle());
+        holder.mContent.setText(item.getmTrackerContent());
 //        if (item.getmPhoto()!=null) {
 //            BitmapDrawable bitmapDrawable =
 //            holder.mPhoto.setImageBitmap();

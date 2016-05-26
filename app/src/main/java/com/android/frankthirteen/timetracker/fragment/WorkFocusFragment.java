@@ -1,12 +1,8 @@
 package com.android.frankthirteen.timetracker.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,136 +10,64 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.model.TrackerItem;
-import com.android.frankthirteen.timetracker.model.TrackerItemLab;
-import com.android.frankthirteen.timetracker.service.PlaySounds;
-import com.android.frankthirteen.timetracker.utils.FormatUtils;
 
-import java.util.UUID;
 
 /**
- * Created by Frank on 5/5/16.
+ * Created by Frank on 5/24/16.
  */
-public class WorkFocusFragment extends Fragment {
-    private static final String TAG = "WORK_FOCUS";
-
-    private static Handler mHandler;
-    private static final int UPDATE_CLOCK = 0;
-    private static final int STOP_CLOCK = 1;
-
-    private TrackerItem mTrackerItem;
-    private TextView workFocusTitle, workFocusContent, workFocusClock;
-    private Button btnStart, btnPause;
-
-    /**
-     * The only way to get a WorkFocusFragment
-     *
-     * @param trackerItemId the Unique id for a tracker item, leads to the other information of it.
-     * @return
-     */
-    public static WorkFocusFragment newInstance(UUID trackerItemId) {
-        Log.d(TAG, "new Instance");
+public class WorkFocusFragment extends Fragment implements View.OnClickListener {
+    public static WorkFocusFragment newInstance() {
 
         Bundle args = new Bundle();
-        args.putSerializable(TrackerDetailFragment.EXTRA_TRACKER_ID, trackerItemId);
+//        UUID mId = id;
+//        args.putSerializable();
         WorkFocusFragment fragment = new WorkFocusFragment();
+
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate.");
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-
-        UUID trackerItemId = (UUID) getArguments().getSerializable(TrackerDetailFragment.EXTRA_TRACKER_ID);
-        mTrackerItem = TrackerItemLab.getsTrackerItemLab(getActivity()).getTrackerItem(trackerItemId);
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_work_focus, null);
+        View rootView = (View) inflater.inflate(R.layout.work_focus_fragment,null);
+        TextView timer = (TextView) rootView.findViewById(R.id.work_focus_timer);
+        Button btnStart = (Button) rootView.findViewById(R.id.btn_start);
+        btnStart.setOnClickListener(this);
+        Button btnPause = (Button) rootView.findViewById(R.id.btn_pause);
+        btnPause.setOnClickListener(this);
 
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case UPDATE_CLOCK:
-                        workFocusClock.setText(FormatUtils.formatDuration(mTrackerItem.getmDuration()));
-                        break;
-                    case STOP_CLOCK:
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
 
-        workFocusContent = (TextView) rootView.findViewById(R.id.workFocus_content);
-        workFocusContent.setText(mTrackerItem.getmContent());
-        workFocusTitle = (TextView) rootView.findViewById(R.id.workFocus_title);
-        workFocusTitle.setText(mTrackerItem.getmTitle());
-        workFocusClock = (TextView) rootView.findViewById(R.id.workFocus_Clock);
-        workFocusClock.setText(FormatUtils.formatDuration(mTrackerItem.getmDuration()));
-        btnStart = (Button) rootView.findViewById(R.id.workFocus_start);
-        btnStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startClock();
-                setButton();
-            }
-        });
-        btnPause = (Button) rootView.findViewById(R.id.workFocus_pause);
-        btnPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pauseClock();
-                btnStart.setEnabled(true);
-            }
-        });
-        setButton();
 
         return rootView;
-    }
-
-    private void startClock() {
-        mTrackerItem.setmIsStarted(true);
-        mHandler.post(new WorkFocusTimer());
-        Intent intent = new Intent(getActivity(), PlaySounds.class);
-        getActivity().startService(intent);
 
     }
 
-    private void pauseClock() {
-        mTrackerItem.setmIsStarted(false);
-        mTrackerItem.saveDuration();
-        Intent intent = new Intent(getActivity(),PlaySounds.class);
-        getActivity().stopService(intent);
-
-    }
-
-    private void setButton(){
-        if (mTrackerItem.isStarted()){
-            btnStart.setEnabled(false);
-        }else {
-            btnStart.setEnabled(true);
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.btn_start:
+                startTimer();
+                break;
+            case R.id.btn_pause:
+                pauseTimer();
+                break;
         }
     }
 
-    private class WorkFocusTimer implements Runnable {
-        @Override
-        public void run() {
-            if (mTrackerItem.isStarted()) {
-                mTrackerItem.increase();
-                Message message = Message.obtain(mHandler,UPDATE_CLOCK);
-                message.sendToTarget();
-                //if you move the handler post outside if, it will create multi thread.
-                mHandler.postDelayed(this, 10);
-            }
-        }
+    /**TODO
+     * stop a timer service and add the duration to a tracking tracker.
+     * popup some buttons which means you can make some notes of this time.
+     */
+    private void pauseTimer() {
+
     }
+
+    /**
+     * start a timer service and change the UI(Button appearance) of this.
+     */
+    private void startTimer() {
+
+    }
+
 
 }

@@ -1,30 +1,4 @@
 <resources>
     <string name="app_name">TimeTracker</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_tracker">Tracker</string>
-    <string name="tracker_time">This is time</string>
-    <string name="start_tracker_item">start</string>
-    <string name="end_tracker_item">stop</string>
-    <string name="pause_tracker_item">pause</string>
-    <string name="new_tracker_item">NewTracker</string>
-    <string name="delete_tracker_item">DeleteTracker</string>
-    <string name="btn_new_tracker">Add</string>
-    <string name="delete_an_item">delete an item</string>
-    <string name="add_new_item">add new item</string>
-    <string name="commit_hint">Enter commit here.</string>
-    <string name="start_date">start date</string>
-    <string name="end_date">end date</string>
-    <string name="content_hint">Enter content here.</string>
-    <string name="content_title">Content:</string>
-    <string name="title_title">Title:</string>
-    <string name="title_hint">Enter a TITLE</string>
-    <string name="detail_img_description">time_track_detail_image</string>
-    <string name="detail_total_duration">Total Duration</string>
-    <string name="detail_img_btn_description">take photo</string>
-    <string name="detail_checkbox_ensure">Are you sure to add this item.</string>
-    <string name="context_delete">Delete</string>
-    <string name="cell_list_duration">Duration</string>
-    <string name="cell_list_title">This is a tracker item title.</string>
-    <string name="cell_list_content">This is a item description</string>
-    <string name="cell_list_image_description">Block Image for cell</string>
+
 </resources>
