@@ -8,7 +8,7 @@
         android:title="@string/new_tracker_item" />
 
     <item android:id="@+id/menu_item_delete"
-        android:icon="@android:drawable/ic_delete"
+        android:icon="@android:drawable/ic_menu_delete"
         android:showAsAction="ifRoom|withText"
         android:title="@string/delete_tracker_item"/>
 

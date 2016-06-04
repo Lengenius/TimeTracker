@@ -12,11 +12,14 @@ public class DurationItem {
     private Context mContext;
     private String mTitle;
     private String mContent;
-    private String mTag;
     private Date mDate;
     private int mDuration;
     private UUID mId;
     private UUID trackerId;
+
+    public DurationItem(){
+
+    }
 
     public DurationItem(Context context) {
         mContext = context;
@@ -41,28 +44,12 @@ public class DurationItem {
         this.mId = mId;
     }
 
-    public String getmTitle() {
-        return mTitle;
-    }
-
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
-    }
-
     public String getmContent() {
         return mContent;
     }
 
     public void setmContent(String mContent) {
         this.mContent = mContent;
-    }
-
-    public String getmTag() {
-        return mTag;
-    }
-
-    public void setmTag(String mTag) {
-        this.mTag = mTag;
     }
 
     public Date getmDate() {

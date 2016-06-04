@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
@@ -22,25 +21,65 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Context mContext;
     private ArrayList<Tracker> trackers;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        //TODO initial the viewHolder's object.
-        public LinearLayout rootView;
-        public TextView mTitle, mContent, mDuration;
-        public ImageView mPhoto;
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
 
-        public ViewHolder(View view) {
-            super(view);
-            rootView = (LinearLayout) view;
-            mTitle = (TextView) rootView.findViewById(R.id.listitem_tracker_title);
-            mContent = (TextView) rootView.findViewById(R.id.listitem_tracker_content);
-            mDuration = (TextView) rootView.findViewById(R.id.listitem_tracker_duration);
-            mPhoto = (ImageView) rootView.findViewById(R.id.cell_thumbnail);
-        }
+        void onItemLongClick(View view, int position);
     }
+
+    private OnItemClickListener mOnItemClickListener;
 
     public RecyclerViewAdapter(Context context) {
         mContext = context;
-        trackers = TrackerLab.getTrackerLab(context).getTrackingTrackers();
+        trackers = TrackerLab.getTrackerLab(mContext).getTrackingTrackers();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.mOnItemClickListener = onItemClickListener;
+
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View rootView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.cell_list_tracker, parent, false);
+        ViewHolder viewHolder = new ViewHolder(rootView);
+        // set viewHolder size and so on.
+
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+//        holder.cellImage.setImageDrawable(tracker.getPhoto());
+
+        Tracker tracker = trackers.get(position);
+        holder.title.setText(tracker.getTitle());
+        holder.content.setText(tracker.getContent());
+        holder.timer.setText(tracker.getTotalDurations());
+        if (mOnItemClickListener!=null){
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = holder.getLayoutPosition();
+
+                    mOnItemClickListener.onItemClick(holder.itemView, pos);
+                }
+            });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = holder.getLayoutPosition();
+
+                    mOnItemClickListener.onItemLongClick(holder.itemView,pos);
+                    return true;
+                }
+            });
+
+
+        }
     }
 
     @Override
@@ -48,24 +87,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return trackers.size();
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_tracker, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
 
-        return viewHolder;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView title;
+        public TextView content;
+        public TextView timer;
+        public ImageView cellImage;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.cell_title);
+            content = (TextView) itemView.findViewById(R.id.cell_content);
+            timer = (TextView) itemView.findViewById(R.id.cell_timer);
+            cellImage = (ImageView) itemView.findViewById(R.id.cell_image);
+        }
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        //TODO bind view and item's content.
-        Tracker item = trackers.get(position);
-
-        holder.mTitle.setText(item.getmTrackerTitle());
-        holder.mContent.setText(item.getmTrackerContent());
-//        if (item.getmPhoto()!=null) {
-//            BitmapDrawable bitmapDrawable =
-//            holder.mPhoto.setImageBitmap();
-//        }
-    }
 }

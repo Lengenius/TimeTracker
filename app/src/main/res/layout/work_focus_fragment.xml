@@ -17,7 +17,8 @@
 
     <Button
         android:text="Pause"
-        android:id="@+id/btn_pause"
+        android:id="@+id/btn_stop"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

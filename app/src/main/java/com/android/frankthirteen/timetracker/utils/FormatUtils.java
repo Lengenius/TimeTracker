@@ -11,7 +11,7 @@ public class FormatUtils {
         minutes = duration/60%60;
         seconds = duration%60;
 
-        return String.format("%02s:%02s:%02s",hours,minutes,seconds);
+        return String.format("%02d:%02d:%02d",hours,minutes,seconds);
 
 
     }

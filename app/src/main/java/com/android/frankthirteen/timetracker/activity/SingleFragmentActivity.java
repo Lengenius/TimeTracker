@@ -27,7 +27,7 @@ public abstract class SingleFragmentActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fragment);
+        setContentView(R.layout.activity_single_fragment);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.base_toolbar);

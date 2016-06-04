@@ -21,6 +21,7 @@ public class TrackerLab {
     public static TrackerLab getTrackerLab(Context context) {
         if (sTrackerLab == null) {
             sTrackerLab = new TrackerLab(context.getApplicationContext());
+
         }
         return sTrackerLab;
     }
@@ -37,6 +38,9 @@ public class TrackerLab {
 
     public ArrayList<Tracker> getTrackingTrackers() {
         ArrayList<Tracker> tracking = new ArrayList<Tracker>();
+        if (trackers.size()==0){
+            fakeData();
+        }
         for (Tracker ti :
                 trackers) {
             if (ti.isTracking()) {
@@ -57,12 +61,21 @@ public class TrackerLab {
     public Tracker getTracker(UUID uuid){
         for (Tracker ti :
                 trackers) {
-            if (ti.getTrackerId() == uuid) {
+            if (ti.getId() == uuid) {
                 return ti;
             }
         }
         return null;
     }
 
+
+    private void fakeData(){
+        for(int i=0;i<3;i++){
+            Tracker fakeTracker = new Tracker();
+            fakeTracker.setTitle("This is "+i);
+            fakeTracker.setContent("there are "+i+"items.");
+            trackers.add(fakeTracker);
+        }
+    }
 
 }

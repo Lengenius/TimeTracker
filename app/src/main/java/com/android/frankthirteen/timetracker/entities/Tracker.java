@@ -13,13 +13,23 @@ public class Tracker {
     private String mTrackerTitle;
     private String mTrackerContent;
     private String mTrackerGoal;
+    private String mTag;
     private int durations;
-    private ArrayList<DurationItem> durationItems;
-
     private boolean tracking;
+
+    private ArrayList<DurationItem> durationItems;
 
     public Tracker() {
         this.trackerId = UUID.randomUUID();
+        tracking = true;
+    }
+
+    public String getmTag() {
+        return mTag;
+    }
+
+    public void setmTag(String mTag) {
+        this.mTag = mTag;
     }
 
     public ArrayList<DurationItem> getDurationItems() {
@@ -32,20 +42,22 @@ public class Tracker {
         durationItems.add(di);
     }
 
-    public int getDurations() {
+    public int getTotalDurations() {
+        return durations;
+    }
+    public void updateTotalDuration(){
         durations = 0;
         for (DurationItem di :
                 durationItems) {
             durations += di.getmDuration();
         }
-        return durations;
     }
 
-    public UUID getTrackerId() {
+    public UUID getId() {
         return trackerId;
     }
 
-    public void setTrackerId(UUID trackerId) {
+    public void setId(UUID trackerId) {
         this.trackerId = trackerId;
     }
 
@@ -57,27 +69,31 @@ public class Tracker {
         this.tracking = tracking;
     }
 
-    public String getmTrackerTitle() {
+    public String getTitle() {
         return mTrackerTitle;
     }
 
-    public void setmTrackerTitle(String mTrackerTitle) {
+    public void setTitle(String mTrackerTitle) {
         this.mTrackerTitle = mTrackerTitle;
     }
 
-    public String getmTrackerContent() {
+    public String getContent() {
         return mTrackerContent;
     }
 
-    public void setmTrackerContent(String mTrackerContent) {
+    public void setContent(String mTrackerContent) {
         this.mTrackerContent = mTrackerContent;
     }
 
-    public String getmTrackerGoal() {
+    public String getGoal() {
         return mTrackerGoal;
     }
 
-    public void setmTrackerGoal(String mTrackerGoal) {
+    public void setGoal(String mTrackerGoal) {
         this.mTrackerGoal = mTrackerGoal;
+    }
+
+    public void addDurationItem(DurationItem di){
+        durationItems.add(di);
     }
 }

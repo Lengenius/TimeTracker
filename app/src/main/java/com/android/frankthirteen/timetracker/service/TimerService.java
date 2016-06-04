@@ -2,6 +2,7 @@ package com.android.frankthirteen.timetracker.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -15,6 +16,7 @@ import java.util.TimerTask;
 public class TimerService extends Service {
     private TimerTask timerTask;
     private Timer timer;
+    private Handler handler;
 
     @Nullable
     @Override

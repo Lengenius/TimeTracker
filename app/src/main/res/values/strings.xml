@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">TimeTracker</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="context_delete">Delete Item</string>
+    <string name="new_tracker_item">Create New Item</string>
+    <string name="delete_tracker_item">Give UP Tracker</string>
+
 </resources>

@@ -3,6 +3,10 @@ package com.android.frankthirteen.timetracker.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
+
+import com.android.frankthirteen.timetracker.activity.TrackListActivity;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 /**
  * Created by Frank on 5/24/16.
@@ -12,18 +16,19 @@ public class TrackerDBHelper extends SQLiteOpenHelper {
             "_id integer primary key autoincrement," +
             "uid text," +
             "duration integer," +
-            "title text," +
             "content text," +
+            "tracking_state int," +
             "tracker_id text" +
-            "date integer," +
-            "tag text)";
+            "date integer)";
 
-    private static final String CREATE_TABLE_TRACKER = "create table tracker("+
-            "_id integer primary key autoincrement,"+
-            "tracker_id text," +
-            "tracker_title text," +
-            "tracker_goal text," +
-            "tracker_content text)";
+    private static final String CREATE_TABLE_TRACKER = "create table tracker(" +
+            "_id integer primary key autoincrement," +
+            "uid text," +
+            "title text," +
+            "goal text," +
+            "total_duration integer," +
+            "content text," +
+            "tag text)";
 
 
     public TrackerDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -33,6 +38,10 @@ public class TrackerDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        db.execSQL(CREATE_TABLE_DURATION_ITEM);
+        db.execSQL(CREATE_TABLE_TRACKER);
+
+        LogUtils.i("DBHelper", "database created");
     }
 
     @Override
