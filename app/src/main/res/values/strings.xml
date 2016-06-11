@@ -6,5 +6,11 @@
     <string name="context_delete">Delete Item</string>
     <string name="new_tracker_item">Create New Item</string>
     <string name="delete_tracker_item">Give UP Tracker</string>
+    <string name="title_activity_guide_start">TimeTracker</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>

@@ -1,15 +1,18 @@
 package com.android.frankthirteen.timetracker.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
@@ -19,10 +22,12 @@ import com.android.frankthirteen.timetracker.utils.LogUtils;
 /**
  * Created by Frank on 5/24/16.
  */
-public class WorkFocusFragment extends Fragment implements View.OnClickListener {
+public class WorkFocusFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
     public static final int UPDATE_TIMER = 0;
     public static final int STOP_TIMER = 1;
     private static final String TAG = "WorkFocusFragment";
+    private static final String ADD_TO = "Add to Tracker";
+    private static final int REQUEST_TRACKER = 0;
 
     private TextView timerTv;
     private Button btnStart, btnStop;
@@ -35,8 +40,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
             switch (msg.what) {
                 case UPDATE_TIMER:
 
-                    timerTv.setText(FormatUtils.timerFormat(elapsedTime));
-
+                    updateTimer();
                     break;
                 case STOP_TIMER:
 
@@ -80,13 +84,36 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            elapsedTime = 0;
+            updateTimer();
+            return;
+        }
+        switch (requestCode) {
+            case REQUEST_TRACKER:
+
+                Toast.makeText(getActivity(),"Tracker added",Toast.LENGTH_SHORT).show();
+                elapsedTime = 0;
+                break;
+            default:
+
+                break;
+        }
+        LogUtils.d(TAG, "elapsedTime is " + elapsedTime + "now");
+        updateTimer();
+    }
+
     /**
-     * TODO
      * stop a timer service and add the duration to a tracking tracker.
      * popup some buttons which means you can make some notes of this time.
      */
     private void stopTimer() {
         started = false;
+        DialogFragment dialog = EnsureFragment.newInstance(elapsedTime);
+        dialog.setTargetFragment(WorkFocusFragment.this, REQUEST_TRACKER);
+        dialog.show(getFragmentManager(), ADD_TO);
 
         //TODO save elapsed time to a certain tracker. reset elapsed time. stop related service.
     }
@@ -100,7 +127,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
         mHandler.post(new TimerThread());
         LogUtils.d(TAG, "start timer method");
     }
-    
+
     private void buttonSet() {
         if (started) {
             btnStart.setEnabled(false);
@@ -113,13 +140,16 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
         }
     }
 
+    private void updateTimer() {
+        timerTv.setText(FormatUtils.timerFormat(elapsedTime));
+    }
+
     class TimerThread implements Runnable {
 
         @Override
         public void run() {
 
             if (started) {
-                LogUtils.d(TAG, "inside a thread");
                 elapsedTime++;
                 Message msg = Message.obtain(mHandler, WorkFocusFragment.UPDATE_TIMER);
                 msg.sendToTarget();

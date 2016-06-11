@@ -16,6 +16,7 @@ public class TrackerLab {
 
     private TrackerLab(Context context) {
         mContext = context;
+        trackers = new ArrayList<Tracker>();
     }
 
     public static TrackerLab getTrackerLab(Context context) {

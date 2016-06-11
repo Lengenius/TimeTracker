@@ -56,7 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Tracker tracker = trackers.get(position);
         holder.title.setText(tracker.getTitle());
         holder.content.setText(tracker.getContent());
-        holder.timer.setText(tracker.getTotalDurations());
+        holder.timer.setText(tracker.getTotalDurations()+"");
         if (mOnItemClickListener!=null){
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
