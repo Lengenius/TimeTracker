@@ -3,9 +3,7 @@ package com.android.frankthirteen.timetracker.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
-import com.android.frankthirteen.timetracker.activity.TrackListActivity;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 /**

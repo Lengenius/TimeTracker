@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.adapter.DividerItemDecoration;
 import com.android.frankthirteen.timetracker.adapter.RecyclerViewAdapter;
 
 /**
@@ -43,6 +44,9 @@ public class TrackListFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.tracker_recyclerView);
         recyclerView.setLayoutManager(linearLayoutManager);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(),
+                DividerItemDecoration.VERTICAL_LIST);
+        recyclerView.addItemDecoration(itemDecoration);
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity());
         recyclerView.setAdapter(adapter);

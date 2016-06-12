@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_tracker_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.android.frankthirteen.timetracker.activity.TrackListActivity">
+    android:background="#660033"
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/tracker_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
 
