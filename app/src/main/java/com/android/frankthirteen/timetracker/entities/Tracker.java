@@ -9,6 +9,8 @@ import java.util.UUID;
  * When you are done with it. You can remove it from tracking list.
  */
 public class Tracker {
+    public static final String EXTRA_ID = "com.android.frankthirteen.timetracker.entities.Extra_id";
+
     private UUID trackerId;
     private String mTrackerTitle;
     private String mTrackerContent;

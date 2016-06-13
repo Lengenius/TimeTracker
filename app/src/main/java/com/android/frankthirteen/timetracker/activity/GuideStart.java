@@ -11,10 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.fragment.DetailFragment;
+import com.android.frankthirteen.timetracker.fragment.ReporterModifyFragment;
 import com.android.frankthirteen.timetracker.fragment.TrackListFragment;
 import com.android.frankthirteen.timetracker.fragment.WorkFocusFragment;
 
@@ -96,7 +95,6 @@ public class GuideStart extends AppCompatActivity
                 fragment = TrackListFragment.newInstance();
                 break;
             case R.id.detail_fragment:
-                fragment = DetailFragment.newInstance();
                 break;
             case R.id.work_fragment:
                 fragment = WorkFocusFragment.newInstance();

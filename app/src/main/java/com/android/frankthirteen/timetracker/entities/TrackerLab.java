@@ -2,6 +2,8 @@ package com.android.frankthirteen.timetracker.entities;
 
 import android.content.Context;
 
+import com.android.frankthirteen.timetracker.utils.LogUtils;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -62,10 +64,14 @@ public class TrackerLab {
     public Tracker getTracker(UUID uuid){
         for (Tracker ti :
                 trackers) {
-            if (ti.getId() == uuid) {
+            LogUtils.d("Lab", "uuid is "+ti.getId().toString());
+            //UUID should use equals
+            if (uuid.equals(ti.getId())) {
+                LogUtils.d("Lab","Found uuid is i:" + ti.getId().toString());
                 return ti;
             }
         }
+        LogUtils.d("Lab","unfortunately ");
         return null;
     }
 

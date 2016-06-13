@@ -29,9 +29,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private OnItemClickListener mOnItemClickListener;
 
-    public RecyclerViewAdapter(Context context) {
+    public RecyclerViewAdapter(Context context, ArrayList<Tracker> trackers) {
         mContext = context;
-        trackers = TrackerLab.getTrackerLab(mContext).getTrackingTrackers();
+        this.trackers = trackers;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
