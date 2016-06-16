@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.adapter.ReporterPagerAdapter;
@@ -14,7 +16,9 @@ import com.android.frankthirteen.timetracker.entities.Tracker;
 
 import java.util.UUID;
 
-public class ReporterActivity extends AppCompatActivity {
+public class ReporterActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private TextView tvIndicator1,tvIndicator2;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,9 +43,19 @@ public class ReporterActivity extends AppCompatActivity {
         UUID uuid = (UUID) getIntent().getSerializableExtra(Tracker.EXTRA_ID);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        tvIndicator1 = ((TextView) findViewById(R.id.indicator_1));
+        tvIndicator2 = ((TextView) findViewById(R.id.indicator_2));
+
+        tvIndicator1.setOnClickListener(this);
+        tvIndicator2.setOnClickListener(this);
+
+
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mViewPager = (ViewPager) findViewById(R.id.reporter_container);
         mViewPager.setAdapter(new ReporterPagerAdapter(getSupportFragmentManager(),uuid));
 
@@ -64,11 +78,30 @@ public class ReporterActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.action_settings:
+
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.indicator_1:
+                mViewPager.setCurrentItem(0);
+                break;
+            case R.id.indicator_2:
+                mViewPager.setCurrentItem(1);
+                break;
+            default:
+
+                break;
+        }
+    }
 }
