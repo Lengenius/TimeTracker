@@ -1,20 +1,23 @@
-buildscript {
+apply plugin: 'android-library'
 
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.+'
-    }
-
+dependencies {
+    compile 'com.android.support:support-v4:19.0.0'
 }
 
-allprojects {
-    version = VERSION_NAME
-    group = GROUP
+android {
+    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
-    repositories {
-        mavenCentral()
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
     }
 }
