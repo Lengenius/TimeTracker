@@ -13,12 +13,11 @@ import android.widget.TextView;
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.adapter.ReporterPagerAdapter;
 import com.android.frankthirteen.timetracker.entities.Tracker;
+import com.astuetz.PagerSlidingTabStrip;
 
 import java.util.UUID;
 
-public class ReporterActivity extends AppCompatActivity implements View.OnClickListener{
-
-    private TextView tvIndicator1,tvIndicator2;
+public class ReporterActivity extends AppCompatActivity{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -43,13 +42,7 @@ public class ReporterActivity extends AppCompatActivity implements View.OnClickL
         UUID uuid = (UUID) getIntent().getSerializableExtra(Tracker.EXTRA_ID);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        tvIndicator1 = ((TextView) findViewById(R.id.indicator_1));
-        tvIndicator2 = ((TextView) findViewById(R.id.indicator_2));
-
-        tvIndicator1.setOnClickListener(this);
-        tvIndicator2.setOnClickListener(this);
-
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.reporter_header);
 
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -58,6 +51,7 @@ public class ReporterActivity extends AppCompatActivity implements View.OnClickL
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mViewPager = (ViewPager) findViewById(R.id.reporter_container);
         mViewPager.setAdapter(new ReporterPagerAdapter(getSupportFragmentManager(),uuid));
+        tabStrip.setViewPager(mViewPager);
 
 
     }
@@ -90,18 +84,18 @@ public class ReporterActivity extends AppCompatActivity implements View.OnClickL
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.indicator_1:
-                mViewPager.setCurrentItem(0);
-                break;
-            case R.id.indicator_2:
-                mViewPager.setCurrentItem(1);
-                break;
-            default:
-
-                break;
-        }
-    }
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId()){
+//            case R.id.indicator_1:
+//                mViewPager.setCurrentItem(0);
+//                break;
+//            case R.id.indicator_2:
+//                mViewPager.setCurrentItem(1);
+//                break;
+//            default:
+//
+//                break;
+//        }
+//    }
 }

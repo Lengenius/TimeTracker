@@ -98,4 +98,9 @@ public class Tracker {
     public void addDurationItem(DurationItem di){
         durationItems.add(di);
     }
+
+    @Override
+    public String toString() {
+        return mTrackerTitle;
+    }
 }
