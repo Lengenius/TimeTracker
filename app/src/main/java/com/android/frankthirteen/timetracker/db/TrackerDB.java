@@ -27,6 +27,7 @@ public class TrackerDB {
     public static final String DURATION_CONTENT = "content";
     public static final String DURATION_TRACKER_ID = "tracker_id";
     public static final String DURATION_DATE = "date";
+    public static final String DURATION_TAG = "tag";
 
     public static final String TABLE_TRACKER = "tracker";
     public static final String TRACKER_ID = "uid";

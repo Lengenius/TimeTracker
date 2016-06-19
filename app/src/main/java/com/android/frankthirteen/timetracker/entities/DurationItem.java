@@ -10,12 +10,12 @@ import java.util.UUID;
  */
 public class DurationItem {
     private Context mContext;
-    private String mTitle;
     private String mContent;
     private Date mDate;
     private int mDuration;
     private UUID mId;
     private UUID trackerId;
+    private String mTag;
 
     public DurationItem(){
 
@@ -71,5 +71,13 @@ public class DurationItem {
 
     public void setmDuration(int mDuration) {
         this.mDuration = mDuration;
+    }
+
+    public String getmTag() {
+        return mTag;
+    }
+
+    public void setmTag(String mTag) {
+        this.mTag = mTag;
     }
 }

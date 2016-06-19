@@ -6,14 +6,15 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.adapter.TagAdapter;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
 
@@ -28,6 +29,7 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment implem
     private static final String EXTRA_TIME = "com.android.frankthirteen.timetracker.fragment.Extra_Time";
 
     private Spinner spinner;
+    private RecyclerView tagsView;
     private EditText edContent;
     private int elapsedTime;
 
@@ -60,12 +62,34 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment implem
 
         spinner.setAdapter(adapter);
 
+        tagsView = ((RecyclerView) view.findViewById(R.id.dialog_ensure_tags));
+
+        List<String> tags = initialTags();
+        TagAdapter tagsAdapter = new TagAdapter(getActivity(),tags);
+        StaggeredGridLayoutManager tagsManager = new StaggeredGridLayoutManager(tags.size()%4,
+                StaggeredGridLayoutManager.HORIZONTAL);
+        tagsView.setAdapter(tagsAdapter);
+        tagsView.setLayoutManager(tagsManager);
+
         builder.setView(view);
         builder.setPositiveButton("OK", this);
         builder.setNegativeButton("Cancel", this);
 
 
         return builder.create();
+    }
+
+    private List<String> initialTags() {
+        List<String> tags = new ArrayList<>();
+        tags.add("Study");
+        tags.add("Sport");
+        tags.add("Entertainment");
+        tags.add("Traffic");
+        tags.add("Work");
+        tags.add("Hobby");
+
+
+        return tags;
     }
 
     @Override
