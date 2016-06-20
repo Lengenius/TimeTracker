@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.adapter.SpacesItemDecoration;
 import com.android.frankthirteen.timetracker.adapter.TagAdapter;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
@@ -51,9 +52,12 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment implem
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = View.inflate(getActivity(), R.layout.fragment_dialog_ensure, null);
+
         edContent = ((EditText) view.findViewById(R.id.dialog_ensure_content));
+
         spinner = ((Spinner) view.findViewById(R.id.dialog_ensure_spinner));
         List<Tracker> trackers = TrackerLab.getTrackerLab(getActivity()).getTrackingTrackers();
         ArrayAdapter<Tracker> adapter = new ArrayAdapter<Tracker>(getActivity(),
@@ -65,11 +69,14 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment implem
         tagsView = ((RecyclerView) view.findViewById(R.id.dialog_ensure_tags));
 
         List<String> tags = initialTags();
-        TagAdapter tagsAdapter = new TagAdapter(getActivity(),tags);
-        StaggeredGridLayoutManager tagsManager = new StaggeredGridLayoutManager(tags.size()%4,
+        TagAdapter tagsAdapter = new TagAdapter(getActivity(), tags);
+        StaggeredGridLayoutManager tagsManager = new StaggeredGridLayoutManager(tags.size() % 4,
                 StaggeredGridLayoutManager.HORIZONTAL);
+        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(16);
+
         tagsView.setAdapter(tagsAdapter);
         tagsView.setLayoutManager(tagsManager);
+        tagsView.addItemDecoration(spacesItemDecoration);
 
         builder.setView(view);
         builder.setPositiveButton("OK", this);
