@@ -51,7 +51,7 @@ public class Tracker {
         durations = 0;
         for (DurationItem di :
                 durationItems) {
-            durations += di.getmDuration();
+            durations += di.getDuration();
         }
     }
 

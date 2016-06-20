@@ -75,11 +75,11 @@ public class WorkFocusFragment extends android.support.v4.app.Fragment implement
             case R.id.btn_start:
                 startTimer();
                 LogUtils.d(TAG, "button clicked");
-                buttonSet();
+                setButtonState();
                 break;
             case R.id.btn_stop:
                 stopTimer();
-                buttonSet();
+                setButtonState();
                 break;
         }
     }
@@ -128,13 +128,11 @@ public class WorkFocusFragment extends android.support.v4.app.Fragment implement
         LogUtils.d(TAG, "start timer method");
     }
 
-    private void buttonSet() {
+    private void setButtonState() {
         if (started) {
             btnStart.setEnabled(false);
             btnStop.setVisibility(View.VISIBLE);
-            //TODO set button state when stopwatch running;
         } else {
-            //TODO set button state when stopwatch stopped;
             btnStop.setVisibility(View.GONE);
             btnStart.setEnabled(true);
         }

@@ -17,8 +17,10 @@ public class DurationItem {
     private UUID trackerId;
     private String mTag;
 
+    /**
+     * Default Constructor for DB only.
+     */
     public DurationItem(){
-
     }
 
     public DurationItem(Context context) {
@@ -36,23 +38,23 @@ public class DurationItem {
         this.trackerId = trackerId;
     }
 
-    public UUID getmId() {
+    public UUID getId() {
         return mId;
     }
 
-    public void setmId(UUID mId) {
+    public void setId(UUID mId) {
         this.mId = mId;
     }
 
-    public String getmContent() {
+    public String getContent() {
         return mContent;
     }
 
-    public void setmContent(String mContent) {
+    public void setContent(String mContent) {
         this.mContent = mContent;
     }
 
-    public Date getmDate() {
+    public Date getDate() {
         return mDate;
     }
 
@@ -61,23 +63,23 @@ public class DurationItem {
      *
      * @param mDate always is the start time.
      */
-    public void setmDate(Date mDate) {
+    public void setDate(Date mDate) {
         this.mDate = mDate;
     }
 
-    public int getmDuration() {
+    public int getDuration() {
         return mDuration;
     }
 
-    public void setmDuration(int mDuration) {
+    public void setDuration(int mDuration) {
         this.mDuration = mDuration;
     }
 
-    public String getmTag() {
+    public String getTag() {
         return mTag;
     }
 
-    public void setmTag(String mTag) {
+    public void setTag(String mTag) {
         this.mTag = mTag;
     }
 }

@@ -16,8 +16,9 @@ public class TrackerDBHelper extends SQLiteOpenHelper {
             "duration integer," +
             "content text," +
             "tracking_state int," +
-            "tracker_id text" +
-            "duration_tag text" +
+            "tracker_id text," +
+            "tag text," +
+            "duration_tag text," +
             "date integer)";
 
     private static final String CREATE_TABLE_TRACKER = "create table tracker(" +

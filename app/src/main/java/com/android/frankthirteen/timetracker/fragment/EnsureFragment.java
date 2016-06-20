@@ -9,30 +9,40 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.adapter.SpacesItemDecoration;
 import com.android.frankthirteen.timetracker.adapter.TagAdapter;
+import com.android.frankthirteen.timetracker.db.TrackerDB;
+import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Frank on 6/11/16.
  */
-public class EnsureFragment extends android.support.v4.app.DialogFragment implements DialogInterface.OnClickListener {
+public class EnsureFragment extends android.support.v4.app.DialogFragment
+        implements DialogInterface.OnClickListener {
 
-    private static final String EXTRA_TIME = "com.android.frankthirteen.timetracker.fragment.Extra_Time";
+    private static final String EXTRA_TIME =
+            "com.android.frankthirteen.timetracker.fragment.Extra_Time";
+    private static final String TAG = "EnsureFragment";
 
     private Spinner spinner;
     private RecyclerView tagsView;
     private EditText edContent;
     private int elapsedTime;
+    private DurationItem mDurationItem;
 
 
     public static EnsureFragment newInstance(int elapsedTime) {
@@ -48,6 +58,8 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment implem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         elapsedTime = getArguments().getInt(EXTRA_TIME);
+        mDurationItem = new DurationItem(getActivity());
+        mDurationItem.setDuration(elapsedTime);
     }
 
     @Override
@@ -60,16 +72,41 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment implem
 
         spinner = ((Spinner) view.findViewById(R.id.dialog_ensure_spinner));
         List<Tracker> trackers = TrackerLab.getTrackerLab(getActivity()).getTrackingTrackers();
-        ArrayAdapter<Tracker> adapter = new ArrayAdapter<Tracker>(getActivity(),
+        final ArrayAdapter<Tracker> adapter = new ArrayAdapter<Tracker>(getActivity(),
                 android.R.layout.simple_list_item_1,
                 trackers);
 
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                UUID trackerId = ((Tracker) parent.getItemAtPosition(position)).getId();
+                mDurationItem.setTrackerId(trackerId);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         tagsView = ((RecyclerView) view.findViewById(R.id.dialog_ensure_tags));
 
-        List<String> tags = initialTags();
-        TagAdapter tagsAdapter = new TagAdapter(getActivity(), tags);
+        final List<String> tags = initialTags();
+        final TagAdapter tagsAdapter = new TagAdapter(getActivity(), tags);
+        tagsAdapter.setOnItemClickListener(new TagAdapter.OnTagItemClickListener() {
+            @Override
+            public void onTagItemClick(View v, int position) {
+                String tagString = tagsAdapter.getItem(position);
+                if (mDurationItem.getTag()!=null){
+                    mDurationItem.setTag(tagString);
+                    LogUtils.d(TAG,"tagString is :" + mDurationItem.getTag());
+                }else{
+                    mDurationItem.setTag(tagString);
+                    LogUtils.d(TAG,"tagString is set :" + mDurationItem.getTag());
+                }
+            }
+        });
         StaggeredGridLayoutManager tagsManager = new StaggeredGridLayoutManager(tags.size() % 4,
                 StaggeredGridLayoutManager.HORIZONTAL);
         SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(16);
@@ -104,6 +141,7 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment implem
         switch (which) {
             case AlertDialog.BUTTON_POSITIVE:
 
+                saveDurationItem();
                 sendResult(Activity.RESULT_OK);
                 break;
             case AlertDialog.BUTTON_NEGATIVE:
@@ -116,6 +154,13 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment implem
         }
     }
 
+    private void saveDurationItem() {
+        if(mDurationItem!=null){
+            TrackerDB.getTrackerDB(getActivity()).insertDurationItem(mDurationItem);
+            LogUtils.d(TAG,"saving");
+        }
+    }
+
     private void sendResult(int resultCode) {
         if (getTargetFragment() == null)
             return;
@@ -124,4 +169,5 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment implem
         getTargetFragment()
                 .onActivityResult(getTargetRequestCode(), resultCode, i);
     }
+
 }

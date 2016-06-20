@@ -10,14 +10,13 @@ import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
-import com.android.frankthirteen.timetracker.entities.TrackerLab;
 
 import java.util.ArrayList;
 
 /**
  * Created by Frank on 5/16/16.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.ViewHolder> {
     private Context mContext;
     private ArrayList<Tracker> trackers;
 
@@ -29,7 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private OnItemClickListener mOnItemClickListener;
 
-    public RecyclerViewAdapter(Context context, ArrayList<Tracker> trackers) {
+    public TrackerListAdapter(Context context, ArrayList<Tracker> trackers) {
         mContext = context;
         this.trackers = trackers;
     }

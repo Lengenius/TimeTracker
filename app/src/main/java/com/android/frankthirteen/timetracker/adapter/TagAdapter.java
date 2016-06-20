@@ -14,10 +14,15 @@ import java.util.List;
 /**
  * Created by Frank on 6/19/16.
  */
-public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
+public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     private Context mContext;
     private List<String> tags;
     private LayoutInflater layoutInflater;
+    private OnTagItemClickListener mOnTagItemClickListener;
+
+    public interface OnTagItemClickListener{
+        void onTagItemClick(View v,int position);
+    }
 
     public TagAdapter(Context context, List<String> tags){
         mContext = context;
@@ -25,17 +30,32 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
         layoutInflater = LayoutInflater.from(context);
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.tag_view,parent,false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+    public void setOnItemClickListener(OnTagItemClickListener onTagItemClickListener){
+
+        this.mOnTagItemClickListener = onTagItemClickListener;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = layoutInflater.inflate(R.layout.tag_view,parent,false);
+        TagViewHolder tagViewHolder = new TagViewHolder(view);
+        return tagViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(final TagViewHolder holder, int position) {
 
         holder.tag.setText(tags.get(position));
+        if(mOnTagItemClickListener!=null){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = holder.getLayoutPosition();
+
+                    mOnTagItemClickListener.onTagItemClick(holder.itemView,pos);
+                }
+            });
+        }
     }
 
     @Override
@@ -43,12 +63,16 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
         return tags.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class TagViewHolder extends RecyclerView.ViewHolder {
         TextView tag;
-        public ViewHolder(View itemView) {
+        public TagViewHolder(View itemView) {
             super(itemView);
 
             tag = ((TextView) itemView.findViewById(R.id.simple_tag_tv));
         }
+    }
+
+    public String getItem(int position){
+        return tags.get(position);
     }
 }

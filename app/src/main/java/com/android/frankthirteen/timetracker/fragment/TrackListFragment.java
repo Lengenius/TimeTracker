@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.activity.ReporterActivity;
 import com.android.frankthirteen.timetracker.adapter.DividerItemDecoration;
-import com.android.frankthirteen.timetracker.adapter.RecyclerViewAdapter;
+import com.android.frankthirteen.timetracker.adapter.TrackerListAdapter;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
 
@@ -64,10 +64,10 @@ public class TrackListFragment extends Fragment {
 
         trackers = getTrackers(TRACKING);
 
-        final RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), trackers);
+        final TrackerListAdapter adapter = new TrackerListAdapter(getActivity(), trackers);
         recyclerView.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new TrackerListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
 

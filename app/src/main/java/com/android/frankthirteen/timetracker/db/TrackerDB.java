@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
@@ -84,7 +83,7 @@ public class TrackerDB {
                 tracker.setContent(c.getString(c.getColumnIndex(TRACKER_CONTENT)));
                 tracker.setmTag(c.getString(c.getColumnIndex(TRACKER_TAG)));
                 tracker.setGoal(c.getString(c.getColumnIndex(TRACKER_GOAL)));
-                tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_STATE))>0);
+                tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_STATE)) > 0);
 
                 trackers.add(tracker);
             }
@@ -112,13 +111,13 @@ public class TrackerDB {
         }
     }
 
-    public void updateTrackerDuration(Tracker tracker){
+    public void updateTrackerDuration(Tracker tracker) {
         Cursor cursor = db.query(TABLE_TRACKER, null, TRACKER_ID + "=?",
                 new String[]{tracker.getId().toString()}, null, null, null);
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(TRACKER_TOTAL_DURATION,tracker.getTotalDurations());
-            db.update(TABLE_TRACKER,contentValues,TRACKER_ID+"=?",
+            contentValues.put(TRACKER_TOTAL_DURATION, tracker.getTotalDurations());
+            db.update(TABLE_TRACKER, contentValues, TRACKER_ID + "=?",
                     new String[]{tracker.getId().toString()});
             cursor.close();
         }
@@ -146,11 +145,14 @@ public class TrackerDB {
         if (di != null) {
             ContentValues contentValues = new ContentValues();
             try {
-                contentValues.put(DURATION_UID, di.getmId().toString());
-                contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
-                contentValues.put(DURATION_DURATION, di.getmDuration());
-                contentValues.put(DURATION_DATE, di.getmDate().getTime());
-                contentValues.put(DURATION_CONTENT, di.getmContent());
+                contentValues.put(DURATION_UID, di.getId().toString());
+                if (di.getTrackerId() != null) {
+                    contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
+                }
+                contentValues.put(DURATION_DURATION, di.getDuration());
+                contentValues.put(DURATION_DATE, di.getDate().getTime());
+                contentValues.put(DURATION_CONTENT, di.getContent());
+                contentValues.put(DURATION_TAG, di.getTag());
                 db.insert(TABLE_DURATION, null, contentValues);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -162,12 +164,12 @@ public class TrackerDB {
         if (di != null) {
             ContentValues contentValues = new ContentValues();
             try {
-                contentValues.put(DURATION_UID, di.getmId().toString());
+                contentValues.put(DURATION_UID, di.getId().toString());
                 contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
-                contentValues.put(DURATION_DURATION, di.getmDuration());
-                contentValues.put(DURATION_DATE, di.getmDate().getTime());
-                contentValues.put(DURATION_CONTENT, di.getmContent());
-                db.update(TABLE_DURATION, contentValues, DURATION_UID + "=?", new String[]{di.getmId().toString()});
+                contentValues.put(DURATION_DURATION, di.getDuration());
+                contentValues.put(DURATION_DATE, di.getDate().getTime());
+                contentValues.put(DURATION_CONTENT, di.getContent());
+                db.update(TABLE_DURATION, contentValues, DURATION_UID + "=?", new String[]{di.getId().toString()});
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -186,12 +188,12 @@ public class TrackerDB {
             do {
                 DurationItem di = new DurationItem();
                 di.setTrackerId(UUID.fromString(trackerId));
-                di.setmId(UUID.fromString(c.getString(c.getColumnIndex(DURATION_UID))));
+                di.setId(UUID.fromString(c.getString(c.getColumnIndex(DURATION_UID))));
                 Date diDate = new Date();
                 diDate.setTime(c.getLong(c.getColumnIndex(DURATION_DATE)));
-                di.setmDate(diDate);
-                di.setmContent(c.getString(c.getColumnIndex(DURATION_CONTENT)));
-                di.setmDuration(c.getInt(c.getColumnIndex(DURATION_DURATION)));
+                di.setDate(diDate);
+                di.setContent(c.getString(c.getColumnIndex(DURATION_CONTENT)));
+                di.setDuration(c.getInt(c.getColumnIndex(DURATION_DURATION)));
                 durationItems.add(di);
             } while (c.moveToNext());
             c.close();

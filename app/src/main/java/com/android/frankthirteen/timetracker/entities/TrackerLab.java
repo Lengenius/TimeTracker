@@ -19,6 +19,7 @@ public class TrackerLab {
     private TrackerLab(Context context) {
         mContext = context;
         trackers = new ArrayList<Tracker>();
+        //Load DB if possible; initial the data.
     }
 
     public static TrackerLab getTrackerLab(Context context) {
@@ -43,6 +44,7 @@ public class TrackerLab {
         ArrayList<Tracker> tracking = new ArrayList<Tracker>();
         if (trackers.size()==0){
             fakeData();
+
         }
         for (Tracker ti :
                 trackers) {
