@@ -7,21 +7,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.adapter.SpacesItemDecoration;
-import com.android.frankthirteen.timetracker.adapter.TagAdapter;
 import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
+import com.android.frankthirteen.timetracker.ui.FlowLayout;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.ArrayList;
@@ -38,11 +37,17 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
             "com.android.frankthirteen.timetracker.fragment.Extra_Time";
     private static final String TAG = "EnsureFragment";
 
+    public String[] tagsValues = new String[]{
+                    "Sport", "Entertainment", "Work", "Traffic", "Study", "Hobby",
+                    "Sport", "Entertainment", "Work", "Traffic", "Study", "Hobby",
+                    "Sport", "Entertainment", "Work", "Traffic", "Study", "Hobby"};
+
     private Spinner spinner;
     private RecyclerView tagsView;
     private EditText edContent;
     private int elapsedTime;
     private DurationItem mDurationItem;
+    private FlowLayout tagsContainer;
 
 
     public static EnsureFragment newInstance(int elapsedTime) {
@@ -64,9 +69,11 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = View.inflate(getActivity(), R.layout.fragment_dialog_ensure, null);
+
+        tagsContainer = ((FlowLayout) view.findViewById(R.id.dialog_ensure_tags));
+        initialTags();
 
         edContent = ((EditText) view.findViewById(R.id.dialog_ensure_content));
 
@@ -90,30 +97,6 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
             }
         });
 
-        tagsView = ((RecyclerView) view.findViewById(R.id.dialog_ensure_tags));
-
-        final List<String> tags = initialTags();
-        final TagAdapter tagsAdapter = new TagAdapter(getActivity(), tags);
-        tagsAdapter.setOnItemClickListener(new TagAdapter.OnTagItemClickListener() {
-            @Override
-            public void onTagItemClick(View v, int position) {
-                String tagString = tagsAdapter.getItem(position);
-                if (mDurationItem.getTag()!=null){
-                    mDurationItem.setTag(tagString);
-                    LogUtils.d(TAG,"tagString is :" + mDurationItem.getTag());
-                }else{
-                    mDurationItem.setTag(tagString);
-                    LogUtils.d(TAG,"tagString is set :" + mDurationItem.getTag());
-                }
-            }
-        });
-        StaggeredGridLayoutManager tagsManager = new StaggeredGridLayoutManager(tags.size() % 4,
-                StaggeredGridLayoutManager.HORIZONTAL);
-        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(16);
-
-        tagsView.setAdapter(tagsAdapter);
-        tagsView.setLayoutManager(tagsManager);
-        tagsView.addItemDecoration(spacesItemDecoration);
 
         builder.setView(view);
         builder.setPositiveButton("OK", this);
@@ -123,17 +106,17 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
         return builder.create();
     }
 
-    private List<String> initialTags() {
-        List<String> tags = new ArrayList<>();
-        tags.add("Study");
-        tags.add("Sport");
-        tags.add("Entertainment");
-        tags.add("Traffic");
-        tags.add("Work");
-        tags.add("Hobby");
+    private void initialTags() {
 
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        for (int i = 0; i < tagsValues.length; i++) {
 
-        return tags;
+            TextView textView = ((TextView) layoutInflater.inflate(R.layout.tag_view, tagsContainer,
+                    false));
+            textView.setText(tagsValues[i]);
+            tagsContainer.addView(textView);
+        }
+
     }
 
     @Override
@@ -155,9 +138,9 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
     }
 
     private void saveDurationItem() {
-        if(mDurationItem!=null){
+        if (mDurationItem != null) {
             TrackerDB.getTrackerDB(getActivity()).insertDurationItem(mDurationItem);
-            LogUtils.d(TAG,"saving");
+            LogUtils.d(TAG, "saving");
         }
     }
 
