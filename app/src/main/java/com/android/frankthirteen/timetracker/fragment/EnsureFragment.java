@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,16 +13,18 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
-import com.android.frankthirteen.timetracker.ui.FlowLayout;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
+import com.zhy.view.flowlayout.FlowLayout;
+import com.zhy.view.flowlayout.TagAdapter;
+import com.zhy.view.flowlayout.TagFlowLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,16 +39,14 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
     private static final String TAG = "EnsureFragment";
 
     public String[] tagsValues = new String[]{
-                    "Sport", "Entertainment", "Work", "Traffic", "Study", "Hobby",
-                    "Sport", "Entertainment", "Work", "Traffic", "Study", "Hobby",
                     "Sport", "Entertainment", "Work", "Traffic", "Study", "Hobby"};
 
     private Spinner spinner;
-    private RecyclerView tagsView;
     private EditText edContent;
     private int elapsedTime;
     private DurationItem mDurationItem;
-    private FlowLayout tagsContainer;
+    private TagFlowLayout tagsContainer;
+    private LayoutInflater layoutInflater;
 
 
     public static EnsureFragment newInstance(int elapsedTime) {
@@ -65,6 +64,7 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
         elapsedTime = getArguments().getInt(EXTRA_TIME);
         mDurationItem = new DurationItem(getActivity());
         mDurationItem.setDuration(elapsedTime);
+        layoutInflater = LayoutInflater.from(getActivity());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = View.inflate(getActivity(), R.layout.fragment_dialog_ensure, null);
 
-        tagsContainer = ((FlowLayout) view.findViewById(R.id.dialog_ensure_tags));
+        tagsContainer = ((TagFlowLayout) view.findViewById(R.id.dialog_ensure_tags));
         initialTags();
 
         edContent = ((EditText) view.findViewById(R.id.dialog_ensure_content));
@@ -107,16 +107,25 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
     }
 
     private void initialTags() {
+        tagsContainer.setAdapter(new TagAdapter<String>(tagsValues) {
+            @Override
+            public View getView(FlowLayout parent, int position, String s) {
 
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-        for (int i = 0; i < tagsValues.length; i++) {
+                TextView tag = (TextView) layoutInflater.inflate(R.layout.tag_view,parent,false);
+                tag.setText(tagsValues[position]);
 
-            TextView textView = ((TextView) layoutInflater.inflate(R.layout.tag_view, tagsContainer,
-                    false));
-            textView.setText(tagsValues[i]);
-            tagsContainer.addView(textView);
-        }
+                return tag;
+            }
+        });
 
+        tagsContainer.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+            @Override
+            public boolean onTagClick(View view, int position, FlowLayout parent) {
+                mDurationItem.setTag(tagsValues[position]);
+                Toast.makeText(getActivity(), tagsValues[position]+" clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     @Override

@@ -34,6 +34,7 @@ dependencies {
     compile 'com.android.support:design:23.2.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
     compile 'com.android.support:support-v4:23.2.1'
+    compile 'com.zhy:flowlayout-lib:1.0.3'
 
     compile project(":PagerSlidingTabStrip")
 }
