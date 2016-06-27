@@ -2,6 +2,7 @@ package com.android.frankthirteen.timetracker.fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +21,12 @@ import java.util.UUID;
 public class ReporterModifyFragment extends Fragment {
 
     private Tracker mTracker;
-    private TextView tvTitle,tvContent,tvDuration,tvDate;
+    private TextView tvTitle, tvContent, tvDuration, tvDate;
+    private UUID mId;
+    private TrackerLab trackerLab;
 
     public static ReporterModifyFragment newInstance(UUID uuid) {
-        
+
         Bundle args = new Bundle();
         args.putSerializable(Tracker.EXTRA_ID, uuid);
         ReporterModifyFragment fragment = new ReporterModifyFragment();
@@ -38,13 +41,23 @@ public class ReporterModifyFragment extends Fragment {
 
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mId = (UUID) getArguments().getSerializable(Tracker.EXTRA_ID);
+        trackerLab = TrackerLab.getTrackerLab(getActivity());
+        if (trackerLab.getTracker(mId) == null){
+            trackerLab.addTracker(new Tracker(mId));
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        UUID mId = (UUID)getArguments().getSerializable(Tracker.EXTRA_ID);
+
 
         mTracker = TrackerLab.getTrackerLab(getActivity()).getTracker(mId);
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_reporter_modify, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_reporter_table, container, false);
 
         tvTitle = (TextView) rootView.findViewById(R.id.tracker_title);
         tvTitle.setText(mTracker.getTitle());

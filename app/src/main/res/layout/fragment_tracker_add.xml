@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/add_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_menu_camera" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:paddingTop="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/EditItem"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Title"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/tracker_title"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:hint="Type a Tracker Title."
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingTop="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/EditItem"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Content"
+                android:textAllCaps="true"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/tracker_content"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:lines="2"
+                android:hint="Type content here."
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingTop="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/EditItem"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="comment"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/tracker_comment"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:lines="3"
+                android:hint="Type some comment here."
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingTop="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/EditItem"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="cost"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:inputType="number"
+                android:id="@+id/goal_time"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:hint="Type some comment here."
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingTop="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/EditItem"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="end"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:inputType="date"
+                android:id="@+id/end_date"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:lines="3"
+                android:hint="Type some comment here."
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

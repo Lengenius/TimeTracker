@@ -135,6 +135,7 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
 
                 saveDurationItem();
                 sendResult(Activity.RESULT_OK);
+                mDurationItem.setComment(edContent.getText().toString());
                 break;
             case AlertDialog.BUTTON_NEGATIVE:
 

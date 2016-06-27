@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public class DurationItem {
     private Context mContext;
-    private String mContent;
+    private String mComment;
     private Date mDate;
     private int mDuration;
     private UUID mId;
@@ -46,12 +46,12 @@ public class DurationItem {
         this.mId = mId;
     }
 
-    public String getContent() {
-        return mContent;
+    public String getComment() {
+        return mComment;
     }
 
-    public void setContent(String mContent) {
-        this.mContent = mContent;
+    public void setComment(String mContent) {
+        this.mComment = mContent;
     }
 
     public Date getDate() {

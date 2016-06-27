@@ -25,9 +25,9 @@ public class TrackerDBHelper extends SQLiteOpenHelper {
             "_id integer primary key autoincrement," +
             "uid text," +
             "title text," +
-            "goal text," +
-            "total_duration integer," +
             "content text," +
+            "comment text," +
+            "total_duration integer," +
             "tag text)";
 
 

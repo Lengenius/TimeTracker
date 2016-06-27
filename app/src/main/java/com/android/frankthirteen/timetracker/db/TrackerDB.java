@@ -31,7 +31,6 @@ public class TrackerDB {
     public static final String TABLE_TRACKER = "tracker";
     public static final String TRACKER_ID = "uid";
     public static final String TRACKER_TITLE = "title";
-    public static final String TRACKER_GOAL = "goal";
     public static final String TRACKER_CONTENT = "content";
     public static final String TRACKER_TAG = "tag";
     public static final String TRACKER_STATE = "tracking_state";
@@ -64,9 +63,8 @@ public class TrackerDB {
             ContentValues values = new ContentValues();
             values.put(TRACKER_ID, tracker.getId().toString());
             values.put(TRACKER_CONTENT, tracker.getContent());
-            values.put(TRACKER_GOAL, tracker.getGoal());
             values.put(TRACKER_TITLE, tracker.getTitle());
-            values.put(TRACKER_TAG, tracker.getmTag());
+            values.put(TRACKER_TAG, tracker.getTag());
             values.put(TRACKER_STATE, tracker.isTracking());
             db.insert(TABLE_TRACKER, null, values);
         }
@@ -81,8 +79,7 @@ public class TrackerDB {
                 tracker.setId(UUID.fromString(c.getString(c.getColumnIndex(TRACKER_ID))));
                 tracker.setTitle(c.getString(c.getColumnIndex(TRACKER_TITLE)));
                 tracker.setContent(c.getString(c.getColumnIndex(TRACKER_CONTENT)));
-                tracker.setmTag(c.getString(c.getColumnIndex(TRACKER_TAG)));
-                tracker.setGoal(c.getString(c.getColumnIndex(TRACKER_GOAL)));
+                tracker.setTag(c.getString(c.getColumnIndex(TRACKER_TAG)));
                 tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_STATE)) > 0);
 
                 trackers.add(tracker);
@@ -101,9 +98,8 @@ public class TrackerDB {
             ContentValues values = new ContentValues();
             values.put(TRACKER_ID, tracker.getId().toString());
             values.put(TRACKER_CONTENT, tracker.getContent());
-            values.put(TRACKER_GOAL, tracker.getGoal());
             values.put(TRACKER_TITLE, tracker.getTitle());
-            values.put(TRACKER_TAG, tracker.getmTag());
+            values.put(TRACKER_TAG, tracker.getTag());
             db.update(TABLE_TRACKER, values,
                     TRACKER_ID + "=?",
                     new String[]{tracker.getId().toString()});
@@ -129,7 +125,7 @@ public class TrackerDB {
 
         if (cursor.moveToFirst()) {
             ContentValues values = new ContentValues();
-            values.put(TRACKER_TAG, tracker.getmTag());
+            values.put(TRACKER_TAG, tracker.getTag());
             db.update(TABLE_TRACKER, values,
                     TRACKER_ID + "=?",
                     new String[]{tracker.getId().toString()});
@@ -151,7 +147,7 @@ public class TrackerDB {
                 }
                 contentValues.put(DURATION_DURATION, di.getDuration());
                 contentValues.put(DURATION_DATE, di.getDate().getTime());
-                contentValues.put(DURATION_CONTENT, di.getContent());
+                contentValues.put(DURATION_CONTENT, di.getComment());
                 contentValues.put(DURATION_TAG, di.getTag());
                 db.insert(TABLE_DURATION, null, contentValues);
             } catch (Exception e) {
@@ -168,7 +164,7 @@ public class TrackerDB {
                 contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
                 contentValues.put(DURATION_DURATION, di.getDuration());
                 contentValues.put(DURATION_DATE, di.getDate().getTime());
-                contentValues.put(DURATION_CONTENT, di.getContent());
+                contentValues.put(DURATION_CONTENT, di.getComment());
                 db.update(TABLE_DURATION, contentValues, DURATION_UID + "=?", new String[]{di.getId().toString()});
                 return true;
             } catch (Exception e) {
@@ -192,13 +188,14 @@ public class TrackerDB {
                 Date diDate = new Date();
                 diDate.setTime(c.getLong(c.getColumnIndex(DURATION_DATE)));
                 di.setDate(diDate);
-                di.setContent(c.getString(c.getColumnIndex(DURATION_CONTENT)));
+                di.setComment(c.getString(c.getColumnIndex(DURATION_CONTENT)));
                 di.setDuration(c.getInt(c.getColumnIndex(DURATION_DURATION)));
                 durationItems.add(di);
             } while (c.moveToNext());
             c.close();
             return durationItems;
         }
+        c.close();
         return durationItems;
     }
 

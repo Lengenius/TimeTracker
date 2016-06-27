@@ -14,8 +14,7 @@ public class Tracker {
     private UUID trackerId;
     private String mTrackerTitle;
     private String mTrackerContent;
-    private String mTrackerGoal;
-    private String mTag;
+    private String mTag,mComment;
     private int durations;
     private boolean tracking;
 
@@ -26,11 +25,16 @@ public class Tracker {
         tracking = true;
     }
 
-    public String getmTag() {
+    public Tracker(UUID uuid){
+        trackerId = uuid;
+        tracking = true;
+    }
+
+    public String getTag() {
         return mTag;
     }
 
-    public void setmTag(String mTag) {
+    public void setTag(String mTag) {
         this.mTag = mTag;
     }
 
@@ -87,14 +91,6 @@ public class Tracker {
         this.mTrackerContent = mTrackerContent;
     }
 
-    public String getGoal() {
-        return mTrackerGoal;
-    }
-
-    public void setGoal(String mTrackerGoal) {
-        this.mTrackerGoal = mTrackerGoal;
-    }
-
     public void addDurationItem(DurationItem di){
         durationItems.add(di);
     }
@@ -102,5 +98,13 @@ public class Tracker {
     @Override
     public String toString() {
         return mTrackerTitle;
+    }
+
+    public void setComment(String mComment) {
+        this.mComment = mComment;
+    }
+
+    public String getComment(){
+        return mComment;
     }
 }

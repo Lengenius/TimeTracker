@@ -1,5 +1,6 @@
 package com.android.frankthirteen.timetracker.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +18,7 @@ import com.android.frankthirteen.timetracker.fragment.ReporterModifyFragment;
 import com.android.frankthirteen.timetracker.fragment.TrackListFragment;
 import com.android.frankthirteen.timetracker.fragment.WorkFocusFragment;
 
-public class GuideStart extends AppCompatActivity
+public class GuideStartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -46,10 +47,9 @@ public class GuideStart extends AppCompatActivity
 
         if (fragment==null){
             fragment = WorkFocusFragment.newInstance();
+            fragmentManager.beginTransaction().add(R.id.guide_fragment_container,fragment).commit();
         }
-
-        fragmentManager.beginTransaction().add(R.id.guide_fragment_container,fragment).commit();
-
+        fragmentManager.beginTransaction().replace(R.id.single_fragment_container,fragment).commit();
 
     }
 
@@ -77,8 +77,19 @@ public class GuideStart extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+
+                break;
+            case R.id.action_add_new_tracker:
+                Intent intent = new Intent(getApplicationContext(),CreateTrackerActivity.class);
+                startActivity(intent);
+
+                break;
+            //add new tracker to tracker list.
+            default:
+
+            return false;
         }
 
         return super.onOptionsItemSelected(item);
