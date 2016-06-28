@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.fragment.ReporterModifyFragment;
 import com.android.frankthirteen.timetracker.fragment.TrackListFragment;
 import com.android.frankthirteen.timetracker.fragment.WorkFocusFragment;
 
@@ -23,7 +22,6 @@ public class GuideStartActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private Fragment fragment;
-
 
 
     @Override
@@ -45,11 +43,10 @@ public class GuideStartActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragment = fragmentManager.findFragmentById(R.id.guide_fragment_container);
 
-        if (fragment==null){
+        if (fragment == null) {
             fragment = WorkFocusFragment.newInstance();
-            fragmentManager.beginTransaction().add(R.id.guide_fragment_container,fragment).commit();
+            fragmentManager.beginTransaction().add(R.id.guide_fragment_container, fragment).commit();
         }
-        fragmentManager.beginTransaction().replace(R.id.single_fragment_container,fragment).commit();
 
     }
 
@@ -82,14 +79,14 @@ public class GuideStartActivity extends AppCompatActivity
 
                 break;
             case R.id.action_add_new_tracker:
-                Intent intent = new Intent(getApplicationContext(),CreateTrackerActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CreateTrackerActivity.class);
                 startActivity(intent);
 
                 break;
             //add new tracker to tracker list.
             default:
 
-            return false;
+                return false;
         }
 
         return super.onOptionsItemSelected(item);
@@ -101,7 +98,7 @@ public class GuideStartActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.list_fragment:
                 fragment = TrackListFragment.newInstance();
                 break;
@@ -124,7 +121,7 @@ public class GuideStartActivity extends AppCompatActivity
         return true;
     }
 
-    private void replaceFragment(Fragment frag){
-        getSupportFragmentManager().beginTransaction().replace(R.id.guide_fragment_container,frag).commit();
+    private void replaceFragment(Fragment frag) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.guide_fragment_container, frag).commit();
     }
 }

@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.android.frankthirteen.timetracker.fragment.ReporterChartFragment;
-import com.android.frankthirteen.timetracker.fragment.ReporterModifyFragment;
+import com.android.frankthirteen.timetracker.fragment.ReporterTableFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ReporterPagerAdapter extends FragmentPagerAdapter {
             fragments = new ArrayList<Fragment>();
         }
         fragments.add(ReporterChartFragment.newInstance(uuid));
-        fragments.add(ReporterModifyFragment.newInstance(uuid));
+        fragments.add(ReporterTableFragment.newInstance(uuid));
     }
 
     @Override

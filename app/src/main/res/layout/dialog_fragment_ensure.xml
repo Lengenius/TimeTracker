@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:zhy="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/dialog_ensure_iv"
@@ -17,11 +17,11 @@
 
     <com.zhy.view.flowlayout.TagFlowLayout
         android:id="@+id/dialog_ensure_tags"
-        zhy:max_select="1"
-        zhy:auto_select_effect="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp">
+        android:padding="4dp"
+        zhy:auto_select_effect="true"
+        zhy:max_select="1">
     </com.zhy.view.flowlayout.TagFlowLayout>
 
     <EditText

@@ -1,6 +1,8 @@
 package com.android.frankthirteen.timetracker.entities;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -9,25 +11,32 @@ import java.util.UUID;
  * When you are done with it. You can remove it from tracking list.
  */
 public class Tracker {
-    public static final String EXTRA_ID = "com.android.frankthirteen.timetracker.entities.Extra_id";
+    public static final String EXTRA_ID = "com.android.frankthirteen.timetracker.Extra_id";
+    public static final String EXTRA_DATE = "com.android.frankthirteen.timetracker.Extra_date";
 
     private UUID trackerId;
     private String mTrackerTitle;
     private String mTrackerContent;
-    private String mTag,mComment;
+    private String mTag, mComment;
     private int durations;
+    private int plannedTimeInMinutes;
     private boolean tracking;
 
-    private ArrayList<DurationItem> durationItems;
+    private Date mEndDate;
+
+    private List<DurationItem> durationItems;
 
     public Tracker() {
         this.trackerId = UUID.randomUUID();
         tracking = true;
+        durationItems = new ArrayList<>();
+        mEndDate = new Date();
     }
 
-    public Tracker(UUID uuid){
+    public Tracker(UUID uuid) {
         trackerId = uuid;
         tracking = true;
+        mEndDate = new Date();
     }
 
     public String getTag() {
@@ -38,12 +47,12 @@ public class Tracker {
         this.mTag = mTag;
     }
 
-    public ArrayList<DurationItem> getDurationItems() {
+    public List<DurationItem> getDurationItems() {
         return durationItems;
     }
 
 
-    public void addDuration(DurationItem di){
+    public void addDuration(DurationItem di) {
         di.setTrackerId(trackerId);
         durationItems.add(di);
     }
@@ -51,7 +60,8 @@ public class Tracker {
     public int getTotalDurations() {
         return durations;
     }
-    public void updateTotalDuration(){
+
+    public void updateTotalDuration() {
         durations = 0;
         for (DurationItem di :
                 durationItems) {
@@ -91,7 +101,7 @@ public class Tracker {
         this.mTrackerContent = mTrackerContent;
     }
 
-    public void addDurationItem(DurationItem di){
+    public void addDurationItem(DurationItem di) {
         durationItems.add(di);
     }
 
@@ -100,11 +110,27 @@ public class Tracker {
         return mTrackerTitle;
     }
 
+    public String getComment() {
+        return mComment;
+    }
+
     public void setComment(String mComment) {
         this.mComment = mComment;
     }
 
-    public String getComment(){
-        return mComment;
+    public void setPlanningTime(int hours) {
+        plannedTimeInMinutes = hours * 60;
+    }
+
+    public Date getEndDate() {
+        if (mEndDate != null) {
+            return mEndDate;
+        } else {
+            return null;
+        }
+    }
+
+    public void setEndDate(Date endDate) {
+        mEndDate = endDate;
     }
 }

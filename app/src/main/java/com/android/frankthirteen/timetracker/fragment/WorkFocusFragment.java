@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import com.android.frankthirteen.timetracker.utils.LogUtils;
 /**
  * Created by Frank on 5/24/16.
  */
-public class WorkFocusFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
+public class WorkFocusFragment extends Fragment implements View.OnClickListener {
     public static final int UPDATE_TIMER = 0;
     public static final int STOP_TIMER = 1;
     private static final String TAG = "WorkFocusFragment";
@@ -111,7 +112,7 @@ public class WorkFocusFragment extends android.support.v4.app.Fragment implement
      */
     private void stopTimer() {
         started = false;
-        DialogFragment dialog = EnsureFragment.newInstance(elapsedTime);
+        DialogFragment dialog = EnsureDialogFragment.newInstance(elapsedTime);
         dialog.setTargetFragment(WorkFocusFragment.this, REQUEST_TRACKER);
         dialog.show(getFragmentManager(), ADD_TO);
 

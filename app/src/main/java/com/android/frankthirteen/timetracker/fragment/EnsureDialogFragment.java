@@ -31,12 +31,12 @@ import java.util.UUID;
 /**
  * Created by Frank on 6/11/16.
  */
-public class EnsureFragment extends android.support.v4.app.DialogFragment
+public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
         implements DialogInterface.OnClickListener {
 
     private static final String EXTRA_TIME =
             "com.android.frankthirteen.timetracker.fragment.Extra_Time";
-    private static final String TAG = "EnsureFragment";
+    private static final String TAG = "EnsureDialogFragment";
 
     public String[] tagsValues = new String[]{
                     "Sport", "Entertainment", "Work", "Traffic", "Study", "Hobby"};
@@ -49,11 +49,11 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
     private LayoutInflater layoutInflater;
 
 
-    public static EnsureFragment newInstance(int elapsedTime) {
+    public static EnsureDialogFragment newInstance(int elapsedTime) {
 
         Bundle args = new Bundle();
         args.putInt(EXTRA_TIME, elapsedTime);
-        EnsureFragment fragment = new EnsureFragment();
+        EnsureDialogFragment fragment = new EnsureDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,7 +70,7 @@ public class EnsureFragment extends android.support.v4.app.DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view = View.inflate(getActivity(), R.layout.fragment_dialog_ensure, null);
+        View view = View.inflate(getActivity(), R.layout.dialog_fragment_ensure, null);
 
         tagsContainer = ((TagFlowLayout) view.findViewById(R.id.dialog_ensure_tags));
         initialTags();

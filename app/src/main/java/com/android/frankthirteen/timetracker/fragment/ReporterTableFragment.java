@@ -18,27 +18,25 @@ import java.util.UUID;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ReporterModifyFragment extends Fragment {
+public class ReporterTableFragment extends Fragment {
 
     private Tracker mTracker;
     private TextView tvTitle, tvContent, tvDuration, tvDate;
     private UUID mId;
     private TrackerLab trackerLab;
 
-    public static ReporterModifyFragment newInstance(UUID uuid) {
-
-        Bundle args = new Bundle();
-        args.putSerializable(Tracker.EXTRA_ID, uuid);
-        ReporterModifyFragment fragment = new ReporterModifyFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
-    public ReporterModifyFragment() {
+    public ReporterTableFragment() {
         // Required empty public constructor
     }
 
+    public static ReporterTableFragment newInstance(UUID uuid) {
+
+        Bundle args = new Bundle();
+        args.putSerializable(Tracker.EXTRA_ID, uuid);
+        ReporterTableFragment fragment = new ReporterTableFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

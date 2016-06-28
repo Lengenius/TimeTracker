@@ -1,44 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.android.frankthirteen.timetracker.activity.ReporterActivity">
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="8dp">
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp">
 
         <ImageView
-            android:id="@+id/reporter_tracker_photo"
+            android:id="@+id/tracker_photo"
             android:layout_width="160dp"
             android:layout_height="160dp"
+            android:layout_margin="4dp"
             android:background="@color/colorPrimaryLight" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="8dp"
+            android:paddingLeft="4dp"
             android:paddingRight="8dp"
             android:paddingTop="4dp">
 
-            <TextView
-                style="@style/EditItem"
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/tracker_add_photo"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
+                android:src="@drawable/ic_menu_camera" />
+
+            <TextView
+                android:id="@+id/label_tracker_title"
+                style="@style/EditItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
                 android:text="Title" />
 
-            <TextView
-                android:id="@+id/reporter_tracker_title"
+            <EditText
+                android:id="@+id/tracker_title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:hint="Type a Tracker Title." />
 
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -57,11 +67,39 @@
             android:text="Content"
             android:textAllCaps="true" />
 
-        <TextView
-            android:id="@+id/reporter_tracker_content"
+        <EditText
+            android:id="@+id/tracker_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3" />
+            android:layout_weight="3"
+            android:hint="Type content here."
+            android:lines="2" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp">
+
+        <TextView
+            style="@style/EditItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:text="comment" />
+
+        <EditText
+            android:id="@+id/tracker_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:hint="Type some comment here."
+            android:lines="3" />
     </LinearLayout>
 
     <LinearLayout
@@ -77,65 +115,48 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="comment" />
+            android:text="cost" />
 
-        <TextView
-            android:id="@+id/reporter_tracker_comment"
+        <EditText
+            android:id="@+id/tracker_plan_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3" />
+            android:layout_weight="3"
+            android:hint="Hours plan to spend on."
+            android:inputType="number" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="4dp">
 
         <TextView
             style="@style/EditItem"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Time payed" />
-
-        <ProgressBar
-            android:id="@+id/reporter_progress_time_cost"
-            style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:progress="40" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="4dp">
+            android:layout_weight="1"
+            android:text="end" />
 
         <TextView
-            style="@style/EditItem"
-            android:layout_width="wrap_content"
+            android:id="@+id/tracker_end_date"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Day past" />
+            android:layout_weight="2"
+            android:hint="End Date." />
 
-        <ProgressBar
-            android:id="@+id/reporter_progress_date"
-            style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/tracker_choose_date"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:progress="25" />
-
+            android:layout_weight="1"
+            android:minHeight="0dp"
+            android:text="choose date" />
     </LinearLayout>
+
 
 </LinearLayout>

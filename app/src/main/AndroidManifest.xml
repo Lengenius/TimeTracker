@@ -27,6 +27,13 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
+
+        <activity
+            android:name=".activity.CreateTrackerActivity"
+            android:label="creating new tracker"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>
