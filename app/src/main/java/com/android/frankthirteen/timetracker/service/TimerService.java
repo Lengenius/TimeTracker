@@ -14,9 +14,6 @@ import java.util.TimerTask;
  * Service to hold a timer.
  */
 public class TimerService extends Service {
-    private TimerTask timerTask;
-    private Timer timer;
-    private Handler handler;
 
     @Nullable
     @Override

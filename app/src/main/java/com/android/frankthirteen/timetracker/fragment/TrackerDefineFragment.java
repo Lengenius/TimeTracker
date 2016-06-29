@@ -2,9 +2,15 @@ package com.android.frankthirteen.timetracker.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,16 +20,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
+import com.android.frankthirteen.timetracker.utils.PictureUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -42,6 +54,9 @@ public class TrackerDefineFragment extends Fragment {
     private ImageButton iBtnTakePhoto;
     private Button btnChooseDate;
     private Tracker tracker;
+    private ImageView trPhoto;
+
+    private String currentPhotoPath;
 
     public static TrackerDefineFragment newInstance(UUID id) {
 
@@ -157,9 +172,39 @@ public class TrackerDefineFragment extends Fragment {
             }
         });
 
+        iBtnTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //create a photo file.
+                //start a photo take activity.
+
+                File photoFile = null;
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getActivity().getPackageManager())!=null) {
+                    try {
+                        photoFile = createFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Sorry, can't create a picture", Toast.LENGTH_SHORT).show();
+                    }
+                    if (photoFile!=null){
+
+                        //latest uses for Android N.
+                        Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                                "com.android.frankthirteen.timetracker",
+                                photoFile);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT,photoURI);
+                        startActivityForResult(intent, REQUEST_PHOTO);
+                    }
+                }
+            }
+        });
+
 
         return rootView;
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -170,13 +215,20 @@ public class TrackerDefineFragment extends Fragment {
         switch (requestCode) {
             case REQUEST_DATE:
                 Date date = (Date) data.getSerializableExtra(Tracker.EXTRA_DATE);
-// TODO: 6/28/16 set a good look format;
-                SimpleDateFormat dateFormat = (SimpleDateFormat) DateFormat.getDateInstance();
-
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd EEE", Locale.getDefault());
+                String dateStr = dateFormat.format(date);
                 tracker.setEndDate(date);
-                trEndDate.setText(date.toString());
+                trEndDate.setText(dateStr);
                 break;
             case REQUEST_PHOTO:
+
+                galleryAddPhoto();
+                Bitmap bitmap = PictureUtils.getThumbnail(trPhoto,currentPhotoPath);
+                trPhoto.setImageBitmap(bitmap);
+
+                //store the photo, get a thumbnail.
+                //change the ImageView.
+                //set tracker's photo attribute.
 
                 break;
         }
@@ -188,11 +240,38 @@ public class TrackerDefineFragment extends Fragment {
         trComment = (EditText) rootView.findViewById(R.id.tracker_comment);
         trTimeCost = (EditText) rootView.findViewById(R.id.tracker_plan_time);
 
+        trPhoto = (ImageView) rootView.findViewById(R.id.tracker_photo);
+
         trEndDate = (TextView) rootView.findViewById(R.id.tracker_end_date);
 
         iBtnTakePhoto = (ImageButton) rootView.findViewById(R.id.tracker_add_photo);
         btnChooseDate = (Button) rootView.findViewById(R.id.tracker_choose_date);
 
+        boolean hasCamera = getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+
+        if (!hasCamera){
+            iBtnTakePhoto.setVisibility(View.GONE);
+        }
+    }
+
+    private File createFile() throws IOException{
+
+        String photoName = tracker.getId().toString();
+        String photoFileName = "JPEG_" + photoName;
+        File dir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(photoFileName,"jpt",dir);
+
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+
+    }
+
+    private void galleryAddPhoto(){
+        Intent mediaSendIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaSendIntent.setData(contentUri);
+        getActivity().sendBroadcast(mediaSendIntent);
     }
 
 }

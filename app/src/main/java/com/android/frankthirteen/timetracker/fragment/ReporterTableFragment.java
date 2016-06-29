@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.UUID;
 
@@ -57,8 +58,9 @@ public class ReporterTableFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_reporter_table, container, false);
 
-        tvTitle = (TextView) rootView.findViewById(R.id.tracker_title);
-        tvTitle.setText(mTracker.getTitle());
+        tvTitle = (TextView) rootView.findViewById(R.id.reporter_tracker_title);
+        LogUtils.d("table", tvTitle.toString());
+        tvTitle.setText(mTracker.getTitle()+"");
 
 
         return rootView;
