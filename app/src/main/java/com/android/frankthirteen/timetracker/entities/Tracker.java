@@ -17,7 +17,8 @@ public class Tracker {
     private UUID trackerId;
     private String mTrackerTitle;
     private String mTrackerContent;
-    private String mTag, mComment;
+    private String mComment;
+    private String mPhotoPath;
     private int durations;
     private int plannedTimeInMinutes;
     private boolean tracking;
@@ -39,13 +40,13 @@ public class Tracker {
         mEndDate = new Date();
     }
 
-    public String getTag() {
-        return mTag;
-    }
-
-    public void setTag(String mTag) {
-        this.mTag = mTag;
-    }
+//    public String getTag() {
+//        return mTag;
+//    }
+//
+//    public void setTag(String mTag) {
+//        this.mTag = mTag;
+//    }
 
     public List<DurationItem> getDurationItems() {
         return durationItems;
@@ -55,6 +56,7 @@ public class Tracker {
     public void addDuration(DurationItem di) {
         di.setTrackerId(trackerId);
         durationItems.add(di);
+        updateTotalDuration();
     }
 
     public int getTotalDurations() {
@@ -101,10 +103,6 @@ public class Tracker {
         this.mTrackerContent = mTrackerContent;
     }
 
-    public void addDurationItem(DurationItem di) {
-        durationItems.add(di);
-    }
-
     @Override
     public String toString() {
         return mTrackerTitle;
@@ -122,6 +120,10 @@ public class Tracker {
         plannedTimeInMinutes = hours * 60;
     }
 
+    public int getPlannedTimeInMinutes() {
+        return plannedTimeInMinutes;
+    }
+
     public Date getEndDate() {
         if (mEndDate != null) {
             return mEndDate;
@@ -132,5 +134,13 @@ public class Tracker {
 
     public void setEndDate(Date endDate) {
         mEndDate = endDate;
+    }
+
+    public String getPhotoPath() {
+        return mPhotoPath;
+    }
+
+    public void setPhotoPath(String mPhotoPath) {
+        this.mPhotoPath = mPhotoPath;
     }
 }

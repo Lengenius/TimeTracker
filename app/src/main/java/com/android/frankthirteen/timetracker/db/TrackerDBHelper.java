@@ -12,24 +12,27 @@ import com.android.frankthirteen.timetracker.utils.LogUtils;
 public class TrackerDBHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_DURATION_ITEM = "create table duration_item(" +
             "_id integer primary key autoincrement," +
-            "uid text," +
-            "duration integer," +
-            "content text," +
-            "tracking_state int," +
+            "duration_id text,"+
             "tracker_id text," +
+            "period integer," +
             "tag text," +
-            "duration_tag text," +
-            "date integer)";
+            "comment text," +
+            "start_date text," +
+            "day integer," +
+            "month integer," +
+            "year integer)";
 
     private static final String CREATE_TABLE_TRACKER = "create table tracker(" +
             "_id integer primary key autoincrement," +
-            "uid text," +
+            "tracker_id text," +
             "title text," +
             "content text," +
             "comment text," +
-            "total_duration integer," +
-            "tag text)";
-
+            "photo_path text," +
+            "duration integer," +
+            "planned_time_in_minutes integer," +
+            "tracking_state text," +
+            "end_date integer)";
 
     public TrackerDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);

@@ -2,6 +2,7 @@ package com.android.frankthirteen.timetracker.entities;
 
 import android.content.Context;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -10,12 +11,13 @@ import java.util.UUID;
  */
 public class DurationItem {
     private Context mContext;
-    private String mComment;
-    private Date mDate;
-    private int mDuration;
+
     private UUID mId;
     private UUID trackerId;
+    private int mPeriod;
     private String mTag;
+    private String mComment;
+    private Date mDate;
 
     /**
      * Default Constructor for DB only.
@@ -25,9 +27,9 @@ public class DurationItem {
 
     public DurationItem(Context context) {
         mContext = context;
-        mDate = new Date();
         mId = UUID.randomUUID();
-        mDuration = 0;
+        mDate = new Date();
+        mPeriod = 0;
     }
 
     public UUID getTrackerId() {
@@ -58,8 +60,26 @@ public class DurationItem {
         return mDate;
     }
 
+    public int getYear(){
+        Calendar c = Calendar.getInstance();
+        c.setTime(mDate);
+        return c.get(Calendar.YEAR);
+    }
+
+    public int getMonth(){
+        Calendar c = Calendar.getInstance();
+        c.setTime(mDate);
+        return c.get(Calendar.MONTH);
+    }
+
+    public int getDay(){
+        Calendar c = Calendar.getInstance();
+        c.setTime(mDate);
+        return c.get(Calendar.DAY_OF_YEAR);
+    }
+
     /**
-     * Set Item start and end time;
+     * Set Item start time;
      *
      * @param mDate always is the start time.
      */
@@ -68,11 +88,11 @@ public class DurationItem {
     }
 
     public int getDuration() {
-        return mDuration;
+        return mPeriod;
     }
 
     public void setDuration(int mDuration) {
-        this.mDuration = mDuration;
+        this.mPeriod = mDuration;
     }
 
     public String getTag() {

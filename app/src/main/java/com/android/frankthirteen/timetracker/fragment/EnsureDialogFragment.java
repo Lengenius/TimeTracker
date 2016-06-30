@@ -48,6 +48,8 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
     private TagFlowLayout tagsContainer;
     private LayoutInflater layoutInflater;
 
+    private UUID trackerId;
+
 
     public static EnsureDialogFragment newInstance(int elapsedTime) {
 
@@ -87,8 +89,7 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                UUID trackerId = ((Tracker) parent.getItemAtPosition(position)).getId();
-                mDurationItem.setTrackerId(trackerId);
+                trackerId = ((Tracker) parent.getItemAtPosition(position)).getId();
             }
 
             @Override
@@ -134,6 +135,7 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
             case AlertDialog.BUTTON_POSITIVE:
 
                 saveDurationItem();
+                TrackerLab.getTrackerLab(getActivity()).getTracker(trackerId).addDuration(mDurationItem);
                 sendResult(Activity.RESULT_OK);
                 mDurationItem.setComment(edContent.getText().toString());
                 break;

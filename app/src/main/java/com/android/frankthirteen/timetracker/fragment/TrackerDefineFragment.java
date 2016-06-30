@@ -225,6 +225,7 @@ public class TrackerDefineFragment extends Fragment {
                 galleryAddPhoto();
                 Bitmap bitmap = PictureUtils.getThumbnail(trPhoto,currentPhotoPath);
                 trPhoto.setImageBitmap(bitmap);
+                tracker.setPhotoPath(currentPhotoPath);
 
                 //store the photo, get a thumbnail.
                 //change the ImageView.

@@ -1,5 +1,6 @@
 package com.android.frankthirteen.timetracker.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,11 +15,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.db.TrackerDB;
+import com.android.frankthirteen.timetracker.entities.Tracker;
+import com.android.frankthirteen.timetracker.entities.TrackerLab;
 import com.android.frankthirteen.timetracker.fragment.TrackListFragment;
 import com.android.frankthirteen.timetracker.fragment.WorkFocusFragment;
 
+import java.util.UUID;
+
 public class GuideStartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final int REQUEST_TRACKER = 0x0001;
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private Fragment fragment;
@@ -80,7 +87,7 @@ public class GuideStartActivity extends AppCompatActivity
                 break;
             case R.id.action_add_new_tracker:
                 Intent intent = new Intent(getApplicationContext(), CreateTrackerActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,REQUEST_TRACKER);
 
                 break;
             //add new tracker to tracker list.
@@ -119,6 +126,27 @@ public class GuideStartActivity extends AppCompatActivity
         replaceFragment(fragment);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode== Activity.RESULT_CANCELED){
+            return;
+        }
+
+        switch (requestCode) {
+            case REQUEST_TRACKER:
+
+                UUID trackerId = (UUID) data.getSerializableExtra(Tracker.EXTRA_ID);
+                Tracker tracker  = TrackerLab.getTrackerLab(GuideStartActivity.this).
+                        getTracker(trackerId);
+                TrackerDB.getTrackerDB(GuideStartActivity.this).insertTracker(tracker);
+
+                break;
+            default:
+
+                break;
+        }
     }
 
     private void replaceFragment(Fragment frag) {

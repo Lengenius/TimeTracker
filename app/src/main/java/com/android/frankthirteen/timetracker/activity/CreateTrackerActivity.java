@@ -1,14 +1,18 @@
 package com.android.frankthirteen.timetracker.activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.fragment.TrackerDefineFragment;
 
 import java.util.UUID;
@@ -17,6 +21,7 @@ import java.util.UUID;
  * Created by Frank on 6/24/16.
  */
 public class CreateTrackerActivity extends AppCompatActivity {
+    private UUID trackerId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,15 +35,39 @@ public class CreateTrackerActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        trackerId = UUID.randomUUID();
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.single_fragment_container);
         if (fragment==null){
-            fragment = TrackerDefineFragment.newInstance(UUID.randomUUID());
+            fragment = TrackerDefineFragment.newInstance(trackerId);
         }
         fm.beginTransaction().add(R.id.single_fragment_container, fragment).commit();
 //        else {
 //            fm.beginTransaction().replace(R.id.single_fragment_container, fragment).commit();
 //        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(CreateTrackerActivity.this)
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CreateTrackerActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra(Tracker.EXTRA_ID,trackerId);
+                        setResult(RESULT_OK,resultIntent);
+                        CreateTrackerActivity.super.onBackPressed();
+                    }
+                })
+                .setTitle("Exit")
+                .setMessage("Are you sure you want to create this tracker?").create().show();
+
     }
 
     @Override

@@ -21,20 +21,27 @@ public class TrackerDB {
      * make the column name constant to avoid misname error.
      */
     public static final String TABLE_DURATION = "duration_item";
-    public static final String DURATION_UID = "uid";
-    public static final String DURATION_DURATION = "duration";
-    public static final String DURATION_CONTENT = "content";
+    public static final String DURATION_UID = "duration_id";
     public static final String DURATION_TRACKER_ID = "tracker_id";
-    public static final String DURATION_DATE = "date";
+    public static final String DURATION_PERIOD = "period";
     public static final String DURATION_TAG = "tag";
+    public static final String DURATION_COMMENT = "comment";
+    public static final String DURATION_DATE = "start_date";
+    public static final String DURATION_DAY = "day";
+    public static final String DURATION_MONTH = "month";
+    public static final String DURATION_YEAR = "year";
+
 
     public static final String TABLE_TRACKER = "tracker";
-    public static final String TRACKER_ID = "uid";
-    public static final String TRACKER_TITLE = "title";
-    public static final String TRACKER_CONTENT = "content";
-    public static final String TRACKER_TAG = "tag";
-    public static final String TRACKER_STATE = "tracking_state";
-    public static final String TRACKER_TOTAL_DURATION = "total_duration";
+    public static final String TRACKER_ID="tracker_id";
+    public static final String TRACKER_TITLE="title";
+    public static final String TRACKER_CONTENT="content";
+    public static final String TRACKER_COMMENT="comment";
+    public static final String TRACKER_PHOTO_PATH="photo_path";
+    public static final String TRACKER_TOTAL_DURATION="duration";
+    public static final String TRACKER_PLANEN_TIME= "planned_time_in_minutes";
+    public static final String TRACKER_TRACKING_STATE="tracking_state";
+    public static final String TRACKER_END_DATE="end_date";
 
     public static final String DB_NAME = "TimeTrackerDB";
     public static final int DB_VERSION = 1;
@@ -64,8 +71,7 @@ public class TrackerDB {
             values.put(TRACKER_ID, tracker.getId().toString());
             values.put(TRACKER_CONTENT, tracker.getContent());
             values.put(TRACKER_TITLE, tracker.getTitle());
-            values.put(TRACKER_TAG, tracker.getTag());
-            values.put(TRACKER_STATE, tracker.isTracking());
+            values.put(TRACKER_TRACKING_STATE, tracker.isTracking());
             db.insert(TABLE_TRACKER, null, values);
         }
     }
@@ -79,8 +85,7 @@ public class TrackerDB {
                 tracker.setId(UUID.fromString(c.getString(c.getColumnIndex(TRACKER_ID))));
                 tracker.setTitle(c.getString(c.getColumnIndex(TRACKER_TITLE)));
                 tracker.setContent(c.getString(c.getColumnIndex(TRACKER_CONTENT)));
-                tracker.setTag(c.getString(c.getColumnIndex(TRACKER_TAG)));
-                tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_STATE)) > 0);
+                tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_TRACKING_STATE)) > 0);
 
                 trackers.add(tracker);
             }
@@ -99,7 +104,6 @@ public class TrackerDB {
             values.put(TRACKER_ID, tracker.getId().toString());
             values.put(TRACKER_CONTENT, tracker.getContent());
             values.put(TRACKER_TITLE, tracker.getTitle());
-            values.put(TRACKER_TAG, tracker.getTag());
             db.update(TABLE_TRACKER, values,
                     TRACKER_ID + "=?",
                     new String[]{tracker.getId().toString()});
@@ -125,7 +129,6 @@ public class TrackerDB {
 
         if (cursor.moveToFirst()) {
             ContentValues values = new ContentValues();
-            values.put(TRACKER_TAG, tracker.getTag());
             db.update(TABLE_TRACKER, values,
                     TRACKER_ID + "=?",
                     new String[]{tracker.getId().toString()});
@@ -145,9 +148,9 @@ public class TrackerDB {
                 if (di.getTrackerId() != null) {
                     contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
                 }
-                contentValues.put(DURATION_DURATION, di.getDuration());
+                contentValues.put(DURATION_PERIOD, di.getDuration());
                 contentValues.put(DURATION_DATE, di.getDate().getTime());
-                contentValues.put(DURATION_CONTENT, di.getComment());
+                contentValues.put(DURATION_COMMENT, di.getComment());
                 contentValues.put(DURATION_TAG, di.getTag());
                 db.insert(TABLE_DURATION, null, contentValues);
             } catch (Exception e) {
@@ -162,9 +165,9 @@ public class TrackerDB {
             try {
                 contentValues.put(DURATION_UID, di.getId().toString());
                 contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
-                contentValues.put(DURATION_DURATION, di.getDuration());
+                contentValues.put(DURATION_PERIOD, di.getDuration());
                 contentValues.put(DURATION_DATE, di.getDate().getTime());
-                contentValues.put(DURATION_CONTENT, di.getComment());
+                contentValues.put(DURATION_COMMENT, di.getComment());
                 db.update(TABLE_DURATION, contentValues, DURATION_UID + "=?", new String[]{di.getId().toString()});
                 return true;
             } catch (Exception e) {
@@ -188,8 +191,8 @@ public class TrackerDB {
                 Date diDate = new Date();
                 diDate.setTime(c.getLong(c.getColumnIndex(DURATION_DATE)));
                 di.setDate(diDate);
-                di.setComment(c.getString(c.getColumnIndex(DURATION_CONTENT)));
-                di.setDuration(c.getInt(c.getColumnIndex(DURATION_DURATION)));
+                di.setComment(c.getString(c.getColumnIndex(DURATION_COMMENT)));
+                di.setDuration(c.getInt(c.getColumnIndex(DURATION_PERIOD)));
                 durationItems.add(di);
             } while (c.moveToNext());
             c.close();
