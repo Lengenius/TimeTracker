@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by Frank on 6/24/16.
  */
-public class CreateTrackerActivity extends AppCompatActivity {
+public class DefineTrackerActivity extends AppCompatActivity {
     private UUID trackerId;
 
     @Override
@@ -49,20 +49,20 @@ public class CreateTrackerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(CreateTrackerActivity.this)
+        new AlertDialog.Builder(DefineTrackerActivity.this)
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        CreateTrackerActivity.super.onBackPressed();
+                        DefineTrackerActivity.super.onBackPressed();
                     }
                 })
-                .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra(Tracker.EXTRA_ID,trackerId);
                         setResult(RESULT_OK,resultIntent);
-                        CreateTrackerActivity.super.onBackPressed();
+                        DefineTrackerActivity.super.onBackPressed();
                     }
                 })
                 .setTitle("Exit")

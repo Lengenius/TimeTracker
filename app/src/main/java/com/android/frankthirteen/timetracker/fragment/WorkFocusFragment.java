@@ -95,7 +95,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
         switch (requestCode) {
             case REQUEST_TRACKER:
 
-                Toast.makeText(getActivity(),"Tracker added",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Duration added",Toast.LENGTH_SHORT).show();
                 elapsedTime = 0;
                 break;
             default:
@@ -116,7 +116,6 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
         dialog.setTargetFragment(WorkFocusFragment.this, REQUEST_TRACKER);
         dialog.show(getFragmentManager(), ADD_TO);
 
-        //TODO save elapsed time to a certain tracker. reset elapsed time. stop related service.
     }
 
 

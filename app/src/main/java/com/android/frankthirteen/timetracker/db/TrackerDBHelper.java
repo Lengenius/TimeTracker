@@ -32,6 +32,7 @@ public class TrackerDBHelper extends SQLiteOpenHelper {
             "duration integer," +
             "planned_time_in_minutes integer," +
             "tracking_state text," +
+            "start_date integer," +
             "end_date integer)";
 
     public TrackerDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {

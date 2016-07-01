@@ -1,5 +1,10 @@
 package com.android.frankthirteen.timetracker.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by Frank on 5/25/16.
  */
@@ -14,6 +19,11 @@ public class FormatUtils {
         return String.format("%02d:%02d:%02d",hours,minutes,seconds);
 
 
+    }
+
+    public static String formatDate(Date date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd EEE", Locale.getDefault());
+        return dateFormat.format(date);
     }
 
 

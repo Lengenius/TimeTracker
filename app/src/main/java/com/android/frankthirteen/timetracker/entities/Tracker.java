@@ -23,7 +23,7 @@ public class Tracker {
     private int plannedTimeInMinutes;
     private boolean tracking;
 
-    private Date mEndDate;
+    private Date mEndDate,mStartDate;
 
     private List<DurationItem> durationItems;
 
@@ -37,7 +37,7 @@ public class Tracker {
     public Tracker(UUID uuid) {
         trackerId = uuid;
         tracking = true;
-        mEndDate = new Date();
+        mStartDate = new Date();
     }
 
 //    public String getTag() {
@@ -142,5 +142,13 @@ public class Tracker {
 
     public void setPhotoPath(String mPhotoPath) {
         this.mPhotoPath = mPhotoPath;
+    }
+
+    public void setStartDate(Date startDate){
+        mStartDate = startDate;
+    }
+
+    public Date getStartDate() {
+        return mStartDate;
     }
 }

@@ -30,6 +30,7 @@ public class TrackListFragment extends Fragment {
 
     private TrackerLab trackerLab;
     private ArrayList<Tracker> trackers;
+    private TrackerListAdapter adapter;
 
     public static TrackListFragment newInstance() {
 
@@ -64,19 +65,15 @@ public class TrackListFragment extends Fragment {
 
         trackers = getTrackers(TRACKING);
 
-        final TrackerListAdapter adapter = new TrackerListAdapter(getActivity(), trackers);
+        adapter = new TrackerListAdapter(getActivity(), trackers);
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new TrackerListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
-                Toast.makeText(getActivity(), "item clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), ReporterActivity.class);
                 intent.putExtra(Tracker.EXTRA_ID,trackers.get(position).getId());
-
                 startActivity(intent);
-
             }
 
             @Override
@@ -90,6 +87,9 @@ public class TrackListFragment extends Fragment {
         return rootView;
 
     }
+
+    //Use broadcast receiver to notify item insert.
+    
 
     private ArrayList<Tracker> getTrackers(int state) {
         ArrayList<Tracker> trackers;

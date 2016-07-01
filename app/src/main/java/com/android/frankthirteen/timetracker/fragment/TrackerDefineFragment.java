@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
+import com.android.frankthirteen.timetracker.utils.FormatUtils;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 import com.android.frankthirteen.timetracker.utils.PictureUtils;
 
@@ -150,12 +151,14 @@ public class TrackerDefineFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                tracker.setPlanningTime(Integer.parseInt(s.toString()));
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (!(s.toString()).equals("")) {
+                    tracker.setPlanningTime(Integer.parseInt(s.toString()));
+                }
             }
         });
 
@@ -164,7 +167,7 @@ public class TrackerDefineFragment extends Fragment {
             public void onClick(View v) {
                 LogUtils.d(TAG, "end date button clicked.");
                 //set date picker fragment include target fragment,
-                DatePickerDialogFragment datePicker = DatePickerDialogFragment.newInstance(tracker.getEndDate());
+                DatePickerDialogFragment datePicker = DatePickerDialogFragment.newInstance(new Date());
                 datePicker.setTargetFragment(TrackerDefineFragment.this, REQUEST_DATE);
                 datePicker.show(getFragmentManager(), "Date");
 
@@ -215,10 +218,9 @@ public class TrackerDefineFragment extends Fragment {
         switch (requestCode) {
             case REQUEST_DATE:
                 Date date = (Date) data.getSerializableExtra(Tracker.EXTRA_DATE);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd EEE", Locale.getDefault());
-                String dateStr = dateFormat.format(date);
+
                 tracker.setEndDate(date);
-                trEndDate.setText(dateStr);
+                trEndDate.setText(FormatUtils.formatDate(date));
                 break;
             case REQUEST_PHOTO:
 

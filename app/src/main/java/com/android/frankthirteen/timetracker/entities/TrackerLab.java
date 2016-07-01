@@ -1,10 +1,13 @@
 package com.android.frankthirteen.timetracker.entities;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
+import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -13,14 +16,23 @@ import java.util.UUID;
 public class TrackerLab {
     private static TrackerLab sTrackerLab;
     private Context mContext;
-    private ArrayList<Tracker> trackers;
+    private List<Tracker> trackers;
+    private TrackerDB trackerDB;
 
 
     private TrackerLab(Context context) {
         mContext = context;
         trackers = new ArrayList<Tracker>();
         //Load DB if possible; initial the data.
+
+        trackerDB = TrackerDB.getTrackerDB(mContext);
+
+        if (trackerDB!=null){
+            initialTrackers();
+        }
     }
+
+
 
     public static TrackerLab getTrackerLab(Context context) {
         if (sTrackerLab == null) {
@@ -57,10 +69,12 @@ public class TrackerLab {
 
     public void addTracker(Tracker tracker) {
         trackers.add(tracker);
+        //add to DB to.
     }
 
     public void removeTracker(Tracker tracker) {
         trackers.remove(tracker);
+        //also need to remove it from DB.
     }
 
     public Tracker getTracker(UUID uuid){
@@ -76,6 +90,13 @@ public class TrackerLab {
         LogUtils.d("Lab","unfortunately ");
         return null;
     }
+
+    private void initialTrackers() {
+
+        trackers = trackerDB.getTrackers();
+
+    }
+
 
 
     private void fakeData(){

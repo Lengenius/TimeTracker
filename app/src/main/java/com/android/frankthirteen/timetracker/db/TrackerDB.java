@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +18,8 @@ import java.util.UUID;
  * Created by Frank on 5/26/16.
  */
 public class TrackerDB {
+
+    private static final String TAG = "DB";
     /**
      * make the column name constant to avoid misname error.
      */
@@ -33,15 +36,16 @@ public class TrackerDB {
 
 
     public static final String TABLE_TRACKER = "tracker";
-    public static final String TRACKER_ID="tracker_id";
-    public static final String TRACKER_TITLE="title";
-    public static final String TRACKER_CONTENT="content";
-    public static final String TRACKER_COMMENT="comment";
-    public static final String TRACKER_PHOTO_PATH="photo_path";
-    public static final String TRACKER_TOTAL_DURATION="duration";
-    public static final String TRACKER_PLANEN_TIME= "planned_time_in_minutes";
-    public static final String TRACKER_TRACKING_STATE="tracking_state";
-    public static final String TRACKER_END_DATE="end_date";
+    public static final String TRACKER_ID = "tracker_id";
+    public static final String TRACKER_TITLE = "title";
+    public static final String TRACKER_CONTENT = "content";
+    public static final String TRACKER_COMMENT = "comment";
+    public static final String TRACKER_PHOTO_PATH = "photo_path";
+    public static final String TRACKER_TOTAL_DURATION = "duration";
+    public static final String TRACKER_PLANED_TIME = "planned_time_in_minutes";
+    public static final String TRACKER_TRACKING_STATE = "tracking_state";
+    public static final String TRACKER_START_DATE = "start_date";
+    public static final String TRACKER_END_DATE = "end_date";
 
     public static final String DB_NAME = "TimeTrackerDB";
     public static final int DB_VERSION = 1;
@@ -66,12 +70,25 @@ public class TrackerDB {
      * encapsulate some method for other user.
      */
     public void insertTracker(Tracker tracker) {
+        LogUtils.d(TAG, "inserting invoked.");
         if (tracker != null) {
             ContentValues values = new ContentValues();
             values.put(TRACKER_ID, tracker.getId().toString());
-            values.put(TRACKER_CONTENT, tracker.getContent());
             values.put(TRACKER_TITLE, tracker.getTitle());
+            values.put(TRACKER_CONTENT, tracker.getContent());
+            values.put(TRACKER_COMMENT, tracker.getComment());
             values.put(TRACKER_TRACKING_STATE, tracker.isTracking());
+            values.put(TRACKER_PLANED_TIME, tracker.getPlannedTimeInMinutes());
+            if (tracker.getStartDate() != null) {
+                values.put(TRACKER_START_DATE, tracker.getStartDate().getTime());
+            }
+            if (tracker.getEndDate() != null) {
+                values.put(TRACKER_END_DATE, tracker.getEndDate().getTime());
+            }
+            if (tracker.getPhotoPath() != null) {
+                values.put(TRACKER_PHOTO_PATH, tracker.getPhotoPath());
+            }
+            LogUtils.d(TAG, values.toString());
             db.insert(TABLE_TRACKER, null, values);
         }
     }
@@ -85,7 +102,18 @@ public class TrackerDB {
                 tracker.setId(UUID.fromString(c.getString(c.getColumnIndex(TRACKER_ID))));
                 tracker.setTitle(c.getString(c.getColumnIndex(TRACKER_TITLE)));
                 tracker.setContent(c.getString(c.getColumnIndex(TRACKER_CONTENT)));
+                tracker.setComment(c.getString(c.getColumnIndex(TRACKER_COMMENT)));
                 tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_TRACKING_STATE)) > 0);
+                tracker.setPlanningTime(c.getInt(c.getColumnIndex(TRACKER_PLANED_TIME)));
+                if (c.getLong(c.getColumnIndex(TRACKER_END_DATE)) != 0) {
+                    Date date = new Date();
+                    date.setTime(c.getLong(c.getColumnIndex(TRACKER_END_DATE)));
+                    tracker.setEndDate(date);
+                }
+                if (c.getString(c.getColumnIndex(TRACKER_PHOTO_PATH)) != null) {
+                    tracker.setPhotoPath(c.getString(c.getColumnIndex(TRACKER_PHOTO_PATH)));
+                }
+
 
                 trackers.add(tracker);
             }
