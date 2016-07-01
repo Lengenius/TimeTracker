@@ -76,9 +76,21 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
                     return true;
                 }
             });
-
-
         }
+    }
+
+    public void addItem(int position, Tracker tracker){
+        trackers.add(position,tracker);
+        notifyItemInserted(position);
+    }
+
+    public void deleteItem(int position){
+        trackers.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public Tracker getItem(int position){
+        return trackers.get(position);
     }
 
     @Override

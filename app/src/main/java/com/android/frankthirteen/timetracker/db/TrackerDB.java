@@ -231,4 +231,16 @@ public class TrackerDB {
     }
 
 
+    public boolean removeTracker(Tracker tracker) {
+        String trackerId = tracker.getId().toString();
+        Cursor cursor = db.query(TABLE_TRACKER, null, TRACKER_ID + "=?", new String[]{trackerId},
+                null, null, null);
+        db.delete(TABLE_TRACKER, TRACKER_ID + "=?", new String[]{trackerId});
+        if (cursor.moveToFirst()){
+            cursor.close();
+            return false;
+        }
+        return true;
+
+    }
 }

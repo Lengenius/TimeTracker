@@ -74,6 +74,7 @@ public class TrackerLab {
 
     public void removeTracker(Tracker tracker) {
         trackers.remove(tracker);
+        trackerDB.removeTracker(tracker);
         //also need to remove it from DB.
     }
 

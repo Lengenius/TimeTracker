@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ public class TrackListFragment extends Fragment {
 
     private TrackerAddReceiver trackerAddReceiver;
     private LocalBroadcastManager localBroadcastManager;
+    private RecyclerView recyclerView;
 
     public static TrackListFragment newInstance() {
 
@@ -73,10 +75,10 @@ public class TrackListFragment extends Fragment {
         //should use different sign to load different trackers.
         View rootView = inflater.inflate(R.layout.fragment_list_tracker, null);
 
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
 
-        final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.tracker_recyclerView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.tracker_recyclerView);
         recyclerView.setLayoutManager(linearLayoutManager);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST);
@@ -85,22 +87,25 @@ public class TrackListFragment extends Fragment {
         trackers = getTrackers(TRACKING);
 
         adapter = new TrackerListAdapter(getActivity(), trackers);
-        recyclerView.setAdapter(adapter);
-
         adapter.setOnItemClickListener(new TrackerListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), ReporterActivity.class);
-                intent.putExtra(Tracker.EXTRA_ID,trackers.get(position).getId());
+                intent.putExtra(Tracker.EXTRA_ID, trackers.get(position).getId());
                 startActivity(intent);
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-
+                Tracker removedTracker = adapter.getItem(position);
+                adapter.deleteItem(position);
+                trackerLab.removeTracker(removedTracker);
                 Toast.makeText(getActivity(), "item long clicked", Toast.LENGTH_SHORT).show();
             }
         });
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
 
 
         return rootView;
@@ -115,22 +120,25 @@ public class TrackListFragment extends Fragment {
         if (state != TRACKING && state != FINISHED) {
             throw new IllegalArgumentException("Invalid argument");
         }
-        if (state == TRACKING){
+        if (state == TRACKING) {
             trackers = trackerLab.getTrackingTrackers();
-        }else {
+        } else {
             trackers = trackerLab.getTrackedTrackers();
         }
 
         return trackers;
     }
 
-    class TrackerAddReceiver extends BroadcastReceiver{
+    class TrackerAddReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getActivity(),"local broadcast received",Toast.LENGTH_SHORT).show();
-            LogUtils.d(TAG,trackers.size() + "items.");
-            adapter.notifyItemInserted(trackers.size()+1);
+            Toast.makeText(getActivity(), "local broadcast received", Toast.LENGTH_SHORT).show();
+            LogUtils.d(TAG, trackers.size() + "items.");
+
+            // TODO: 7/1/16 make the recycler view refresh later to show the new item.
+            adapter.notifyDataSetChanged();
+            recyclerView.invalidate();
         }
     }
 }
