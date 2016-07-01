@@ -31,7 +31,6 @@ public class Tracker {
         this.trackerId = UUID.randomUUID();
         tracking = true;
         durationItems = new ArrayList<>();
-        mEndDate = new Date();
     }
 
     public Tracker(UUID uuid) {

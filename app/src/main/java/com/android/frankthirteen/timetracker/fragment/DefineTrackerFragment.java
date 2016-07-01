@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -33,21 +32,18 @@ import com.android.frankthirteen.timetracker.utils.PictureUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
  * Created by Frank on 6/28/16.
  */
-public class TrackerDefineFragment extends Fragment {
+public class DefineTrackerFragment extends Fragment {
 
     public static final int REQUEST_DATE = 0;
     public static final int REQUEST_PHOTO = 1;
 
-    private static final String TAG = "TrackerDefineFragment";
+    private static final String TAG = "DefineTrackerFragment";
 
     private UUID mId;
     private EditText trTitle, trContent, trComment, trTimeCost;
@@ -59,11 +55,11 @@ public class TrackerDefineFragment extends Fragment {
 
     private String currentPhotoPath;
 
-    public static TrackerDefineFragment newInstance(UUID id) {
+    public static DefineTrackerFragment newInstance(UUID id) {
 
         Bundle args = new Bundle();
         args.putSerializable(Tracker.EXTRA_ID, id);
-        TrackerDefineFragment fragment = new TrackerDefineFragment();
+        DefineTrackerFragment fragment = new DefineTrackerFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -168,7 +164,7 @@ public class TrackerDefineFragment extends Fragment {
                 LogUtils.d(TAG, "end date button clicked.");
                 //set date picker fragment include target fragment,
                 DatePickerDialogFragment datePicker = DatePickerDialogFragment.newInstance(new Date());
-                datePicker.setTargetFragment(TrackerDefineFragment.this, REQUEST_DATE);
+                datePicker.setTargetFragment(DefineTrackerFragment.this, REQUEST_DATE);
                 datePicker.show(getFragmentManager(), "Date");
 
 

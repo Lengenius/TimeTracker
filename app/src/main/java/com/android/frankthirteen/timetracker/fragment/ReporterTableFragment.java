@@ -15,6 +15,8 @@ import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -82,10 +84,21 @@ public class ReporterTableFragment extends Fragment {
 
         tvContent.setText(mTracker.getContent());
         tvComment.setText(mTracker.getComment());
-        LogUtils.d(TAG,mTracker.getComment());
+//        LogUtils.d(TAG,mTracker.getComment());
         //
-        tvDayPast.setText("Today - start Date");
+        int dayPast = getDayPast();
+
+        tvDayPast.setText(dayPast + "days passed.");
         tvTimePayed.setText(mTracker.getTotalDurations() + "mins");
+
+        prTimePayed.setProgress(Math.round
+                (mTracker.getTotalDurations()/60)/mTracker.getPlannedTimeInMinutes()*100);
+    }
+
+    private int getDayPast() {
+        Date today = new Date();
+        long msPast = today.getTime() - mTracker.getStartDate().getTime();
+        return Math.round(msPast/1000/60/60/24);
     }
 
 

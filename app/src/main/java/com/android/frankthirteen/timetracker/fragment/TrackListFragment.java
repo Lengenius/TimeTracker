@@ -1,9 +1,13 @@
 package com.android.frankthirteen.timetracker.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +21,7 @@ import com.android.frankthirteen.timetracker.adapter.DividerItemDecoration;
 import com.android.frankthirteen.timetracker.adapter.TrackerListAdapter;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.ArrayList;
 
@@ -27,10 +32,17 @@ public class TrackListFragment extends Fragment {
     public static final int TRACKING = 0;
     public static final int FINISHED = 1;
 
+    public static final String TRACKER_ADDED = "com.android.frankthirteen.timetracker.fragment." +
+            "TRACKER_ADDED";
+    private static final String TAG = "TRACKER_LIST";
+
 
     private TrackerLab trackerLab;
     private ArrayList<Tracker> trackers;
     private TrackerListAdapter adapter;
+
+    private TrackerAddReceiver trackerAddReceiver;
+    private LocalBroadcastManager localBroadcastManager;
 
     public static TrackListFragment newInstance() {
 
@@ -45,6 +57,13 @@ public class TrackListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         trackerLab = TrackerLab.getTrackerLab(getActivity());
+        localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        trackerAddReceiver = new TrackerAddReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(TRACKER_ADDED);
+        localBroadcastManager.registerReceiver(trackerAddReceiver,
+                intentFilter);
+
     }
 
     @Nullable
@@ -89,7 +108,6 @@ public class TrackListFragment extends Fragment {
     }
 
     //Use broadcast receiver to notify item insert.
-    
 
     private ArrayList<Tracker> getTrackers(int state) {
         ArrayList<Tracker> trackers;
@@ -104,5 +122,15 @@ public class TrackListFragment extends Fragment {
         }
 
         return trackers;
+    }
+
+    class TrackerAddReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getActivity(),"local broadcast received",Toast.LENGTH_SHORT).show();
+            LogUtils.d(TAG,trackers.size() + "items.");
+            adapter.notifyItemInserted(trackers.size()+1);
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +14,8 @@ import android.view.MenuItem;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
-import com.android.frankthirteen.timetracker.fragment.TrackerDefineFragment;
+import com.android.frankthirteen.timetracker.fragment.DefineTrackerFragment;
+import com.android.frankthirteen.timetracker.fragment.TrackListFragment;
 
 import java.util.UUID;
 
@@ -22,6 +24,7 @@ import java.util.UUID;
  */
 public class DefineTrackerActivity extends AppCompatActivity {
     private UUID trackerId;
+    private LocalBroadcastManager localBroadcastManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,11 +38,13 @@ public class DefineTrackerActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
         trackerId = UUID.randomUUID();
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.single_fragment_container);
         if (fragment==null){
-            fragment = TrackerDefineFragment.newInstance(trackerId);
+            fragment = DefineTrackerFragment.newInstance(trackerId);
         }
         fm.beginTransaction().add(R.id.single_fragment_container, fragment).commit();
 //        else {
@@ -62,6 +67,7 @@ public class DefineTrackerActivity extends AppCompatActivity {
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra(Tracker.EXTRA_ID,trackerId);
                         setResult(RESULT_OK,resultIntent);
+                        sendLocalBroadcast(TrackListFragment.TRACKER_ADDED);
                         DefineTrackerActivity.super.onBackPressed();
                     }
                 })
@@ -84,5 +90,10 @@ public class DefineTrackerActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sendLocalBroadcast(String action){
+        Intent intent = new Intent(action);
+        localBroadcastManager.sendBroadcast(intent);
     }
 }
