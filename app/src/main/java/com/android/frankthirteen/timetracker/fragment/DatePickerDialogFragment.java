@@ -22,7 +22,8 @@ import java.util.GregorianCalendar;
  * Created by Frank on 6/28/16.
  */
 public class DatePickerDialogFragment extends DialogFragment {
-    private Date mDate;
+    private Date startDate;
+    private Date endDate;
 
     public static DatePickerDialogFragment newInstance(Date date) {
 
@@ -36,13 +37,13 @@ public class DatePickerDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View rootView = View.inflate(getActivity(), R.layout.dialog_fragment_date_picker, null);
         DatePicker datePicker = ((DatePicker) rootView.findViewById(R.id.dialog_date_picker));
 
-        mDate = (Date) getArguments().getSerializable(Tracker.EXTRA_DATE);
+        startDate = (Date) getArguments().getSerializable(Tracker.EXTRA_DATE);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(mDate);
+        calendar.setTime(startDate);
 
         int year, month, day;
         year = calendar.get(Calendar.YEAR);
@@ -52,10 +53,10 @@ public class DatePickerDialogFragment extends DialogFragment {
         datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
-
+                endDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
             }
         });
+        datePicker.setMinDate(startDate.getTime()-1000);
 
         builder.setView(rootView);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -74,7 +75,7 @@ public class DatePickerDialogFragment extends DialogFragment {
             return;
         }
         Intent i = new Intent();
-        i.putExtra(Tracker.EXTRA_DATE, mDate);
+        i.putExtra(Tracker.EXTRA_DATE, endDate);
 
         getActivity().setResult(Activity.RESULT_OK);
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, i);

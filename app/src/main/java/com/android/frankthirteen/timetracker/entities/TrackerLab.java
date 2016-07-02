@@ -14,6 +14,7 @@ import java.util.UUID;
  * Created by Frank on 5/25/16.
  */
 public class TrackerLab {
+    private static final String TAG = "LAB";
     private static TrackerLab sTrackerLab;
     private Context mContext;
     private List<Tracker> trackers;
@@ -78,23 +79,40 @@ public class TrackerLab {
         //also need to remove it from DB.
     }
 
+    public void removeTracker(UUID trackerId) {
+        for (Tracker tr :
+                trackers) {
+            if (tr.getId().equals(trackerId)){
+
+                trackers.remove(tr);
+                trackerDB.removeTracker(tr);
+            }
+        }
+        //also need to remove it from DB.
+    }
+
     public Tracker getTracker(UUID uuid){
         for (Tracker ti :
                 trackers) {
-            LogUtils.d("Lab", "uuid is "+ti.getId().toString());
+            LogUtils.d(TAG, "uuid is "+ti.getId().toString());
             //UUID should use equals
             if (uuid.equals(ti.getId())) {
-                LogUtils.d("Lab","Found uuid is i:" + ti.getId().toString());
+                LogUtils.d(TAG,"Found uuid is i:" + ti.getId().toString());
                 return ti;
             }
         }
-        LogUtils.d("Lab","unfortunately ");
+        LogUtils.d(TAG,"unfortunately ");
         return null;
     }
 
     private void initialTrackers() {
 
         trackers = trackerDB.getTrackers();
+        for (Tracker tr :
+                trackers) {
+            LogUtils.d(TAG,"getting tracker\'s durations.");
+            tr.setDurationItems(trackerDB.getDurationItemsByTracker(tr));
+        }
 
     }
 

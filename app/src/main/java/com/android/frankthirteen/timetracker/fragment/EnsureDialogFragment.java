@@ -133,11 +133,11 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case AlertDialog.BUTTON_POSITIVE:
-
-                saveDurationItem();
                 TrackerLab.getTrackerLab(getActivity()).getTracker(trackerId).addDuration(mDurationItem);
+                saveDurationItem();
+//                The order matters.
+//                LogUtils.d(TAG,"Duration item tracker id" + mDurationItem.getTrackerId().toString());
                 sendResult(Activity.RESULT_OK);
-                mDurationItem.setComment(edContent.getText().toString());
                 break;
             case AlertDialog.BUTTON_NEGATIVE:
 
@@ -151,6 +151,8 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
 
     private void saveDurationItem() {
         if (mDurationItem != null) {
+            mDurationItem.setComment(edContent.getText().toString());
+            mDurationItem.setTrackerId(trackerId);
             TrackerDB.getTrackerDB(getActivity()).insertDurationItem(mDurationItem);
             LogUtils.d(TAG, "saving");
         }

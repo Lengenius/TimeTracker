@@ -61,7 +61,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.work_focus_fragment, null);
+        View rootView = inflater.inflate(R.layout.fragment_work_focus, null);
         timerTv = (TextView) rootView.findViewById(R.id.work_focus_timer);
         btnStart = (Button) rootView.findViewById(R.id.btn_start);
         btnStart.setOnClickListener(this);

@@ -214,7 +214,6 @@ public class DefineTrackerFragment extends Fragment {
         switch (requestCode) {
             case REQUEST_DATE:
                 Date date = (Date) data.getSerializableExtra(Tracker.EXTRA_DATE);
-
                 tracker.setEndDate(date);
                 trEndDate.setText(FormatUtils.formatDate(date));
                 break;

@@ -105,6 +105,11 @@ public class TrackerDB {
                 tracker.setComment(c.getString(c.getColumnIndex(TRACKER_COMMENT)));
                 tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_TRACKING_STATE)) > 0);
                 tracker.setPlanningTime(c.getInt(c.getColumnIndex(TRACKER_PLANED_TIME)));
+                if (c.getLong(c.getColumnIndex(TRACKER_START_DATE))!=0) {
+                    Date date = new Date();
+                    date.setTime(c.getLong(c.getColumnIndex(TRACKER_START_DATE)));
+                    tracker.setStartDate(date);
+                }
                 if (c.getLong(c.getColumnIndex(TRACKER_END_DATE)) != 0) {
                     Date date = new Date();
                     date.setTime(c.getLong(c.getColumnIndex(TRACKER_END_DATE)));
@@ -174,12 +179,14 @@ public class TrackerDB {
             try {
                 contentValues.put(DURATION_UID, di.getId().toString());
                 if (di.getTrackerId() != null) {
+                    LogUtils.d("DBDuration","TrackerId is :"+di.getTrackerId().toString());
                     contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
                 }
                 contentValues.put(DURATION_PERIOD, di.getDuration());
                 contentValues.put(DURATION_DATE, di.getDate().getTime());
                 contentValues.put(DURATION_COMMENT, di.getComment());
                 contentValues.put(DURATION_TAG, di.getTag());
+                LogUtils.d(TAG,contentValues.toString());
                 db.insert(TABLE_DURATION, null, contentValues);
             } catch (Exception e) {
                 e.printStackTrace();

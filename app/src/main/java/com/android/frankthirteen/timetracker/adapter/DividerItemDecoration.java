@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.android.frankthirteen.timetracker.R;
+
 /**
  * Created by Frank on 6/12/16.
  */

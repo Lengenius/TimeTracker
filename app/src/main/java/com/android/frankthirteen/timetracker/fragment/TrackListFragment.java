@@ -133,7 +133,7 @@ public class TrackListFragment extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getActivity(), "local broadcast received", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "local broadcast received", Toast.LENGTH_SHORT).show();
             LogUtils.d(TAG, trackers.size() + "items.");
 
             // TODO: 7/1/16 make the recycler view refresh later to show the new item.

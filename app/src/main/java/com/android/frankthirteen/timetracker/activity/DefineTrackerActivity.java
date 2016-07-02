@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
+import com.android.frankthirteen.timetracker.entities.TrackerLab;
 import com.android.frankthirteen.timetracker.fragment.DefineTrackerFragment;
 import com.android.frankthirteen.timetracker.fragment.TrackListFragment;
 
@@ -58,6 +59,11 @@ public class DefineTrackerActivity extends AppCompatActivity {
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra(Tracker.EXTRA_ID,trackerId);
+                        setResult(RESULT_CANCELED,resultIntent);
+                        TrackerLab.getTrackerLab(DefineTrackerActivity.this).
+                                removeTracker(trackerId);
                         DefineTrackerActivity.super.onBackPressed();
                     }
                 })

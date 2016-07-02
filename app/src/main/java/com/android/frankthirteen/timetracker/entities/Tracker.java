@@ -1,5 +1,7 @@
 package com.android.frankthirteen.timetracker.entities;
 
+import com.android.frankthirteen.timetracker.utils.LogUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.UUID;
 public class Tracker {
     public static final String EXTRA_ID = "com.android.frankthirteen.timetracker.Extra_id";
     public static final String EXTRA_DATE = "com.android.frankthirteen.timetracker.Extra_date";
+    private static final String TAG = "TRACKER_CLASS";
 
     private UUID trackerId;
     private String mTrackerTitle;
@@ -31,11 +34,13 @@ public class Tracker {
         this.trackerId = UUID.randomUUID();
         tracking = true;
         durationItems = new ArrayList<>();
+        mStartDate = new Date();
     }
 
     public Tracker(UUID uuid) {
         trackerId = uuid;
         tracking = true;
+        durationItems = new ArrayList<>();
         mStartDate = new Date();
     }
 
@@ -51,9 +56,15 @@ public class Tracker {
         return durationItems;
     }
 
+    public void setDurationItems(List<DurationItem> durationItems){
+        this.durationItems = durationItems;
+        updateTotalDuration();
+    }
 
     public void addDuration(DurationItem di) {
         di.setTrackerId(trackerId);
+        LogUtils.d(TAG,di.getTrackerId().toString());
+
         durationItems.add(di);
         updateTotalDuration();
     }

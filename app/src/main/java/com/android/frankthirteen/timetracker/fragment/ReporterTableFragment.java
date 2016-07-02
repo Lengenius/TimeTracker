@@ -58,14 +58,10 @@ public class ReporterTableFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_reporter_table, container, false);
 
         initialView(rootView);
-
-
 
         return rootView;
     }
@@ -91,8 +87,10 @@ public class ReporterTableFragment extends Fragment {
         tvDayPast.setText(dayPast + "days passed.");
         tvTimePayed.setText(mTracker.getTotalDurations() + "mins");
 
-        prTimePayed.setProgress(Math.round
-                (mTracker.getTotalDurations()/60)/mTracker.getPlannedTimeInMinutes()*100);
+        if (mTracker.getPlannedTimeInMinutes()!=0) {
+            prTimePayed.setProgress(Math.round
+                    (mTracker.getTotalDurations()/60)/mTracker.getPlannedTimeInMinutes()*100);
+        }
     }
 
     private int getDayPast() {
