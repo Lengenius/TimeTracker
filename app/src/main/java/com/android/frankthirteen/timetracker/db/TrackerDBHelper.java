@@ -19,6 +19,7 @@ public class TrackerDBHelper extends SQLiteOpenHelper {
             "comment text," +
             "start_date text," +
             "day integer," +
+            "week integer," +
             "month integer," +
             "year integer)";
 

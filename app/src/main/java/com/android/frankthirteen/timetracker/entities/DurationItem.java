@@ -72,6 +72,12 @@ public class DurationItem {
         return c.get(Calendar.MONTH);
     }
 
+    public int getWeek() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(mDate);
+        return c.get(Calendar.WEEK_OF_YEAR);
+    }
+
     public int getDay(){
         Calendar c = Calendar.getInstance();
         c.setTime(mDate);
@@ -102,4 +108,6 @@ public class DurationItem {
     public void setTag(String mTag) {
         this.mTag = mTag;
     }
+
+
 }

@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -42,6 +43,7 @@ public class DatePickerDialogFragment extends DialogFragment {
         DatePicker datePicker = ((DatePicker) rootView.findViewById(R.id.dialog_date_picker));
 
         startDate = (Date) getArguments().getSerializable(Tracker.EXTRA_DATE);
+        endDate = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
 
@@ -50,13 +52,15 @@ public class DatePickerDialogFragment extends DialogFragment {
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        datePicker.setMinDate(startDate.getTime()-1000);
         datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+
                 endDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
             }
         });
-        datePicker.setMinDate(startDate.getTime()-1000);
 
         builder.setView(rootView);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -76,6 +80,7 @@ public class DatePickerDialogFragment extends DialogFragment {
         }
         Intent i = new Intent();
         i.putExtra(Tracker.EXTRA_DATE, endDate);
+//        LogUtils.d("TAG",i.getExtras());
 
         getActivity().setResult(Activity.RESULT_OK);
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, i);

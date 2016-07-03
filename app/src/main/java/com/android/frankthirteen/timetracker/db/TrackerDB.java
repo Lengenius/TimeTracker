@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
@@ -31,6 +32,7 @@ public class TrackerDB {
     public static final String DURATION_COMMENT = "comment";
     public static final String DURATION_DATE = "start_date";
     public static final String DURATION_DAY = "day";
+    public static final String DURATION_WEEK = "week";
     public static final String DURATION_MONTH = "month";
     public static final String DURATION_YEAR = "year";
 
@@ -72,26 +74,12 @@ public class TrackerDB {
     public void insertTracker(Tracker tracker) {
         LogUtils.d(TAG, "inserting invoked.");
         if (tracker != null) {
-            ContentValues values = new ContentValues();
-            values.put(TRACKER_ID, tracker.getId().toString());
-            values.put(TRACKER_TITLE, tracker.getTitle());
-            values.put(TRACKER_CONTENT, tracker.getContent());
-            values.put(TRACKER_COMMENT, tracker.getComment());
-            values.put(TRACKER_TRACKING_STATE, tracker.isTracking());
-            values.put(TRACKER_PLANED_TIME, tracker.getPlannedTimeInMinutes());
-            if (tracker.getStartDate() != null) {
-                values.put(TRACKER_START_DATE, tracker.getStartDate().getTime());
-            }
-            if (tracker.getEndDate() != null) {
-                values.put(TRACKER_END_DATE, tracker.getEndDate().getTime());
-            }
-            if (tracker.getPhotoPath() != null) {
-                values.put(TRACKER_PHOTO_PATH, tracker.getPhotoPath());
-            }
+            ContentValues values = assemblyTrackerValue(tracker);
             LogUtils.d(TAG, values.toString());
             db.insert(TABLE_TRACKER, null, values);
         }
     }
+
 
     public List<Tracker> getTrackers() {
         List<Tracker> trackers = new ArrayList<Tracker>();
@@ -105,7 +93,7 @@ public class TrackerDB {
                 tracker.setComment(c.getString(c.getColumnIndex(TRACKER_COMMENT)));
                 tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_TRACKING_STATE)) > 0);
                 tracker.setPlanningTime(c.getInt(c.getColumnIndex(TRACKER_PLANED_TIME)));
-                if (c.getLong(c.getColumnIndex(TRACKER_START_DATE))!=0) {
+                if (c.getLong(c.getColumnIndex(TRACKER_START_DATE)) != 0) {
                     Date date = new Date();
                     date.setTime(c.getLong(c.getColumnIndex(TRACKER_START_DATE)));
                     tracker.setStartDate(date);
@@ -129,45 +117,42 @@ public class TrackerDB {
         return trackers;
     }
 
-    public void updateTracker(Tracker tracker) {
+    public boolean removeTracker(Tracker tracker) {
+        String trackerId = tracker.getId().toString();
+        Cursor cursor = db.query(TABLE_TRACKER, null, TRACKER_ID + "=?", new String[]{trackerId},
+                null, null, null);
+        db.delete(TABLE_TRACKER, TRACKER_ID + "=?", new String[]{trackerId});
+        if (cursor.moveToFirst()) {
+            cursor.close();
+            return false;
+        }
+        return true;
+    }
+
+    public void modifyTracker(Tracker tracker) {
         Cursor cursor = db.query(TABLE_TRACKER, null, TRACKER_ID + "=?",
                 new String[]{tracker.getId().toString()}, null, null, null);
         if (cursor.moveToFirst()) {
-            ContentValues values = new ContentValues();
-            values.put(TRACKER_ID, tracker.getId().toString());
-            values.put(TRACKER_CONTENT, tracker.getContent());
-            values.put(TRACKER_TITLE, tracker.getTitle());
-            db.update(TABLE_TRACKER, values,
-                    TRACKER_ID + "=?",
+            ContentValues values = assemblyTrackerValue(tracker);
+
+            db.update(TABLE_TRACKER, values, TRACKER_ID + "=?",
                     new String[]{tracker.getId().toString()});
             cursor.close();
         }
     }
-
-    public void updateTrackerDuration(Tracker tracker) {
-        Cursor cursor = db.query(TABLE_TRACKER, null, TRACKER_ID + "=?",
-                new String[]{tracker.getId().toString()}, null, null, null);
-        if (cursor.moveToFirst()) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(TRACKER_TOTAL_DURATION, tracker.getTotalDurations());
-            db.update(TABLE_TRACKER, contentValues, TRACKER_ID + "=?",
-                    new String[]{tracker.getId().toString()});
-            cursor.close();
-        }
-    }
-
-    public void addTrackerPhoto(Tracker tracker) {
-        Cursor cursor = db.query(TABLE_TRACKER, null, TRACKER_ID + "=?",
-                new String[]{tracker.getId().toString()}, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            ContentValues values = new ContentValues();
-            db.update(TABLE_TRACKER, values,
-                    TRACKER_ID + "=?",
-                    new String[]{tracker.getId().toString()});
-            cursor.close();
-        }
-    }
+/**
+ public void updateTrackerDuration(Tracker tracker) {
+ Cursor cursor = db.query(TABLE_TRACKER, null, TRACKER_ID + "=?",
+ new String[]{tracker.getId().toString()}, null, null, null);
+ if (cursor.moveToFirst()) {
+ ContentValues contentValues = new ContentValues();
+ contentValues.put(TRACKER_TOTAL_DURATION, tracker.getTotalDurations());
+ db.update(TABLE_TRACKER, contentValues, TRACKER_ID + "=?",
+ new String[]{tracker.getId().toString()});
+ cursor.close();
+ }
+ }
+ */
 
     /**
      * Duration part
@@ -175,43 +160,34 @@ public class TrackerDB {
 
     public void insertDurationItem(DurationItem di) {
         if (di != null) {
-            ContentValues contentValues = new ContentValues();
-            try {
-                contentValues.put(DURATION_UID, di.getId().toString());
-                if (di.getTrackerId() != null) {
-                    LogUtils.d("DBDuration","TrackerId is :"+di.getTrackerId().toString());
-                    contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
-                }
-                contentValues.put(DURATION_PERIOD, di.getDuration());
-                contentValues.put(DURATION_DATE, di.getDate().getTime());
-                contentValues.put(DURATION_COMMENT, di.getComment());
-                contentValues.put(DURATION_TAG, di.getTag());
-                LogUtils.d(TAG,contentValues.toString());
-                db.insert(TABLE_DURATION, null, contentValues);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            ContentValues contentValues = assemblyDurationValues(di);
+            LogUtils.d(TAG, contentValues.toString());
+            db.insert(TABLE_DURATION, null, contentValues);
         }
     }
 
-    public boolean updateDurationItem(DurationItem di) {
-        if (di != null) {
-            ContentValues contentValues = new ContentValues();
-            try {
-                contentValues.put(DURATION_UID, di.getId().toString());
-                contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
-                contentValues.put(DURATION_PERIOD, di.getDuration());
-                contentValues.put(DURATION_DATE, di.getDate().getTime());
-                contentValues.put(DURATION_COMMENT, di.getComment());
-                db.update(TABLE_DURATION, contentValues, DURATION_UID + "=?", new String[]{di.getId().toString()});
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return false;
-    }
+
+
+    /**
+     * public boolean updateDurationItem(DurationItem di) {
+     * if (di != null) {
+     * ContentValues contentValues = new ContentValues();
+     * try {
+     * contentValues.put(DURATION_UID, di.getId().toString());
+     * contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
+     * contentValues.put(DURATION_PERIOD, di.getDuration());
+     * contentValues.put(DURATION_DATE, di.getDate().getTime());
+     * contentValues.put(DURATION_COMMENT, di.getComment());
+     * db.update(TABLE_DURATION, contentValues, DURATION_UID + "=?", new String[]{di.getId().toString()});
+     * return true;
+     * } catch (Exception e) {
+     * e.printStackTrace();
+     * return false;
+     * }
+     * }
+     * return false;
+     * }
+     */
 
     public List<DurationItem> getDurationItemsByTracker(Tracker tracker) {
         List<DurationItem> durationItems = new ArrayList<DurationItem>();
@@ -237,17 +213,51 @@ public class TrackerDB {
         return durationItems;
     }
 
+    public List<DurationItem> getDurationItemsBy() {
+        List<DurationItem> durationItems = new ArrayList<DurationItem>();
+        //get durations by week month day or year.
 
-    public boolean removeTracker(Tracker tracker) {
-        String trackerId = tracker.getId().toString();
-        Cursor cursor = db.query(TABLE_TRACKER, null, TRACKER_ID + "=?", new String[]{trackerId},
-                null, null, null);
-        db.delete(TABLE_TRACKER, TRACKER_ID + "=?", new String[]{trackerId});
-        if (cursor.moveToFirst()){
-            cursor.close();
-            return false;
+        return durationItems;
+    }
+
+    @NonNull
+    private ContentValues assemblyDurationValues(DurationItem di) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(DURATION_UID, di.getId().toString());
+        if (di.getTrackerId() != null) {
+            LogUtils.d("DBDuration", "TrackerId is :" + di.getTrackerId().toString());
+            contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
         }
-        return true;
+        contentValues.put(DURATION_PERIOD, di.getDuration());
+        contentValues.put(DURATION_DATE, di.getDate().getTime());
+        contentValues.put(DURATION_COMMENT, di.getComment());
+        contentValues.put(DURATION_TAG, di.getTag());
+        contentValues.put(DURATION_YEAR, di.getYear());
+        contentValues.put(DURATION_MONTH, di.getMonth());
+        contentValues.put(DURATION_WEEK,di.getWeek());
+        contentValues.put(DURATION_DAY,di.getDay());
+        return contentValues;
+    }
 
+    @NonNull
+    private ContentValues assemblyTrackerValue(Tracker tracker) {
+        ContentValues values = new ContentValues();
+        values.put(TRACKER_ID, tracker.getId().toString());
+        values.put(TRACKER_TITLE, tracker.getTitle());
+        values.put(TRACKER_CONTENT, tracker.getContent());
+        values.put(TRACKER_COMMENT, tracker.getComment());
+        values.put(TRACKER_TRACKING_STATE, tracker.isTracking());
+        values.put(TRACKER_PLANED_TIME, tracker.getPlannedTimeInMinutes());
+        if (tracker.getStartDate() != null) {
+            values.put(TRACKER_START_DATE, tracker.getStartDate().getTime());
+        }
+        if (tracker.getEndDate() != null) {
+            values.put(TRACKER_END_DATE, tracker.getEndDate().getTime());
+        }
+        if (tracker.getPhotoPath() != null) {
+            values.put(TRACKER_PHOTO_PATH, tracker.getPhotoPath());
+        }
+        return values;
     }
 }
