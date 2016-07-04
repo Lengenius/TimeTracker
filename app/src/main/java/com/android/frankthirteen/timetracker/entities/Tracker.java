@@ -126,8 +126,8 @@ public class Tracker {
         this.mComment = mComment;
     }
 
-    public void setPlanningTime(int hours) {
-        plannedTimeInMinutes = hours * 60;
+    public void setPlanningTimeInMinutes(int minutes) {
+        plannedTimeInMinutes = minutes;
     }
 
     public int getPlannedTimeInMinutes() {

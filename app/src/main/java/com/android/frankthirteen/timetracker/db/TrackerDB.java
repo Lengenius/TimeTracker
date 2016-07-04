@@ -92,7 +92,7 @@ public class TrackerDB {
                 tracker.setContent(c.getString(c.getColumnIndex(TRACKER_CONTENT)));
                 tracker.setComment(c.getString(c.getColumnIndex(TRACKER_COMMENT)));
                 tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_TRACKING_STATE)) > 0);
-                tracker.setPlanningTime(c.getInt(c.getColumnIndex(TRACKER_PLANED_TIME)));
+                tracker.setPlanningTimeInMinutes(c.getInt(c.getColumnIndex(TRACKER_PLANED_TIME)));
                 if (c.getLong(c.getColumnIndex(TRACKER_START_DATE)) != 0) {
                     Date date = new Date();
                     date.setTime(c.getLong(c.getColumnIndex(TRACKER_START_DATE)));

@@ -70,6 +70,7 @@ public class ReporterChartFragment extends Fragment {
         return rootView;
     }
 
+//    Should I put this method into DataBase to reuse it?
     private BarData initialBarData() {
         List<DurationItem> rawData;
         List<BarEntry> wrappedData = new ArrayList<BarEntry>();

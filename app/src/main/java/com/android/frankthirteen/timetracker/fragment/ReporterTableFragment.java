@@ -88,8 +88,22 @@ public class ReporterTableFragment extends Fragment {
         tvTimePayed.setText(mTracker.getTotalDurations() + "mins");
 
         if (mTracker.getPlannedTimeInMinutes()!=0) {
-            prTimePayed.setProgress(Math.round
-                    (mTracker.getTotalDurations()/60)/mTracker.getPlannedTimeInMinutes()*100);
+            float passed = mTracker.getTotalDurations();
+            float planned = mTracker.getPlannedTimeInMinutes();
+            int progress = Math.round(100*(passed/planned));
+            LogUtils.d(TAG,"setting progress bar." + progress);
+            prTimePayed.setProgress(progress);
+        }
+
+        if (getDayPast()!=0){
+            Date today = new Date();
+            float passed = (mTracker.getStartDate().getTime() - today.getTime())/1000/60/60/24;
+            float planned = (mTracker.getEndDate().getTime()-mTracker.getStartDate().getTime())
+                    /1000/60/60/24;
+
+            int progress = Math.round((passed/planned)*100);
+
+            prDayPast.setProgress(progress);
         }
     }
 

@@ -153,7 +153,8 @@ public class DefineTrackerFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!(s.toString()).equals("")) {
-                    tracker.setPlanningTime(Integer.parseInt(s.toString()));
+                    int plannedTime = Integer.parseInt(s.toString());
+                    tracker.setPlanningTimeInMinutes(plannedTime*60);
                 }
             }
         });
