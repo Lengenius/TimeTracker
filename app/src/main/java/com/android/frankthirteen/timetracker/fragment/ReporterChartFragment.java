@@ -12,18 +12,24 @@ import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
+import com.android.frankthirteen.timetracker.utils.FormatUtils;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 
+import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -31,9 +37,12 @@ import java.util.UUID;
  */
 public class ReporterChartFragment extends Fragment {
 
+    private static final String TAG = "Chart";
+
     private Tracker mTracker;
     private BarChart barChart;
     private TextView chartTitle;
+    private Date now;
 
     public static ReporterChartFragment newInstance(UUID uuid) {
 
@@ -47,6 +56,7 @@ public class ReporterChartFragment extends Fragment {
 
     public ReporterChartFragment() {
         //Constructor
+        now = new Date();
 
     }
 
@@ -58,28 +68,57 @@ public class ReporterChartFragment extends Fragment {
         TrackerLab trackerLab = TrackerLab.getTrackerLab(getActivity());
         mTracker = trackerLab.getTracker(id);
 
-        View rootView = inflater.inflate(R.layout.fragment_reporter_chart, null);
+        View rootView = inflater.inflate(R.layout.fragment_reporter_chart, container, false);
         chartTitle = (TextView) rootView.findViewById(R.id.reporter_chart_title);
         barChart = (BarChart) rootView.findViewById(R.id.tracker_reporter_barChart);
-
+//set the barChart.
         barChart.setData(initialBarData());
-        barChart.invalidate();
+        barChart.setDrawGridBackground(false);
+
+        YAxis yAxisLeft = barChart.getAxisLeft();
+        YAxis yAxisRight = barChart.getAxisRight();
+        XAxis xAxis = barChart.getXAxis();
+
+
+        yAxisLeft.setAxisMinValue(0);
+//        yAxisLeft.setAxisMaxValue(1200);
+        yAxisLeft.setLabelCount(6, false);
+        yAxisLeft.setValueFormatter(new YValueFormatter());
+
+        yAxisRight.setEnabled(false);
+
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setAvoidFirstLastClipping(true);
+
+        barChart.setVisibleXRangeMinimum(7);
+        barChart.setScaleYEnabled(false);
+        barChart.setVisibleXRangeMaximum(7);
+
+        barChart.animateX(2000);
+
+//        barChart.invalidate();
 
         chartTitle.setText(mTracker.getTitle());
 
         return rootView;
     }
 
-//    Should I put this method into DataBase to reuse it?
+    //    Should I put this method into DataBase to reuse it?
     private BarData initialBarData() {
+//        fakeData();
+
         List<DurationItem> rawData;
         List<BarEntry> wrappedData = new ArrayList<BarEntry>();
         List<String> xVals = new ArrayList<String>();
+
         if (mTracker.getDurationItems() != null) {
             rawData = mTracker.getDurationItems();
+
+            prepareXLabels(rawData, wrappedData, xVals);
+
             int duration = 0;
             int day = 0;
-            int index = 0;
+//            int weekDay = 0;
             for (int i = 0; i < rawData.size(); i++) {
 //                get the item in list.
                 DurationItem di = rawData.get(i);
@@ -87,29 +126,36 @@ public class ReporterChartFragment extends Fragment {
 //                    get the 1st item and store its day & duration info.
                     day = di.getDay();
                     duration = di.getDuration();
+
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(di.getDate());
+//                    weekDay = c.get(Calendar.DAY_OF_WEEK);
                 } else if (day == di.getDay()) {
 //                    if the next item is added in the same day.
-//                    sum its duration info.
+//                    sum its durations info.
                     duration += di.getDuration();
                 } else {
 //                    if it is a duration item in another day. add the stored info to an entry.
-                    BarEntry entry = new BarEntry(duration, index);
-                    String xLabel;
-                    wrappedData.add(entry);
-                    xLabel = getXLabel(di);
-                    xVals.add(xLabel);
+//                    dayIndex should also related to di's weekday.
+                    double diDay = di.getDate().getTime();
+                    double trackerStarDate = mTracker.getStartDate().getTime();
+
+                    int dayIndex = (int) Math.floor((diDay - trackerStarDate)
+                            / 1000.0 / 60 / 60 / 24);
+                    BarEntry entry = new BarEntry(duration, dayIndex);
+                    wrappedData.set(dayIndex, entry);
+
 //                    refresh the stored info.
                     day = di.getDay();
-                    index++;
                     duration = di.getDuration();
                 }
 //                When reached the last item.
                 if (i == rawData.size() - 1) {
-                    BarEntry entry = new BarEntry(duration, index);
-                    String xLabel;
-                    wrappedData.add(entry);
-                    xLabel = getXLabel(di);
-                    xVals.add(xLabel);
+                    int dayIndex = (int) Math.floor((
+                            di.getDate().getTime() - mTracker.getStartDate().getTime())
+                            / 1000.0 / 60 / 60 / 24);
+                    BarEntry entry = new BarEntry(duration, dayIndex);
+                    wrappedData.set(dayIndex, entry);
                 }
 
             }
@@ -117,23 +163,102 @@ public class ReporterChartFragment extends Fragment {
 
         BarDataSet barDataSet = new BarDataSet(wrappedData, mTracker.getTitle());
 
+
         return new BarData(xVals, barDataSet);
 
     }
 
-    private String getXLabel(DurationItem di) {
-        Date date = di.getDate();
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
+    private void prepareXLabels(List<DurationItem> rawData, List<BarEntry> wrappedData, List<String> xVals) {
+        long lastItem = rawData.get(rawData.size() - 1).getDate().getTime();
+        DurationItem firstItem = rawData.get(0);
+        int firstDayOfWeek = FormatUtils.getDayOfWeek(firstItem.getDate());
+
+        int daySinceStart = (int) Math.ceil(((lastItem - mTracker.getStartDate().getTime())) /
+                1000 / 60.0 / 60.0 / 24.0);
+
+        for (int i = 0; i < daySinceStart + 1; i++) {
+            BarEntry barEntry = new BarEntry(0, i);
+            wrappedData.add(i, barEntry);
+            //Since the first day is sunday.
+            xVals.add(getXLabel(firstDayOfWeek - 1 + i));
+        }
+    }
+
+    private String getXLabel(int i) {
+//        Date date = di.getDate();
+//        Calendar c = Calendar.getInstance();
+//        c.setTime(date);
         // return different xLabel on condition.
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
+// for the current Locale :
+//   DateFormatSymbols symbols = new DateFormatSymbols();
+        String[] dayNames = symbols.getShortWeekdays();
+        for (int j = 0; j < dayNames.length; j++) {
+
+            LogUtils.d(TAG, "dayNames " + j + "item is " + dayNames[j]);
+
+        }
         int returnType = 0;
         switch (returnType) {
             case 0:
-                return c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+//                return c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+                String result = dayNames[i % 7 + 1];
+                LogUtils.d(TAG, "item sequence is " + i % 7 + result);
+
+                return result;
+
             default:
                 return null;
         }
 
+    }
+
+    class YValueFormatter implements YAxisValueFormatter {
+
+        private DecimalFormat mFormat;
+
+        public YValueFormatter() {
+            mFormat = new DecimalFormat("###,##0");
+        }
+
+        @Override
+        public String getFormattedValue(float value, YAxis yAxis) {
+            return mFormat.format(value) + " Mins";
+        }
+    }
+
+    private void fakeData() {
+        Random r = new Random();
+        r.setSeed(2);
+
+        List<DurationItem> durationItems = mTracker.getDurationItems();
+        for (int i = 0; i < 14; i++) {
+            if (i % 7 != 0) {
+                DurationItem di = new DurationItem();
+                di.setTrackerId(mTracker.getId());
+                di.setId(UUID.randomUUID());
+                Date diDate = new Date();
+                long startDate = mTracker.getStartDate().getTime();
+                diDate.setTime(startDate + i * 1000 * 60 * 60 * 24 - 1000);
+                di.setDate(diDate);
+                LogUtils.d(TAG, di.getDay() + " days since start");
+                di.setDuration(r.nextInt(1400));
+                durationItems.add(di);
+            } else {
+                DurationItem di = new DurationItem();
+                di.setTrackerId(mTracker.getId());
+                di.setId(UUID.randomUUID());
+                Date diDate = new Date();
+                long startDate = mTracker.getStartDate().getTime();
+                diDate.setTime(startDate + i * 1000 * 60 * 60 * 24);
+                di.setDate(diDate);
+                LogUtils.d(TAG, di.getDay() + " days since start");
+                di.setDuration(0);
+                durationItems.add(di);
+            }
+        }
+
+        LogUtils.d(TAG, mTracker.getDurationItems().size() + " items.");
     }
 
 }

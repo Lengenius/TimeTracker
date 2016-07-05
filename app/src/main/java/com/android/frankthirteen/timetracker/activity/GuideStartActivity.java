@@ -24,8 +24,6 @@ import com.android.frankthirteen.timetracker.fragment.TrackListFragment;
 import com.android.frankthirteen.timetracker.fragment.WorkFocusFragment;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class GuideStartActivity extends AppCompatActivity
@@ -119,12 +117,12 @@ public class GuideStartActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.list_fragment:
+            case R.id.nav_list_fragment:
                 fragment = TrackListFragment.newInstance();
                 break;
             case R.id.detail_fragment:
                 break;
-            case R.id.work_fragment:
+            case R.id.nav_work_fragment:
                 fragment = WorkFocusFragment.newInstance();
                 break;
             case R.id.nav_send:
@@ -187,7 +185,7 @@ public class GuideStartActivity extends AppCompatActivity
             public void run() {
                 doubleClickToExit = false;
             }
-        }, 1500);
+        }, 1200);
     }
 
 }
