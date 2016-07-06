@@ -52,11 +52,10 @@ public class DatePickerDialogFragment extends DialogFragment {
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        datePicker.setMinDate(startDate.getTime()-1000);
+//        datePicker.setMinDate(startDate.getTime()-1000);
         datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
 
                 endDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
             }

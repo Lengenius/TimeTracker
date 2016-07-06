@@ -168,7 +168,6 @@ public class DefineTrackerFragment extends Fragment {
                 datePicker.setTargetFragment(DefineTrackerFragment.this, REQUEST_DATE);
                 datePicker.show(getFragmentManager(), "Date");
 
-
             }
         });
 

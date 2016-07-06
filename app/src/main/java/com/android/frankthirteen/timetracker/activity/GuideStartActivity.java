@@ -21,6 +21,7 @@ import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
+import com.android.frankthirteen.timetracker.fragment.DailyReporterFragment;
 import com.android.frankthirteen.timetracker.fragment.TrackListFragment;
 import com.android.frankthirteen.timetracker.fragment.WorkFocusFragment;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
@@ -83,10 +84,7 @@ public class GuideStartActivity extends AppCompatActivity
 
             Target target = new ViewTarget(R.id.btn_start,this);
             firstLaunch(target);
-
-
         }
-
     }
 
     private ShowcaseView firstLaunch(Target target) {
@@ -158,6 +156,7 @@ public class GuideStartActivity extends AppCompatActivity
                 fragment = TrackListFragment.newInstance();
                 break;
             case R.id.detail_fragment:
+                fragment = DailyReporterFragment.newInstance();
                 break;
             case R.id.nav_work_fragment:
                 fragment = WorkFocusFragment.newInstance();

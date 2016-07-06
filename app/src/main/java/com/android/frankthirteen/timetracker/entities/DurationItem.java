@@ -17,7 +17,7 @@ public class DurationItem {
     private int mPeriod;
     private String mTag;
     private String mComment;
-    private Date mDate;
+    private Date mEndDate;
 
     /**
      * Default Constructor for DB only.
@@ -28,7 +28,8 @@ public class DurationItem {
     public DurationItem(Context context) {
         mContext = context;
         mId = UUID.randomUUID();
-        mDate = new Date();
+        mEndDate = new Date();
+
         mPeriod = 0;
     }
 
@@ -57,30 +58,30 @@ public class DurationItem {
     }
 
     public Date getDate() {
-        return mDate;
+        return mEndDate;
     }
 
     public int getYear(){
         Calendar c = Calendar.getInstance();
-        c.setTime(mDate);
+        c.setTime(mEndDate);
         return c.get(Calendar.YEAR);
     }
 
     public int getMonth(){
         Calendar c = Calendar.getInstance();
-        c.setTime(mDate);
+        c.setTime(mEndDate);
         return c.get(Calendar.MONTH);
     }
 
     public int getWeek() {
         Calendar c = Calendar.getInstance();
-        c.setTime(mDate);
+        c.setTime(mEndDate);
         return c.get(Calendar.WEEK_OF_YEAR);
     }
 
     public int getDay(){
         Calendar c = Calendar.getInstance();
-        c.setTime(mDate);
+        c.setTime(mEndDate);
         return c.get(Calendar.DAY_OF_YEAR);
     }
 
@@ -90,7 +91,7 @@ public class DurationItem {
      * @param mDate always is the start time.
      */
     public void setDate(Date mDate) {
-        this.mDate = mDate;
+        this.mEndDate = mDate;
     }
 
     public int getDuration() {
@@ -109,5 +110,14 @@ public class DurationItem {
         this.mTag = mTag;
     }
 
+    public Date getStartDate(){
+        Date mStartDate = new Date();
+        mStartDate.setTime(mEndDate.getTime() - mPeriod * 1000);
+        return mStartDate;
+    }
+
+    public Tracker getTracker(){
+        return TrackerLab.getTrackerLab(mContext).getTracker(trackerId);
+    }
 
 }

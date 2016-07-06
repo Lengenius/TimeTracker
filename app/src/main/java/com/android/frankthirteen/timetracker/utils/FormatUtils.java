@@ -28,6 +28,13 @@ public class FormatUtils {
         return dateFormat.format(date);
     }
 
+    public static String formatDateTime(Date date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd EEE \nHH:mm:ss", Locale.getDefault());
+        return dateFormat.format(date);
+    }
+
+
+
     public static int getDayOfWeek(Date date){
         calendar = Calendar.getInstance();
 
