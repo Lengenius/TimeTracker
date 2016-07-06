@@ -2,6 +2,7 @@ package com.android.frankthirteen.timetracker.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -23,23 +24,32 @@ import com.android.frankthirteen.timetracker.entities.TrackerLab;
 import com.android.frankthirteen.timetracker.fragment.TrackListFragment;
 import com.android.frankthirteen.timetracker.fragment.WorkFocusFragment;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.util.UUID;
 
 public class GuideStartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public SharedPreferences preferences = null;
+
     private static final int REQUEST_TRACKER = 0x0001;
     private static final String TAG = "GUIDE";
+    private static final String FIRST_RUN = "FirstRun";
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private Fragment fragment;
 
     private boolean doubleClickToExit = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        preferences = getSharedPreferences("com.android.frankthirteen.timetracker",MODE_PRIVATE);
+
         setContentView(R.layout.activity_guide_start);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,6 +71,33 @@ public class GuideStartActivity extends AppCompatActivity
             fragmentManager.beginTransaction().add(R.id.guide_fragment_container, fragment).commit();
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (preferences.getBoolean(FIRST_RUN,true)){
+            preferences.edit().putBoolean(FIRST_RUN,false).apply();
+            // When first run load the show case view.
+
+            Target target = new ViewTarget(R.id.btn_start,this);
+            firstLaunch(target);
+
+
+        }
+
+    }
+
+    private ShowcaseView firstLaunch(Target target) {
+
+        return new ShowcaseView.Builder(this)
+                .setContentTitle("Start ")
+                .setContentText("Press start button to start.")
+                .setTarget(target)
+                .setStyle(R.style.CustomShowcaseTheme)
+                .hideOnTouchOutside()
+                .build();
     }
 
     @Override

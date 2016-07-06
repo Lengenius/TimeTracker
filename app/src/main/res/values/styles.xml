@@ -16,6 +16,14 @@
 
     </style>
 
+    <style name="CustomShowcaseTheme" parent="ShowcaseView">
+        <item name="sv_backgroundColor">#e51249d9</item>
+        <item name="sv_showcaseColor">#25467A</item>
+        <item name="sv_buttonText">Close</item>
+        <item name="sv_titleTextAppearance">@android:style/TextAppearance.DeviceDefault.Medium</item>
+        <item name="sv_detailTextAppearance">@android:style/TextAppearance</item>
+    </style>
+
     <style name="EditItem" >
         <item name="android:background">@drawable/edit_hint_bg</item>
         <item name="android:textSize">16sp</item>
