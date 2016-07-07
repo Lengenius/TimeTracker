@@ -43,7 +43,7 @@ public class DatePickerDialogFragment extends DialogFragment {
         DatePicker datePicker = ((DatePicker) rootView.findViewById(R.id.dialog_date_picker));
 
         startDate = (Date) getArguments().getSerializable(Tracker.EXTRA_DATE);
-        endDate = new Date();
+//        endDate = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
 
@@ -78,7 +78,11 @@ public class DatePickerDialogFragment extends DialogFragment {
             return;
         }
         Intent i = new Intent();
-        i.putExtra(Tracker.EXTRA_DATE, endDate);
+        if (endDate!=null) {
+            i.putExtra(Tracker.EXTRA_DATE, endDate);
+        }else {
+            i.putExtra(Tracker.EXTRA_DATE,startDate);
+        }
 //        LogUtils.d("TAG",i.getExtras());
 
         getActivity().setResult(Activity.RESULT_OK);

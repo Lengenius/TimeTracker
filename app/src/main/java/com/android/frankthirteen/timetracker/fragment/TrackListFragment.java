@@ -137,8 +137,7 @@ public class TrackListFragment extends Fragment {
             LogUtils.d(TAG, trackers.size() + "items.");
 
             // TODO: 7/1/16 make the recycler view refresh later to show the new item.
-            adapter.notifyDataSetChanged();
-            recyclerView.invalidate();
+            adapter.addItem(trackers.size(), trackerLab.getLastTracker());
         }
     }
 }

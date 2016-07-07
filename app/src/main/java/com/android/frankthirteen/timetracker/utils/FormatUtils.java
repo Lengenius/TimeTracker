@@ -12,7 +12,7 @@ import java.util.Locale;
 public class FormatUtils {
     private static Calendar calendar;
 
-    public static String timerFormat(int duration){
+    public static String formatTime(int duration){
         int hours,minutes,seconds;
         hours = duration/60/60;
         minutes = duration/60%60;

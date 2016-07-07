@@ -105,6 +105,11 @@ public class TrackerLab {
         return null;
     }
 
+    public Tracker getLastTracker(){
+
+        return trackers.get(trackers.size()-1);
+    }
+
     private void initialTrackers() {
 
         trackers = trackerDB.getTrackers();

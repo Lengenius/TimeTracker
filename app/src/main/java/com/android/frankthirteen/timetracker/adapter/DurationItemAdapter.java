@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.List;
 
@@ -19,8 +20,17 @@ import java.util.List;
  */
 public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapter.ViewHolder> {
 
+    private static final String TAG = "Duration adapter";
     private List<DurationItem> durationItemList;
     private Context mContext;
+
+    public interface OnItemClickListener{
+        void onClick(View v, int position);
+
+        void onLongClick(View v, int position);
+    }
+
+    private OnItemClickListener onItemClickListener;
 
     public DurationItemAdapter(Context context, List<DurationItem> data) {
         durationItemList = data;
@@ -28,7 +38,9 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
 
     }
 
-
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.onItemClickListener = listener;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,20 +52,42 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         DurationItem di = durationItemList.get(position);
+
         holder.trackerTitle.setText(di.getTracker().getTitle());
         holder.tag.setText(di.getTag());
 
         holder.startTime.setText(FormatUtils.formatDateTime(di.getStartDate()));
+        holder.duration.setText(FormatUtils.formatTime(di.getDuration()));
+        if (onItemClickListener!=null){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = holder.getLayoutPosition();
+
+                    onItemClickListener.onClick(holder.itemView,pos);
+                }
+            });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = holder.getLayoutPosition();
+
+                    onItemClickListener.onLongClick(holder.itemView,pos);
+                    return true;
+                }
+            });
+        }
 
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return durationItemList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -68,5 +102,12 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
             duration = ((TextView) itemView.findViewById(R.id.di_cell_duration));
 
         }
+    }
+
+    public void updateData(List<DurationItem> data){
+        LogUtils.d(TAG, data.size() + "items loaded.");
+        durationItemList.clear();
+        durationItemList.addAll(data);
+        notifyDataSetChanged();
     }
 }

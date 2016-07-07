@@ -191,13 +191,14 @@ public class TrackerDB {
     public List<DurationItem> getDurationItemsByTracker(Tracker tracker) {
         List<DurationItem> durationItems = new ArrayList<DurationItem>();
         String trackerId = tracker.getId().toString();
-        Cursor c = db.query(TABLE_DURATION, new String[]{DURATION_TRACKER_ID},
+        Cursor c = db.query(TABLE_DURATION, null,
                 DURATION_TRACKER_ID + "=?",
                 new String[]{trackerId}, null, null, null);
         if (c.moveToFirst()) {
             do {
-                DurationItem di = assemblyDurationItem(durationItems, c);
+                DurationItem di = assemblyDurationItem(c);
                 di.setTrackerId(UUID.fromString(trackerId));
+                durationItems.add(di);
             } while (c.moveToNext());
             c.close();
             return durationItems;
@@ -209,16 +210,19 @@ public class TrackerDB {
     public List<DurationItem> getDurationItemsByDay(int year, int day) {
         List<DurationItem> durationItems = new ArrayList<DurationItem>();
         String dayStr = String.valueOf(day);
-        Cursor c = db.query(TABLE_DURATION, new String[]{DURATION_DAY}, DURATION_DAY + "=?",
+        Cursor c = db.query(TABLE_DURATION, null, DURATION_DAY + "=?",
                 new String[]{dayStr}, null, null, null);
-        if (c.moveToFirst()){
+        if (c.moveToFirst()) {
             do {
-                DurationItem di = assemblyDurationItem(durationItems, c);
+                DurationItem di = assemblyDurationItem(c);
+                di.setTrackerId(
+                        UUID.fromString(c.getString(c.getColumnIndex(DURATION_TRACKER_ID))));
                 durationItems.add(di);
-            }while (c.moveToNext());
+            } while (c.moveToNext());
             c.close();
         }
         //get durations by week month day or year.
+        LogUtils.d(TAG, "There are items:" + durationItems.size());
         return durationItems;
     }
 
@@ -235,6 +239,7 @@ public class TrackerDB {
         contentValues.put(DURATION_DATE, di.getDate().getTime());
         contentValues.put(DURATION_COMMENT, di.getComment());
         contentValues.put(DURATION_TAG, di.getTag());
+        LogUtils.d(TAG, "Duration item tag is " + di.getTag());
         contentValues.put(DURATION_YEAR, di.getYear());
         contentValues.put(DURATION_MONTH, di.getMonth());
         contentValues.put(DURATION_WEEK, di.getWeek());
@@ -264,15 +269,15 @@ public class TrackerDB {
     }
 
     @NonNull
-    private DurationItem assemblyDurationItem(List<DurationItem> durationItems, Cursor c) {
-        DurationItem di = new DurationItem();
+    private DurationItem assemblyDurationItem(Cursor c) {
+        DurationItem di = new DurationItem(mContext);
         di.setId(UUID.fromString(c.getString(c.getColumnIndex(DURATION_UID))));
         Date diDate = new Date();
         diDate.setTime(c.getLong(c.getColumnIndex(DURATION_DATE)));
         di.setDate(diDate);
         di.setComment(c.getString(c.getColumnIndex(DURATION_COMMENT)));
         di.setDuration(c.getInt(c.getColumnIndex(DURATION_PERIOD)));
-        durationItems.add(di);
+        di.setTag(c.getString(c.getColumnIndex(DURATION_TAG)));
         return di;
     }
 }

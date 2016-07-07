@@ -139,7 +139,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
     }
 
     private void updateTimer() {
-        timerTv.setText(FormatUtils.timerFormat(elapsedTime));
+        timerTv.setText(FormatUtils.formatTime(elapsedTime));
     }
 
     class TimerThread implements Runnable {

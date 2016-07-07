@@ -8,12 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.adapter.DividerItemDecoration;
@@ -22,6 +21,7 @@ import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
+import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,10 +34,14 @@ import java.util.List;
 public class DailyReporterFragment extends Fragment {
 
     private static final int REQUEST_DATE = 0x0001;
+    private static final String SAVED_DATE = "Date";
+    private static final String TAG = "Daily";
     private RecyclerView recyclerView;
     private ImageButton previousDay, nextDay;
     private Date date;
     private Button chooseDate;
+
+    private DurationItemAdapter adapter;
 
     public static DailyReporterFragment newInstance() {
 
@@ -51,7 +55,11 @@ public class DailyReporterFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        date = new Date();
+        if (savedInstanceState != null) {
+            date = (Date) savedInstanceState.getSerializable(SAVED_DATE);
+        } else {
+            date = new Date();
+        }
     }
 
     @Nullable
@@ -90,12 +98,25 @@ public class DailyReporterFragment extends Fragment {
         });
 
         updateDate(date);
-        DurationItemAdapter adapter = new DurationItemAdapter(getActivity(), getData(date));
+        adapter = new DurationItemAdapter(getActivity(), getData(date));
+
+        adapter.setOnItemClickListener(new DurationItemAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                LogUtils.d(TAG, "Duration item id is :" +
+                        getData(date).get(position).getId().toString());
+            }
+
+            @Override
+            public void onLongClick(View v, int position) {
+
+            }
+        });
 
         recyclerView = ((RecyclerView) view.findViewById(R.id.daily_reporter_list));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),
-                LinearLayoutManager.VERTICAL,false);
+                LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST);
@@ -109,7 +130,23 @@ public class DailyReporterFragment extends Fragment {
 
     private void updateDate(Date date) {
         chooseDate.setText(FormatUtils.formatDate(date));
+
+        //1. get new data .
+        //2. put it into adapter.
+        if (adapter != null) {
+            adapter.updateData(getData(date));
+            recyclerView.invalidate();
+        }
+
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // TODO: 7/6/16 save date info.
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVED_DATE, date);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -131,6 +168,7 @@ public class DailyReporterFragment extends Fragment {
         int day = c.get(Calendar.DAY_OF_YEAR);
         int year = c.get(Calendar.YEAR);
         dailyData = TrackerDB.getTrackerDB(getActivity()).getDurationItemsByDay(year, day);
+
 
         return dailyData;
     }
