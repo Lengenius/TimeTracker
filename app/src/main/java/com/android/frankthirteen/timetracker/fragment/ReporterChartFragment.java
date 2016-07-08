@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
@@ -94,9 +95,7 @@ public class ReporterChartFragment extends Fragment {
         barChart.setScaleYEnabled(false);
         barChart.setVisibleXRangeMaximum(7);
 
-        barChart.animateX(2000);
-
-//        barChart.invalidate();
+        barChart.invalidate();
 
         chartTitle.setText(mTracker.getTitle());
 
@@ -105,56 +104,61 @@ public class ReporterChartFragment extends Fragment {
 
     //    Should I put this method into DataBase to reuse it?
     private BarData initialBarData() {
-//        fakeData();
-
         List<DurationItem> rawData;
         List<BarEntry> wrappedData = new ArrayList<BarEntry>();
         List<String> xVals = new ArrayList<String>();
+//        mTracker.setDurationItems(
+//                TrackerDB.getTrackerDB(getActivity()).getDurationItemsByTracker(mTracker)
+//        );
 
-        if (mTracker.getDurationItems() != null) {
+
+        if (mTracker.getDurationItems().size() != 0) {
             rawData = mTracker.getDurationItems();
 
             prepareXLabels(rawData, wrappedData, xVals);
 
-            int duration = 0;
-            int day = 0;
-//            int weekDay = 0;
+            int period = 0;
+            int diDay = 0;
+            double dayTime = 0;
+
             for (int i = 0; i < rawData.size(); i++) {
 //                get the item in list.
                 DurationItem di = rawData.get(i);
-                if (day == 0) {
+                if (diDay == 0) {
 //                    get the 1st item and store its day & duration info.
-                    day = di.getDay();
-                    duration = di.getDuration();
+                    diDay = di.getDay();
+                    period = di.getDuration();
 
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(di.getDate());
+//                    Calendar c = Calendar.getInstance();
+//                    c.setTime(di.getDate());
 //                    weekDay = c.get(Calendar.DAY_OF_WEEK);
-                } else if (day == di.getDay()) {
+                } else if (diDay == di.getDay()) {
 //                    if the next item is added in the same day.
 //                    sum its durations info.
-                    duration += di.getDuration();
+                    period += di.getDuration();
+                    dayTime = di.getDate().getTime();
                 } else {
+//                    new Entry Item. which means new day.
 //                    if it is a duration item in another day. add the stored info to an entry.
 //                    dayIndex should also related to di's weekday.
-                    double diDay = di.getDate().getTime();
+
                     double trackerStarDate = mTracker.getStartDate().getTime();
 
-                    int dayIndex = (int) Math.floor((diDay - trackerStarDate)
+                    int dayIndex = (int) Math.floor((dayTime - trackerStarDate)
                             / 1000.0 / 60 / 60 / 24);
-                    BarEntry entry = new BarEntry(duration, dayIndex);
+                    BarEntry entry = new BarEntry(period, dayIndex);
                     wrappedData.set(dayIndex, entry);
 
 //                    refresh the stored info.
-                    day = di.getDay();
-                    duration = di.getDuration();
+                    diDay = di.getDay();
+                    period = di.getDuration();
                 }
 //                When reached the last item.
                 if (i == rawData.size() - 1) {
                     int dayIndex = (int) Math.floor((
                             di.getDate().getTime() - mTracker.getStartDate().getTime())
                             / 1000.0 / 60 / 60 / 24);
-                    BarEntry entry = new BarEntry(duration, dayIndex);
+                    BarEntry entry = new BarEntry(period, dayIndex);
                     wrappedData.set(dayIndex, entry);
                 }
 
@@ -185,28 +189,17 @@ public class ReporterChartFragment extends Fragment {
     }
 
     private String getXLabel(int i) {
-//        Date date = di.getDate();
-//        Calendar c = Calendar.getInstance();
-//        c.setTime(date);
-        // return different xLabel on condition.
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
-// for the current Locale :
-//   DateFormatSymbols symbols = new DateFormatSymbols();
         String[] dayNames = symbols.getShortWeekdays();
-        for (int j = 0; j < dayNames.length; j++) {
-
-            LogUtils.d(TAG, "dayNames " + j + "item is " + dayNames[j]);
-
-        }
         int returnType = 0;
         switch (returnType) {
             case 0:
 //                return c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
+//                dayNames[0] == " ";
                 String result = dayNames[i % 7 + 1];
                 LogUtils.d(TAG, "item sequence is " + i % 7 + result);
 
                 return result;
-
             default:
                 return null;
         }
@@ -227,38 +220,38 @@ public class ReporterChartFragment extends Fragment {
         }
     }
 
-    private void fakeData() {
-        Random r = new Random();
-        r.setSeed(2);
-
-        List<DurationItem> durationItems = mTracker.getDurationItems();
-        for (int i = 0; i < 14; i++) {
-            if (i % 7 != 0) {
-                DurationItem di = new DurationItem();
-                di.setTrackerId(mTracker.getId());
-                di.setId(UUID.randomUUID());
-                Date diDate = new Date();
-                long startDate = mTracker.getStartDate().getTime();
-                diDate.setTime(startDate + i * 1000 * 60 * 60 * 24 - 1000);
-                di.setDate(diDate);
-                LogUtils.d(TAG, di.getDay() + " days since start");
-                di.setDuration(r.nextInt(1400));
-                durationItems.add(di);
-            } else {
-                DurationItem di = new DurationItem();
-                di.setTrackerId(mTracker.getId());
-                di.setId(UUID.randomUUID());
-                Date diDate = new Date();
-                long startDate = mTracker.getStartDate().getTime();
-                diDate.setTime(startDate + i * 1000 * 60 * 60 * 24);
-                di.setDate(diDate);
-                LogUtils.d(TAG, di.getDay() + " days since start");
-                di.setDuration(0);
-                durationItems.add(di);
-            }
-        }
-
-        LogUtils.d(TAG, mTracker.getDurationItems().size() + " items.");
-    }
+//    private void fakeData() {
+//        Random r = new Random();
+//        r.setSeed(2);
+//
+//        List<DurationItem> durationItems = mTracker.getDurationItems();
+//        for (int i = 0; i < 14; i++) {
+//            if (i % 7 != 0) {
+//                DurationItem di = new DurationItem();
+//                di.setTrackerId(mTracker.getId());
+//                di.setId(UUID.randomUUID());
+//                Date diDate = new Date();
+//                long startDate = mTracker.getStartDate().getTime();
+//                diDate.setTime(startDate + i * 1000 * 60 * 60 * 24 - 1000);
+//                di.setDate(diDate);
+//                LogUtils.d(TAG, di.getDay() + " days since start");
+//                di.setDuration(r.nextInt(1400));
+//                durationItems.add(di);
+//            } else {
+//                DurationItem di = new DurationItem();
+//                di.setTrackerId(mTracker.getId());
+//                di.setId(UUID.randomUUID());
+//                Date diDate = new Date();
+//                long startDate = mTracker.getStartDate().getTime();
+//                diDate.setTime(startDate + i * 1000 * 60 * 60 * 24);
+//                di.setDate(diDate);
+//                LogUtils.d(TAG, di.getDay() + " days since start");
+//                di.setDuration(0);
+//                durationItems.add(di);
+//            }
+//        }
+//
+//        LogUtils.d(TAG, mTracker.getDurationItems().size() + " items.");
+//    }
 
 }

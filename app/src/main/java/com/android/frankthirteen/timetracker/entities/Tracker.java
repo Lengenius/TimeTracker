@@ -7,12 +7,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * Created by Frank on 5/24/16.
  * Tracker means a task you may want to achieve in a certain time.
  * When you are done with it. You can remove it from tracking list.
  */
-public class Tracker {
+public class Tracker{
     public static final String EXTRA_ID = "com.android.frankthirteen.timetracker.Extra_id";
     public static final String EXTRA_DATE = "com.android.frankthirteen.timetracker.Extra_date";
     private static final String TAG = "TRACKER_CLASS";
@@ -67,6 +69,10 @@ public class Tracker {
 
         durationItems.add(di);
         updateTotalDuration();
+    }
+
+    public void setTotalDurations(int totalDuration){
+        durations = totalDuration;
     }
 
     public int getTotalDurations() {

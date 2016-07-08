@@ -1,12 +1,14 @@
 package com.android.frankthirteen.timetracker.fragment;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -14,8 +16,8 @@ import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
+import com.android.frankthirteen.timetracker.utils.PictureUtils;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -28,6 +30,7 @@ public class ReporterTableFragment extends Fragment {
     private Tracker mTracker;
     private TextView tvTitle, tvContent, tvComment, tvTimePayed,tvDayPast;
     private ProgressBar prDayPast, prTimePayed;
+    private ImageView trPhoto;
     private UUID mId;
 
     public ReporterTableFragment() {
@@ -78,14 +81,23 @@ public class ReporterTableFragment extends Fragment {
         prDayPast = (ProgressBar) rootView.findViewById(R.id.reporter_progress_day_past);
         prTimePayed = (ProgressBar) rootView.findViewById(R.id.reporter_progress_time_payed);
 
+        trPhoto = (ImageView) rootView.findViewById(R.id.reporter_tracker_photo);
+        if (mTracker.getPhotoPath()!=null){
+            Bitmap bitmap = PictureUtils.getThumbnail(trPhoto,mTracker.getPhotoPath());
+            trPhoto.setImageBitmap(bitmap);
+        }
+
+
         tvContent.setText(mTracker.getContent());
         tvComment.setText(mTracker.getComment());
 //        LogUtils.d(TAG,mTracker.getComment());
         //
         int dayPast = getDayPast();
 
-        tvDayPast.setText(dayPast + "days passed.");
-        tvTimePayed.setText(mTracker.getTotalDurations() + "mins");
+        String passedDay =dayPast + getResources().getString(R.string.reporter_table_day_passed);
+        tvDayPast.setText(passedDay);
+        String passedMinutes = mTracker.getTotalDurations() + getResources().getString(R.string.minutes);
+        tvTimePayed.setText(passedMinutes);
 
         if (mTracker.getPlannedTimeInMinutes()!=0) {
             float passed = mTracker.getTotalDurations();

@@ -129,6 +129,12 @@ public class TrackListFragment extends Fragment {
         return trackers;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        localBroadcastManager.unregisterReceiver(trackerAddReceiver);
+    }
+
     class TrackerAddReceiver extends BroadcastReceiver {
 
         @Override

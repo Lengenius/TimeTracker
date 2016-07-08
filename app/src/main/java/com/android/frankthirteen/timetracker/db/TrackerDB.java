@@ -91,8 +91,11 @@ public class TrackerDB {
                 tracker.setTitle(c.getString(c.getColumnIndex(TRACKER_TITLE)));
                 tracker.setContent(c.getString(c.getColumnIndex(TRACKER_CONTENT)));
                 tracker.setComment(c.getString(c.getColumnIndex(TRACKER_COMMENT)));
-                tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_TRACKING_STATE)) > 0);
+                tracker.setTotalDurations(
+                        c.getInt(c.getColumnIndex(TRACKER_TOTAL_DURATION))
+                );
                 tracker.setPlanningTimeInMinutes(c.getInt(c.getColumnIndex(TRACKER_PLANED_TIME)));
+                tracker.setTracking(c.getInt(c.getColumnIndex(TRACKER_TRACKING_STATE)) > 0);
                 if (c.getLong(c.getColumnIndex(TRACKER_START_DATE)) != 0) {
                     Date date = new Date();
                     date.setTime(c.getLong(c.getColumnIndex(TRACKER_START_DATE)));
@@ -106,7 +109,6 @@ public class TrackerDB {
                 if (c.getString(c.getColumnIndex(TRACKER_PHOTO_PATH)) != null) {
                     tracker.setPhotoPath(c.getString(c.getColumnIndex(TRACKER_PHOTO_PATH)));
                 }
-
 
                 trackers.add(tracker);
             }
@@ -129,7 +131,7 @@ public class TrackerDB {
         return true;
     }
 
-    public void modifyTracker(Tracker tracker) {
+    public void updateTracker(Tracker tracker) {
         Cursor cursor = db.query(TABLE_TRACKER, null, TRACKER_ID + "=?",
                 new String[]{tracker.getId().toString()}, null, null, null);
         if (cursor.moveToFirst()) {
@@ -256,6 +258,7 @@ public class TrackerDB {
         values.put(TRACKER_COMMENT, tracker.getComment());
         values.put(TRACKER_TRACKING_STATE, tracker.isTracking());
         values.put(TRACKER_PLANED_TIME, tracker.getPlannedTimeInMinutes());
+        values.put(TRACKER_TOTAL_DURATION,tracker.getTotalDurations());
         if (tracker.getStartDate() != null) {
             values.put(TRACKER_START_DATE, tracker.getStartDate().getTime());
         }

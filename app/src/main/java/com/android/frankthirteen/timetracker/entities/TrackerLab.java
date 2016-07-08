@@ -116,6 +116,7 @@ public class TrackerLab {
         for (Tracker tr :
                 trackers) {
             LogUtils.d(TAG,"getting tracker\'s durations.");
+            //it may cause performance problem. it
             tr.setDurationItems(trackerDB.getDurationItemsByTracker(tr));
         }
 
