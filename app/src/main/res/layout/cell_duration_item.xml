@@ -13,6 +13,12 @@
         android:layout_weight="1"
         android:text="unset" />
 
+    <ImageView
+        android:id="@+id/di_cell_tag_img"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent" />
+
     <TextView
         android:gravity="center_vertical"
         android:layout_gravity="center_vertical"

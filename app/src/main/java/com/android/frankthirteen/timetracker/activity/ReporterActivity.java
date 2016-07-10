@@ -38,6 +38,7 @@ public class ReporterActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reporter);
+        setTitle(getString(R.string.title_tracker_reporter));
 
         UUID uuid = (UUID) getIntent().getSerializableExtra(Tracker.EXTRA_ID);
 

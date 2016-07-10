@@ -43,7 +43,6 @@ public class ReporterChartFragment extends Fragment {
     private Tracker mTracker;
     private BarChart barChart;
     private TextView chartTitle;
-    private Date now;
 
     public static ReporterChartFragment newInstance(UUID uuid) {
 
@@ -57,7 +56,6 @@ public class ReporterChartFragment extends Fragment {
 
     public ReporterChartFragment() {
         //Constructor
-        now = new Date();
 
     }
 
@@ -128,6 +126,7 @@ public class ReporterChartFragment extends Fragment {
 //                    get the 1st item and store its day & duration info.
                     diDay = di.getDay();
                     period = di.getDuration();
+                    dayTime = di.getDate().getTime();
 
 //                    Calendar c = Calendar.getInstance();
 //                    c.setTime(di.getDate());
@@ -146,7 +145,8 @@ public class ReporterChartFragment extends Fragment {
 
                     int dayIndex = (int) Math.floor((dayTime - trackerStarDate)
                             / 1000.0 / 60 / 60 / 24);
-                    BarEntry entry = new BarEntry(period, dayIndex);
+//                    turn period in second into minutes.
+                    BarEntry entry = new BarEntry(period / 60, dayIndex);
                     wrappedData.set(dayIndex, entry);
 
 //                    refresh the stored info.
@@ -158,7 +158,7 @@ public class ReporterChartFragment extends Fragment {
                     int dayIndex = (int) Math.floor((
                             di.getDate().getTime() - mTracker.getStartDate().getTime())
                             / 1000.0 / 60 / 60 / 24);
-                    BarEntry entry = new BarEntry(period, dayIndex);
+                    BarEntry entry = new BarEntry(period/60, dayIndex);
                     wrappedData.set(dayIndex, entry);
                 }
 

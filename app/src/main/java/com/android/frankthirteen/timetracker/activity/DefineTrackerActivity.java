@@ -32,6 +32,8 @@ public class DefineTrackerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_fragment_activity);
 
+        setTitle(getString(R.string.title_tracker_define));
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three

@@ -167,4 +167,25 @@ public class Tracker{
     public Date getStartDate() {
         return mStartDate;
     }
+
+    public DurationItem getDuration(DurationItem di){
+        for (DurationItem duration :
+                durationItems) {
+            if (duration.getId().equals(di.getId())){
+                return duration;
+            }
+        }
+        return null;
+    }
+
+    public void removeDuration(DurationItem di){
+
+        for (DurationItem duration :
+                durationItems) {
+            if (duration.getId().equals(di.getId())){
+                durationItems.remove(duration);
+            }
+        }
+
+    }
 }

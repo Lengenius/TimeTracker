@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
+import com.android.frankthirteen.timetracker.utils.FormatUtils;
+import com.android.frankthirteen.timetracker.utils.PictureUtils;
 
 import java.util.ArrayList;
 
@@ -55,7 +57,13 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
         Tracker tracker = trackers.get(position);
         holder.title.setText(tracker.getTitle());
         holder.content.setText(tracker.getContent());
-        holder.timer.setText(tracker.getTotalDurations()+"");
+        if (tracker.getPhotoPath()!=null){
+
+            holder.cellImage.setImageBitmap(
+                    PictureUtils.getThumbnail(holder.cellImage,tracker.getPhotoPath()));
+        }
+
+        holder.timer.setText(FormatUtils.formatTime(tracker.getTotalDurations()));
         if (mOnItemClickListener!=null){
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {

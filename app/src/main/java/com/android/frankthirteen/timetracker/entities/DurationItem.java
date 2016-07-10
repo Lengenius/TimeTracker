@@ -19,6 +19,8 @@ public class DurationItem {
     private String mComment;
     private Date mEndDate;
 
+    public static final String EXTRA_DI_ID =
+            "com.android.frankthirteen.timetracker.entities.durationId";
     /**
      * Default Constructor for DB only.
      */

@@ -16,8 +16,7 @@
             android:id="@+id/tracker_photo"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:layout_margin="4dp"
-            android:background="@color/colorPrimaryLight" />
+            android:layout_margin="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,13 +38,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
-                android:text="Title" />
+                android:text="@string/title" />
 
             <EditText
                 android:id="@+id/tracker_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Type a Tracker Title." />
+                android:hint="@string/title_hint" />
 
         </LinearLayout>
     </LinearLayout>
@@ -63,16 +62,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Content"
+            android:text="@string/content"
             android:textAllCaps="true" />
 
         <EditText
-            android:layout_marginLeft="8dp"
             android:id="@+id/tracker_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_weight="3"
-            android:hint="Type content here."
+            android:hint="@string/content_hint"
             android:lines="2" />
     </LinearLayout>
 
@@ -91,15 +90,15 @@
             android:layout_gravity="top"
             android:layout_weight="1"
             android:gravity="top"
-            android:text="comment" />
+            android:text="@string/comment" />
 
         <EditText
-            android:layout_marginLeft="8dp"
             android:id="@+id/tracker_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_weight="3"
-            android:hint="Type some comment here."
+            android:hint="@string/comment_hint"
             android:lines="3" />
     </LinearLayout>
 
@@ -116,15 +115,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="cost" />
+            android:text="@string/cost" />
 
         <EditText
-            android:layout_marginLeft="8dp"
             android:id="@+id/tracker_plan_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_weight="3"
-            android:hint="Hours plan to spend on."
+            android:hint="@string/cost_hint"
             android:inputType="number" />
     </LinearLayout>
 
@@ -142,17 +141,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="end" />
+            android:text="@string/end_date" />
 
         <TextView
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:padding="8dp"
             android:id="@+id/tracker_end_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
             android:layout_weight="2"
-            android:hint="End Date." />
+            android:hint="@string/end_date_hint"
+            android:padding="8dp" />
 
         <Button
             android:id="@+id/tracker_choose_date"
@@ -160,7 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:minHeight="0dp"
-            android:text="choose date" />
+            android:text="@string/choose_date" />
     </LinearLayout>
 
 

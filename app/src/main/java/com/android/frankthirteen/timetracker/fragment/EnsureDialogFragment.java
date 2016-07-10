@@ -20,6 +20,7 @@ import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
+import com.android.frankthirteen.timetracker.enums.Tags;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -47,6 +48,7 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
     private DurationItem mDurationItem;
     private TagFlowLayout tagsContainer;
     private LayoutInflater layoutInflater;
+    private Tracker oldTracker;
 
     private UUID trackerId;
 
@@ -60,12 +62,24 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
         return fragment;
     }
 
+    public static EnsureDialogFragment newInstance(DurationItem durationItem) {
+
+        Bundle args = new Bundle();
+        args.putSerializable(DurationItem.EXTRA_DI_ID,durationItem.getId());
+        EnsureDialogFragment fragment = new EnsureDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        elapsedTime = getArguments().getInt(EXTRA_TIME);
-        mDurationItem = new DurationItem(getActivity());
-        mDurationItem.setDuration(elapsedTime);
+        if (getArguments().getInt(EXTRA_TIME)!=0) {
+            elapsedTime = getArguments().getInt(EXTRA_TIME);
+            mDurationItem = new DurationItem(getActivity());
+            mDurationItem.setDuration(elapsedTime);
+        }
         layoutInflater = LayoutInflater.from(getActivity());
     }
 

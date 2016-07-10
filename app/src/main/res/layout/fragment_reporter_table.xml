@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="8dp"
         tools:context="com.android.frankthirteen.timetracker.activity.ReporterActivity">
@@ -18,8 +18,7 @@
             <ImageView
                 android:id="@+id/reporter_tracker_photo"
                 android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:background="@color/colorPrimaryLight" />
+                android:layout_height="160dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,11 +31,11 @@
                 <TextView
                     style="@style/EditItem"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="Title" />
+                    android:text="@string/title" />
 
                 <TextView
                     android:id="@+id/reporter_tracker_title"
@@ -52,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Content"
+            android:text="@string/content"
             android:textAllCaps="true" />
 
         <ScrollView
@@ -72,7 +71,7 @@
             style="@style/EditItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="comment" />
+            android:text="@string/comment" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -105,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="Time payed" />
+                    android:text="@string/time_payed" />
 
                 <TextView
                     android:id="@+id/reporter_tv_time_payed"
@@ -146,7 +145,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="Day past" />
+                    android:text="@string/day_passed" />
 
                 <TextView
                     android:id="@+id/reporter_tv_day_past"

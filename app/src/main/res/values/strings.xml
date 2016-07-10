@@ -22,5 +22,20 @@
     <string name="zero_timer">00:00:00</string>
     <string name="reporter_table_day_passed">days passed.</string>
     <string name="minutes">Minutes</string>
+    <string name="title">Title</string>
+    <string name="title_hint">Type a Tracker Title.</string>
+    <string name="content">Content</string>
+    <string name="content_hint">Type content here.</string>
+    <string name="comment">comment</string>
+    <string name="comment_hint">Type some comment here.</string>
+    <string name="cost">cost</string>
+    <string name="cost_hint">Hours plan to spend on.</string>
+    <string name="end_date">end</string>
+    <string name="end_date_hint">End Date.</string>
+    <string name="choose_date">choose date</string>
+    <string name="time_payed">Time payed</string>
+    <string name="day_passed">Day passed</string>
+    <string name="title_tracker_define">Define Tracker.</string>
+    <string name="title_tracker_reporter">Tracker Reporter</string>
 
 </resources>

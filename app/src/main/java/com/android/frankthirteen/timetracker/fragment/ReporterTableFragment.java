@@ -96,11 +96,11 @@ public class ReporterTableFragment extends Fragment {
 
         String passedDay =dayPast + getResources().getString(R.string.reporter_table_day_passed);
         tvDayPast.setText(passedDay);
-        String passedMinutes = mTracker.getTotalDurations() + getResources().getString(R.string.minutes);
+        String passedMinutes = mTracker.getTotalDurations()/60 + getResources().getString(R.string.minutes);
         tvTimePayed.setText(passedMinutes);
 
         if (mTracker.getPlannedTimeInMinutes()!=0) {
-            float passed = mTracker.getTotalDurations();
+            float passed = mTracker.getTotalDurations()/60;
             float planned = mTracker.getPlannedTimeInMinutes();
             int progress = Math.round(100*(passed/planned));
             LogUtils.d(TAG,"setting progress bar." + progress);

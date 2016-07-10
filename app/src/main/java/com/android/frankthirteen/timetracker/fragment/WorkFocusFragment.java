@@ -151,7 +151,6 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
                 elapsedTime++;
                 Message msg = Message.obtain(mHandler, WorkFocusFragment.UPDATE_TIMER);
                 msg.sendToTarget();
-                //TODO time interval will be set to 1000 when upload to store.
                 mHandler.postDelayed(this, 10);
             }
 
