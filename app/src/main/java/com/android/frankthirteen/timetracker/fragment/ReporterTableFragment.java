@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ public class ReporterTableFragment extends Fragment {
     private TextView tvTitle, tvContent, tvComment, tvTimePayed,tvDayPast;
     private ProgressBar prDayPast, prTimePayed;
     private ImageView trPhoto;
+    private CheckBox checkBox;
     private UUID mId;
 
     public ReporterTableFragment() {
@@ -78,6 +81,8 @@ public class ReporterTableFragment extends Fragment {
         tvDayPast = (TextView) rootView.findViewById(R.id.reporter_tv_day_past);
         tvTimePayed = (TextView) rootView.findViewById(R.id.reporter_tv_time_payed);
 
+        checkBox = (CheckBox) rootView.findViewById(R.id.checkbox_tracking_state);
+
         prDayPast = (ProgressBar) rootView.findViewById(R.id.reporter_progress_day_past);
         prTimePayed = (ProgressBar) rootView.findViewById(R.id.reporter_progress_time_payed);
 
@@ -117,6 +122,16 @@ public class ReporterTableFragment extends Fragment {
 
             prDayPast.setProgress(progress);
         }
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    mTracker.setTracking(false);
+                    TrackerLab.getTrackerLab(getActivity()).updateTracker(mTracker);
+                }
+            }
+        });
     }
 
     private int getDayPast() {

@@ -1,7 +1,9 @@
 package com.android.frankthirteen.timetracker.fragment;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -36,8 +38,11 @@ public class TrackListFragment extends Fragment {
     public static final String TRACKER_ADDED = "com.android.frankthirteen.timetracker.fragment." +
             "TRACKER_ADDED";
     private static final String TAG = "TRACKER_LIST";
+    private static final String TRACKING_STATE = "com.android.frankthirteen.timetracker.fragment."
+            + "ListState";
 
 
+    private int flagState = 0;
     private TrackerLab trackerLab;
     private ArrayList<Tracker> trackers;
     private TrackerListAdapter adapter;
@@ -46,9 +51,10 @@ public class TrackListFragment extends Fragment {
     private LocalBroadcastManager localBroadcastManager;
     private RecyclerView recyclerView;
 
-    public static TrackListFragment newInstance() {
+    public static TrackListFragment newInstance(int state) {
 
         Bundle args = new Bundle();
+        args.putInt(TRACKING_STATE, state);
 
         TrackListFragment fragment = new TrackListFragment();
         fragment.setArguments(args);
@@ -58,6 +64,7 @@ public class TrackListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        flagState = getArguments().getInt(TRACKING_STATE);
         trackerLab = TrackerLab.getTrackerLab(getActivity());
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         trackerAddReceiver = new TrackerAddReceiver();
@@ -84,7 +91,7 @@ public class TrackListFragment extends Fragment {
                 DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(itemDecoration);
 
-        trackers = getTrackers(TRACKING);
+        trackers = getTrackers(flagState);
 
         adapter = new TrackerListAdapter(getActivity(), trackers);
         adapter.setOnItemClickListener(new TrackerListAdapter.OnItemClickListener() {
@@ -96,11 +103,30 @@ public class TrackListFragment extends Fragment {
             }
 
             @Override
-            public void onItemLongClick(View view, int position) {
-                Tracker removedTracker = adapter.getItem(position);
-                adapter.deleteItem(position);
-                trackerLab.removeTracker(removedTracker);
-                Toast.makeText(getActivity(), "item long clicked", Toast.LENGTH_SHORT).show();
+            public void onItemLongClick(View view, final int position) {
+                final Tracker removedTracker = adapter.getItem(position);
+                new AlertDialog.Builder(getActivity())
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                adapter.deleteItem(position);
+                                trackerLab.removeTracker(removedTracker);
+                                Toast.makeText(getActivity(),
+                                        R.string.toast_tracker_deleted, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setCancelable(false)
+                        .setTitle(R.string.title_delete_tracker)
+                        .setMessage(R.string.message_dialog_delete_tracker)
+                        .show();
+
+
             }
         });
 
@@ -139,10 +165,6 @@ public class TrackListFragment extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context, "local broadcast received", Toast.LENGTH_SHORT).show();
-            LogUtils.d(TAG, trackers.size() + "items.");
-
-            // TODO: 7/1/16 make the recycler view refresh later to show the new item.
             adapter.addItem(trackers.size(), trackerLab.getLastTracker());
         }
     }

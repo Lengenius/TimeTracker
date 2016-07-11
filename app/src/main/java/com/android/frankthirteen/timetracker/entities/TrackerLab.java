@@ -1,8 +1,8 @@
 package com.android.frankthirteen.timetracker.entities;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
+import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
@@ -28,11 +28,10 @@ public class TrackerLab {
 
         trackerDB = TrackerDB.getTrackerDB(mContext);
 
-        if (trackerDB!=null){
+        if (trackerDB != null) {
             initialTrackers();
         }
     }
-
 
 
     public static TrackerLab getTrackerLab(Context context) {
@@ -55,10 +54,6 @@ public class TrackerLab {
 
     public ArrayList<Tracker> getTrackingTrackers() {
         ArrayList<Tracker> tracking = new ArrayList<Tracker>();
-        if (trackers.size()==0){
-            fakeData();
-
-        }
         for (Tracker ti :
                 trackers) {
             if (ti.isTracking()) {
@@ -70,44 +65,47 @@ public class TrackerLab {
 
     public void addTracker(Tracker tracker) {
         trackers.add(tracker);
+        trackerDB.insertTracker(tracker);
         //add to DB to.
     }
 
     public void removeTracker(Tracker tracker) {
         trackers.remove(tracker);
         trackerDB.removeTracker(tracker);
+        trackerDB.removeDurationItemsByTracker(tracker);
         //also need to remove it from DB.
     }
 
     public void removeTracker(UUID trackerId) {
         for (Tracker tr :
                 trackers) {
-            if (tr.getId().equals(trackerId)){
+            if (tr.getId().equals(trackerId)) {
 
                 trackers.remove(tr);
                 trackerDB.removeTracker(tr);
+                trackerDB.removeDurationItemsByTracker(tr);
             }
         }
         //also need to remove it from DB.
     }
 
-    public Tracker getTracker(UUID uuid){
+    public Tracker getTracker(UUID uuid) {
         for (Tracker ti :
                 trackers) {
-            LogUtils.d(TAG, "uuid is "+ti.getId().toString());
+            LogUtils.d(TAG, "uuid is " + ti.getId().toString());
             //UUID should use equals
             if (uuid.equals(ti.getId())) {
-                LogUtils.d(TAG,"Found uuid is i:" + ti.getId().toString());
+                LogUtils.d(TAG, "Found uuid is i:" + ti.getId().toString());
                 return ti;
             }
         }
-        LogUtils.d(TAG,"unfortunately ");
+        LogUtils.d(TAG, "unfortunately ");
         return null;
     }
 
-    public Tracker getLastTracker(){
+    public Tracker getLastTracker() {
 
-        return trackers.get(trackers.size()-1);
+        return trackers.get(trackers.size() - 1);
     }
 
     private void initialTrackers() {
@@ -115,7 +113,7 @@ public class TrackerLab {
         trackers = trackerDB.getTrackers();
         for (Tracker tr :
                 trackers) {
-            LogUtils.d(TAG,"getting tracker\'s durations.");
+            LogUtils.d(TAG, "getting tracker\'s durations.");
             //it may cause performance problem. it
             tr.setDurationItems(trackerDB.getDurationItemsByTracker(tr));
         }
@@ -123,14 +121,25 @@ public class TrackerLab {
     }
 
 
+    private void fakeData() {
+        Tracker trackerMeaning = new Tracker();
+        trackerMeaning.setTitle(mContext.getString(R.string.tracker_meaning_title));
+        trackerMeaning.setContent(mContext.getString(R.string.tracker_meaning_content));
+        trackers.add(trackerMeaning);
 
-    private void fakeData(){
-        for(int i=0;i<3;i++){
-            Tracker fakeTracker = new Tracker();
-            fakeTracker.setTitle("This is "+i);
-            fakeTracker.setContent("there are "+i+"items.");
-            trackers.add(fakeTracker);
-        }
+        Tracker trackerOperation = new Tracker();
+        trackerOperation.setTitle(mContext.getString(R.string.tracker_operation_title));
+        trackerOperation.setContent(mContext.getString(R.string.tracker_operation_content));
+        trackers.add(trackerOperation);
+
+        Tracker createTracker = new Tracker();
+        createTracker.setTitle(mContext.getString(R.string.tracker_create_title));
+        createTracker.setContent(mContext.getString(R.string.tracker_create_content));
+        trackers.add(createTracker);
+
     }
 
+    public void updateTracker(Tracker mTracker) {
+        trackerDB.updateTracker(mTracker);
+    }
 }

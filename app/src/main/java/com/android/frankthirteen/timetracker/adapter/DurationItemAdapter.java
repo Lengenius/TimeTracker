@@ -1,7 +1,6 @@
 package com.android.frankthirteen.timetracker.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
-import com.android.frankthirteen.timetracker.enums.Tags;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
@@ -27,7 +25,7 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
     private List<DurationItem> durationItemList;
     private Context mContext;
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onClick(View v, int position);
 
         void onLongClick(View v, int position);
@@ -41,14 +39,14 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
 
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.cell_duration_item,parent,false);
+                inflate(R.layout.cell_duration_item, parent, false);
 
         ViewHolder vh = new ViewHolder(rootView);
         return vh;
@@ -59,19 +57,24 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
 
         DurationItem di = durationItemList.get(position);
 
-        holder.trackerTitle.setText(di.getTracker().getTitle());
-        holder.tag.setText(di.getTag());
+        try {
+            holder.trackerTitle.setText(di.getTracker().getTitle());
+        } catch (Exception e) {
+            LogUtils.e(TAG, "this durationItem is not bound to a tracker.");
+            e.printStackTrace();
+        }
+        holder.tag.setText(di.getTagValue());
         holder.diTag.setImageResource(getTagPic(di));
 
         holder.startTime.setText(FormatUtils.formatDateTime(di.getStartDate()));
         holder.duration.setText(FormatUtils.formatTime(di.getDuration()));
-        if (onItemClickListener!=null){
+        if (onItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = holder.getLayoutPosition();
 
-                    onItemClickListener.onClick(holder.itemView,pos);
+                    onItemClickListener.onClick(holder.itemView, pos);
                 }
             });
 
@@ -80,7 +83,7 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
                 public boolean onLongClick(View v) {
                     int pos = holder.getLayoutPosition();
 
-                    onItemClickListener.onLongClick(holder.itemView,pos);
+                    onItemClickListener.onLongClick(holder.itemView, pos);
                     return true;
                 }
             });
@@ -95,7 +98,7 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView trackerTitle,tag,startTime,duration;
+        public TextView trackerTitle, tag, startTime, duration;
         public ImageView diTag;
 
         public ViewHolder(View itemView) {
@@ -110,34 +113,33 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
         }
     }
 
-    public void updateData(List<DurationItem> data){
+    public void updateData(List<DurationItem> data) {
         LogUtils.d(TAG, data.size() + "items loaded.");
         durationItemList.clear();
         durationItemList.addAll(data);
         notifyDataSetChanged();
     }
 
-    private int getTagPic(DurationItem di){
-        if (di.getTag()!=null) {
-
+    private int getTagPic(DurationItem di) {
+        if (di.getTag() < 0x00ff) {
 
             switch (di.getTag()) {
-                case "Sport":
+                case 0:
                     return R.mipmap.ic_sport;
-                case "Study":
-                    return R.mipmap.ic_study;
-                case "Entertainment":
+                case 1:
                     return R.mipmap.ic_entertainment;
-                case "Work":
+                case 2:
                     return R.mipmap.ic_work;
-                case "Traffic":
+                case 3:
                     return R.mipmap.ic_traffic;
-                case "Hobby":
+                case 4:
+                    return R.mipmap.ic_study;
+                case 5:
                     return R.mipmap.ic_hobby;
                 default:
                     return 0;
             }
-        }else {
+        } else {
             return 0;
         }
     }

@@ -7,32 +7,20 @@
         <item
             android:id="@+id/nav_work_fragment"
             android:icon="@drawable/ic_menu_manage"
-            android:title="@string/work_timer" />
+            android:title="@string/nav_work_timer" />
         <item
             android:id="@+id/nav_list_fragment"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/tracker_list" />
+            android:icon="@drawable/ic_reporter"
+            android:title="@string/nav_tracker_list" />
         <item
             android:id="@+id/detail_fragment"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/daily_reporter" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-    </group>
+            android:icon="@drawable/ic_tracker_list"
+            android:title="@string/nav_daily_reporter" />
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+        <item android:id="@+id/nav_finished_fragment"
+            android:icon="@drawable/ic_done"
+            android:title="@string/nav_finished_tracker"/>
+
+    </group>
 
 </menu>

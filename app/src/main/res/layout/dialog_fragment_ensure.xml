@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:zhy="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -25,8 +26,10 @@
     </com.zhy.view.flowlayout.TagFlowLayout>
 
     <EditText
-        android:id="@+id/dialog_ensure_content"
-        android:layout_width="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:id="@+id/dialog_ensure_comment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 

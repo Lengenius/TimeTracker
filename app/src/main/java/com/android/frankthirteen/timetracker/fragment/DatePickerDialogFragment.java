@@ -13,7 +13,6 @@ import android.widget.DatePicker;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.entities.Tracker;
-import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -62,10 +61,16 @@ public class DatePickerDialogFragment extends DialogFragment {
         });
 
         builder.setView(rootView);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 sendResult(Activity.RESULT_OK);
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
         });
 

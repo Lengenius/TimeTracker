@@ -36,7 +36,7 @@
 
         <TextView
             android:gravity="center"
-            android:text="Title"
+            android:text=" "
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
             android:id="@+id/di_cell_tracker_title"
             android:layout_width="match_parent"

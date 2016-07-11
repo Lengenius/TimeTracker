@@ -79,8 +79,8 @@ public class DefineTrackerActivity extends AppCompatActivity {
                         DefineTrackerActivity.super.onBackPressed();
                     }
                 })
-                .setTitle("Exit")
-                .setMessage("Are you sure you want to create this tracker?").create().show();
+                .setTitle(getString(R.string.exit))
+                .setMessage(getString(R.string.sure_content)).create().show();
 
     }
 

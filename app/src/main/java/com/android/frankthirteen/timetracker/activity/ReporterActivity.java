@@ -51,7 +51,7 @@ public class ReporterActivity extends AppCompatActivity{
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mViewPager = (ViewPager) findViewById(R.id.reporter_container);
-        mViewPager.setAdapter(new ReporterPagerAdapter(getSupportFragmentManager(),uuid));
+        mViewPager.setAdapter(new ReporterPagerAdapter(this,getSupportFragmentManager(),uuid));
         tabStrip.setViewPager(mViewPager);
 
 

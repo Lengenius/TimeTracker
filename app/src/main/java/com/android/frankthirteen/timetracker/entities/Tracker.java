@@ -3,6 +3,7 @@ package com.android.frankthirteen.timetracker.entities;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -36,14 +37,14 @@ public class Tracker{
         this.trackerId = UUID.randomUUID();
         tracking = true;
         durationItems = new ArrayList<>();
-        mStartDate = new Date();
+        mStartDate = getZeroOfDay(new Date());
     }
 
     public Tracker(UUID uuid) {
         trackerId = uuid;
         tracking = true;
         durationItems = new ArrayList<>();
-        mStartDate = new Date();
+        mStartDate = getZeroOfDay(new Date());
     }
 
 //    public String getTag() {
@@ -187,5 +188,16 @@ public class Tracker{
             }
         }
 
+    }
+
+    private Date getZeroOfDay(Date date){
+        Calendar c = Calendar.getInstance();
+
+        c.setTime(date);
+        c.set(Calendar.HOUR_OF_DAY,0);
+        c.set(Calendar.MINUTE,0);
+        c.set(Calendar.SECOND,0);
+        c.set(Calendar.MILLISECOND,0);
+        return c.getTime();
     }
 }

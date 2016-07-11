@@ -3,9 +3,12 @@ package com.android.frankthirteen.timetracker.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,14 +16,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
-import com.android.frankthirteen.timetracker.enums.Tags;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -38,9 +39,9 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
     private static final String EXTRA_TIME =
             "com.android.frankthirteen.timetracker.fragment.Extra_Time";
     private static final String TAG = "EnsureDialogFragment";
+    private Context mContext;
 
-    public String[] tagsValues = new String[]{
-                    "Sport", "Entertainment", "Work", "Traffic", "Study", "Hobby"};
+    public String[] tagsValues;
 
     private Spinner spinner;
     private EditText edContent;
@@ -48,7 +49,6 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
     private DurationItem mDurationItem;
     private TagFlowLayout tagsContainer;
     private LayoutInflater layoutInflater;
-    private Tracker oldTracker;
 
     private UUID trackerId;
 
@@ -65,7 +65,7 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
     public static EnsureDialogFragment newInstance(DurationItem durationItem) {
 
         Bundle args = new Bundle();
-        args.putSerializable(DurationItem.EXTRA_DI_ID,durationItem.getId());
+        args.putSerializable(DurationItem.EXTRA_DI_ID, durationItem.getId());
         EnsureDialogFragment fragment = new EnsureDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -75,7 +75,15 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments().getInt(EXTRA_TIME)!=0) {
+        mContext = getActivity();
+        tagsValues= new String[]{
+                mContext.getString(R.string.tag_sport),
+                mContext.getString(R.string.tag_Entertainment),
+                mContext.getString(R.string.tag_work),
+                mContext.getString(R.string.tag_traffic),
+                mContext.getString(R.string.tag_study),
+                mContext.getString(R.string.tag_hobby)};
+        if (getArguments().getInt(EXTRA_TIME) != 0) {
             elapsedTime = getArguments().getInt(EXTRA_TIME);
             mDurationItem = new DurationItem(getActivity());
             mDurationItem.setDuration(elapsedTime);
@@ -91,7 +99,25 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
         tagsContainer = ((TagFlowLayout) view.findViewById(R.id.dialog_ensure_tags));
         initialTags();
 
-        edContent = ((EditText) view.findViewById(R.id.dialog_ensure_content));
+        edContent = ((EditText) view.findViewById(R.id.dialog_ensure_comment));
+
+        edContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                mDurationItem.setComment(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         spinner = ((Spinner) view.findViewById(R.id.dialog_ensure_spinner));
         List<Tracker> trackers = TrackerLab.getTrackerLab(getActivity()).getTrackingTrackers();
@@ -114,8 +140,8 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
 
 
         builder.setView(view);
-        builder.setPositiveButton("OK", this);
-        builder.setNegativeButton("Cancel", this);
+        builder.setPositiveButton(android.R.string.ok, this);
+        builder.setNegativeButton(android.R.string.cancel, this);
 
 
         return builder.create();
@@ -125,10 +151,8 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
         tagsContainer.setAdapter(new TagAdapter<String>(tagsValues) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
-
-                TextView tag = (TextView) layoutInflater.inflate(R.layout.tag_view,parent,false);
+                TextView tag = (TextView) layoutInflater.inflate(R.layout.tag_view, parent, false);
                 tag.setText(tagsValues[position]);
-
                 return tag;
             }
         });
@@ -136,8 +160,7 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
         tagsContainer.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
-                mDurationItem.setTag(tagsValues[position]);
-                Toast.makeText(getActivity(), tagsValues[position]+" clicked", Toast.LENGTH_SHORT).show();
+                mDurationItem.setTag(position);
                 return true;
             }
         });

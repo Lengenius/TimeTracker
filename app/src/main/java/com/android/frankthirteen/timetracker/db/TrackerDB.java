@@ -209,6 +209,12 @@ public class TrackerDB {
         return durationItems;
     }
 
+    public void removeDurationItemsByTracker(Tracker tracker) {
+        String trackerId = tracker.getId().toString();
+        db.delete(TABLE_DURATION, DURATION_TRACKER_ID + "=?", new String[]{trackerId});
+
+    }
+
     public List<DurationItem> getDurationItemsByDay(int year, int day) {
         List<DurationItem> durationItems = new ArrayList<DurationItem>();
         String dayStr = String.valueOf(day);
@@ -258,7 +264,7 @@ public class TrackerDB {
         values.put(TRACKER_COMMENT, tracker.getComment());
         values.put(TRACKER_TRACKING_STATE, tracker.isTracking());
         values.put(TRACKER_PLANED_TIME, tracker.getPlannedTimeInMinutes());
-        values.put(TRACKER_TOTAL_DURATION,tracker.getTotalDurations());
+        values.put(TRACKER_TOTAL_DURATION, tracker.getTotalDurations());
         if (tracker.getStartDate() != null) {
             values.put(TRACKER_START_DATE, tracker.getStartDate().getTime());
         }
@@ -280,7 +286,7 @@ public class TrackerDB {
         di.setDate(diDate);
         di.setComment(c.getString(c.getColumnIndex(DURATION_COMMENT)));
         di.setDuration(c.getInt(c.getColumnIndex(DURATION_PERIOD)));
-        di.setTag(c.getString(c.getColumnIndex(DURATION_TAG)));
+        di.setTag(c.getInt(c.getColumnIndex(DURATION_TAG)));
         return di;
     }
 }

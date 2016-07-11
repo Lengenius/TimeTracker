@@ -2,6 +2,8 @@ package com.android.frankthirteen.timetracker.entities;
 
 import android.content.Context;
 
+import com.android.frankthirteen.timetracker.R;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -15,16 +17,17 @@ public class DurationItem {
     private UUID mId;
     private UUID trackerId;
     private int mPeriod;
-    private String mTag;
+    private int mTag = 0x00ff;
     private String mComment;
     private Date mEndDate;
 
     public static final String EXTRA_DI_ID =
             "com.android.frankthirteen.timetracker.entities.durationId";
+
     /**
      * Default Constructor for DB only.
      */
-    public DurationItem(){
+    public DurationItem() {
     }
 
     public DurationItem(Context context) {
@@ -63,13 +66,13 @@ public class DurationItem {
         return mEndDate;
     }
 
-    public int getYear(){
+    public int getYear() {
         Calendar c = Calendar.getInstance();
         c.setTime(mEndDate);
         return c.get(Calendar.YEAR);
     }
 
-    public int getMonth(){
+    public int getMonth() {
         Calendar c = Calendar.getInstance();
         c.setTime(mEndDate);
         return c.get(Calendar.MONTH);
@@ -81,7 +84,7 @@ public class DurationItem {
         return c.get(Calendar.WEEK_OF_YEAR);
     }
 
-    public int getDay(){
+    public int getDay() {
         Calendar c = Calendar.getInstance();
         c.setTime(mEndDate);
         return c.get(Calendar.DAY_OF_YEAR);
@@ -104,22 +107,43 @@ public class DurationItem {
         this.mPeriod = mDuration;
     }
 
-    public String getTag() {
+    public int getTag() {
         return mTag;
     }
 
-    public void setTag(String mTag) {
+    public void setTag(int mTag) {
         this.mTag = mTag;
     }
 
-    public Date getStartDate(){
+    public Date getStartDate() {
         Date mStartDate = new Date();
         mStartDate.setTime(mEndDate.getTime() - mPeriod * 1000);
         return mStartDate;
     }
 
-    public Tracker getTracker(){
+    public Tracker getTracker() {
         return TrackerLab.getTrackerLab(mContext).getTracker(trackerId);
+    }
+
+    public String getTagValue() {
+        switch (mTag) {
+
+            case 0:
+                return mContext.getString(R.string.tag_sport);
+            case 1:
+                return mContext.getString(R.string.tag_Entertainment);
+            case 2:
+                return mContext.getString(R.string.tag_work);
+            case 3:
+                return mContext.getString(R.string.tag_traffic);
+            case 4:
+                return mContext.getString(R.string.tag_study);
+            case 5:
+                return mContext.getString(R.string.tag_hobby);
+            default:
+                return null;
+        }
+
     }
 
 }

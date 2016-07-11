@@ -1,19 +1,25 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragment.ReporterTableFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:id="@+id/reporter_chart_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="@string/reporter_chart_title" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:layout_width="match_parent"
         android:id="@+id/tracker_reporter_barChart"
-        android:layout_height="match_parent"/>
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
 
-</FrameLayout>
+</LinearLayout>

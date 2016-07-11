@@ -15,7 +15,7 @@ public class TrackerDBHelper extends SQLiteOpenHelper {
             "duration_id text,"+
             "tracker_id text," +
             "period integer," +
-            "tag text," +
+            "tag integer," +
             "comment text," +
             "start_date text," +
             "day integer," +

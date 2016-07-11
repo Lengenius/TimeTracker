@@ -1,9 +1,11 @@
 package com.android.frankthirteen.timetracker.adapter;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.android.frankthirteen.timetracker.R;
 import com.android.frankthirteen.timetracker.fragment.ReporterChartFragment;
 import com.android.frankthirteen.timetracker.fragment.ReporterTableFragment;
 
@@ -15,16 +17,18 @@ import java.util.UUID;
  * Created by Frank on 6/13/16.
  */
 public class ReporterPagerAdapter extends FragmentPagerAdapter {
+    private Context mContext;
 
     private List<Fragment> fragments;
 
-    public ReporterPagerAdapter(FragmentManager fm, UUID uuid) {
+    public ReporterPagerAdapter(Context context, FragmentManager fm, UUID uuid) {
         super(fm);
+        mContext = context;
         if (fragments == null) {
             fragments = new ArrayList<Fragment>();
         }
-        fragments.add(ReporterChartFragment.newInstance(uuid));
         fragments.add(ReporterTableFragment.newInstance(uuid));
+        fragments.add(ReporterChartFragment.newInstance(uuid));
     }
 
     @Override
@@ -42,9 +46,9 @@ public class ReporterPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "ChartView";
+                return mContext.getString(R.string.pager_title_detail);
             case 1:
-                return "Reporter View";
+                return mContext.getString(R.string.pager_title_chart);
             default:
                 return "null";
         }

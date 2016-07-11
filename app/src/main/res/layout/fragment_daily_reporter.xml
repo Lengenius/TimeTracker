@@ -10,25 +10,27 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:src="@android:drawable/ic_media_previous"
             android:id="@+id/di_previous_day"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_left" />
 
         <Button
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
             android:id="@+id/di_choose_date"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Choose Date" />
 
         <ImageButton
-            android:src="@android:drawable/ic_media_next"
             android:id="@+id/di_next_day"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_right" />
 
     </LinearLayout>
 

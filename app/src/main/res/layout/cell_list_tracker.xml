@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -8,37 +8,40 @@
         android:id="@+id/cell_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:src="@mipmap/ic_launcher" />
 
-    <TextView
-        android:id="@+id/cell_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/cell_image"
-        android:padding="8dp"
-        android:text="title"
-        android:textAllCaps="true"
-        android:textAppearance="?android:textAppearanceMedium" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/cell_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cell_title"
-        android:layout_toRightOf="@id/cell_image"
-        android:maxLines="1"
-        android:padding="8dp"
-        android:text="content" />
+        <TextView
+            android:id="@+id/cell_title"
+            android:layout_width="match_parent"
+            android:maxLines="1"
+            android:ellipsize="marquee"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@string/title"
+            android:textAllCaps="true"
+            android:textAppearance="?android:textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/cell_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:text="@string/content" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/cell_time_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="8dp">
@@ -55,6 +58,7 @@
             android:id="@+id/cell_timer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="00:00:00"
             android:textColor="#88000000"
             android:textSize="24sp" />
@@ -63,4 +67,4 @@
     </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

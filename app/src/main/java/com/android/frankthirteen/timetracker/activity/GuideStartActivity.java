@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
 import com.android.frankthirteen.timetracker.fragment.DailyReporterFragment;
@@ -38,7 +37,7 @@ public class GuideStartActivity extends AppCompatActivity
 
     private static final int REQUEST_TRACKER = 0x0001;
     private static final String TAG = "GUIDE";
-    private static final String FIRST_RUN = "FirstRun";
+    private static final String FIRST_RUN = "GuideActivityFirstRun";
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private Fragment fragment;
@@ -153,7 +152,7 @@ public class GuideStartActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_list_fragment:
-                fragment = TrackListFragment.newInstance();
+                fragment = TrackListFragment.newInstance(0);
                 break;
             case R.id.detail_fragment:
                 fragment = DailyReporterFragment.newInstance();
@@ -161,11 +160,9 @@ public class GuideStartActivity extends AppCompatActivity
             case R.id.nav_work_fragment:
                 fragment = WorkFocusFragment.newInstance();
                 break;
-            case R.id.nav_send:
-
-                break;
-            case R.id.nav_share:
-
+            case R.id.nav_finished_fragment:
+                LogUtils.d(TAG,"finished button clicked.");
+                fragment = TrackListFragment.newInstance(1);
                 break;
             default:
                 fragment = WorkFocusFragment.newInstance();
@@ -179,21 +176,18 @@ public class GuideStartActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_CANCELED) {
-            return;
-        }
 
         switch (requestCode) {
             case REQUEST_TRACKER:
-                LogUtils.d(TAG, "tracker result OK");
-                UUID trackerId = (UUID) data.getSerializableExtra(Tracker.EXTRA_ID);
-                Tracker tracker = TrackerLab.getTrackerLab(GuideStartActivity.this).
-                        getTracker(trackerId);
-                TrackerDB.getTrackerDB(GuideStartActivity.this).insertTracker(tracker);
-                if ((fragment.getClass()).equals(TrackListFragment.class)){
-
+                if (resultCode == Activity.RESULT_OK) {
+                    LogUtils.d(TAG, "tracker result OK");
+                    UUID trackerId = (UUID) data.getSerializableExtra(Tracker.EXTRA_ID);
+                    Tracker tracker = TrackerLab.getTrackerLab(GuideStartActivity.this).
+                            getTracker(trackerId);
+                    TrackerLab.getTrackerLab(this).updateTracker(tracker);
+                }else {
+                    LogUtils.d(TAG,"Result canceled.");
                 }
-
                 break;
             default:
 
@@ -213,7 +207,7 @@ public class GuideStartActivity extends AppCompatActivity
         }
 
         doubleClickToExit = true;
-        Toast.makeText(GuideStartActivity.this, "Double click to quit TimeTracker.",
+        Toast.makeText(GuideStartActivity.this, R.string.toast_quit_message,
                 Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
@@ -221,7 +215,7 @@ public class GuideStartActivity extends AppCompatActivity
             public void run() {
                 doubleClickToExit = false;
             }
-        }, 1200);
+        }, 1000);
     }
 
 }

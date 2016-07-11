@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
@@ -26,11 +25,8 @@ import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -148,6 +144,7 @@ public class ReporterChartFragment extends Fragment {
 //                    turn period in second into minutes.
                     BarEntry entry = new BarEntry(period / 60, dayIndex);
                     wrappedData.set(dayIndex, entry);
+                    dayTime = di.getDate().getTime();
 
 //                    refresh the stored info.
                     diDay = di.getDay();
@@ -194,8 +191,6 @@ public class ReporterChartFragment extends Fragment {
         int returnType = 0;
         switch (returnType) {
             case 0:
-//                return c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-//                dayNames[0] == " ";
                 String result = dayNames[i % 7 + 1];
                 LogUtils.d(TAG, "item sequence is " + i % 7 + result);
 

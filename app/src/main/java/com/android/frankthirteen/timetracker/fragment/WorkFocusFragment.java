@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.db.TrackerDB;
+import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
 
@@ -35,20 +37,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
     private boolean started = false;
     private int elapsedTime = 0;
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case UPDATE_TIMER:
-
-                    updateTimer();
-                    break;
-                case STOP_TIMER:
-
-                    break;
-            }
-        }
-    };
+    private Handler mHandler;
 
     public static WorkFocusFragment newInstance() {
 
@@ -56,6 +45,25 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
         WorkFocusFragment fragment = new WorkFocusFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case UPDATE_TIMER:
+
+                        updateTimer();
+                        break;
+                    case STOP_TIMER:
+
+                        break;
+                }
+            }
+        };
     }
 
     @Nullable
@@ -83,6 +91,15 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
                 setButtonState();
                 break;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        DurationItem durationItem = new DurationItem(getActivity());
+        durationItem.setDuration(elapsedTime);
+        TrackerDB.getTrackerDB(getActivity()).insertDurationItem(durationItem);
+
     }
 
     @Override
@@ -124,7 +141,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
      */
     private void startTimer() {
         started = true;
-        mHandler.post(new TimerThread());
+        mHandler.postDelayed(new TimerThread(),1000);
         LogUtils.d(TAG, "start timer method");
     }
 
@@ -151,7 +168,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
                 elapsedTime++;
                 Message msg = Message.obtain(mHandler, WorkFocusFragment.UPDATE_TIMER);
                 msg.sendToTarget();
-                mHandler.postDelayed(this, 10);
+                mHandler.postDelayed(this, 1000);
             }
 
         }
