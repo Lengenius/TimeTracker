@@ -97,6 +97,10 @@ public class TrackerListAdapter extends RecyclerView.Adapter<TrackerListAdapter.
         notifyItemRemoved(position);
     }
 
+    public void updateItems(){
+        notifyDataSetChanged();
+    }
+
     public Tracker getItem(int position){
         return trackers.get(position);
     }

@@ -19,6 +19,7 @@ public class Tracker{
     public static final String EXTRA_ID = "com.android.frankthirteen.timetracker.Extra_id";
     public static final String EXTRA_DATE = "com.android.frankthirteen.timetracker.Extra_date";
     private static final String TAG = "TRACKER_CLASS";
+    public static final String TITLE = "com.android.frankthirteen.timetracker.Title";
 
     private UUID trackerId;
     private String mTrackerTitle;

@@ -30,7 +30,7 @@ public class ReporterTableFragment extends Fragment {
 
     private static final String TAG = "REPORTER_TABLE";
     private Tracker mTracker;
-    private TextView tvTitle, tvContent, tvComment, tvTimePayed,tvDayPast;
+    private TextView tvTitle, tvContent, tvComment, tvTimePayed, tvDayPast;
     private ProgressBar prDayPast, prTimePayed;
     private ImageView trPhoto;
     private CheckBox checkBox;
@@ -82,13 +82,14 @@ public class ReporterTableFragment extends Fragment {
         tvTimePayed = (TextView) rootView.findViewById(R.id.reporter_tv_time_payed);
 
         checkBox = (CheckBox) rootView.findViewById(R.id.checkbox_tracking_state);
+        checkBox.setChecked(!mTracker.isTracking());
 
         prDayPast = (ProgressBar) rootView.findViewById(R.id.reporter_progress_day_past);
         prTimePayed = (ProgressBar) rootView.findViewById(R.id.reporter_progress_time_payed);
 
         trPhoto = (ImageView) rootView.findViewById(R.id.reporter_tracker_photo);
-        if (mTracker.getPhotoPath()!=null){
-            Bitmap bitmap = PictureUtils.getThumbnail(trPhoto,mTracker.getPhotoPath());
+        if (mTracker.getPhotoPath() != null) {
+            Bitmap bitmap = PictureUtils.getThumbnail(trPhoto, mTracker.getPhotoPath());
             trPhoto.setImageBitmap(bitmap);
         }
 
@@ -99,26 +100,28 @@ public class ReporterTableFragment extends Fragment {
         //
         int dayPast = getDayPast();
 
-        String passedDay =dayPast + getResources().getString(R.string.reporter_table_day_passed);
+        String passedDay = dayPast + getResources().getString(R.string.reporter_table_day_passed);
         tvDayPast.setText(passedDay);
-        String passedMinutes = mTracker.getTotalDurations()/60 + getResources().getString(R.string.minutes);
+        String passedMinutes = mTracker.getTotalDurations() / 60 + getResources().getString(R.string.minutes);
         tvTimePayed.setText(passedMinutes);
 
-        if (mTracker.getPlannedTimeInMinutes()!=0) {
-            float passed = mTracker.getTotalDurations()/60;
+        if (mTracker.getPlannedTimeInMinutes() != 0) {
+            float passed = mTracker.getTotalDurations() / 60;
             float planned = mTracker.getPlannedTimeInMinutes();
-            int progress = Math.round(100*(passed/planned));
-            LogUtils.d(TAG,"setting progress bar." + progress);
+            int progress = Math.round(100 * (passed / planned));
+            LogUtils.d(TAG, "setting progress bar." + progress);
             prTimePayed.setProgress(progress);
         }
 
-        if (getDayPast()!=0){
+        if (getDayPast() != 0 && (mTracker.getEndDate() != null)) {
             Date today = new Date();
-            float passed = (mTracker.getStartDate().getTime() - today.getTime())/1000/60/60/24;
-            float planned = (mTracker.getEndDate().getTime()-mTracker.getStartDate().getTime())
-                    /1000/60/60/24;
+            float passed = (mTracker.getStartDate().getTime() -
+                    today.getTime()) / 1000 / 60 / 60 / 24;
+            float planned = (mTracker.getEndDate().getTime() -
+                    mTracker.getStartDate().getTime())
+                    / 1000 / 60 / 60 / 24;
 
-            int progress = Math.round((passed/planned)*100);
+            int progress = Math.round((passed / planned) * 100);
 
             prDayPast.setProgress(progress);
         }
@@ -126,10 +129,8 @@ public class ReporterTableFragment extends Fragment {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    mTracker.setTracking(false);
-                    TrackerLab.getTrackerLab(getActivity()).updateTracker(mTracker);
-                }
+                mTracker.setTracking(!isChecked);
+                TrackerLab.getTrackerLab(getActivity()).updateTracker(mTracker);
             }
         });
     }
@@ -137,7 +138,7 @@ public class ReporterTableFragment extends Fragment {
     private int getDayPast() {
         Date today = new Date();
         long msPast = today.getTime() - mTracker.getStartDate().getTime();
-        return Math.round(msPast/1000/60/60/24);
+        return Math.round(msPast / 1000 / 60 / 60 / 24);
     }
 
 

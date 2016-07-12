@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.frankthirteen.timetracker.R;
+import com.android.frankthirteen.timetracker.db.TrackerDB;
 import com.android.frankthirteen.timetracker.entities.DurationItem;
 import com.android.frankthirteen.timetracker.utils.FormatUtils;
 import com.android.frankthirteen.timetracker.utils.LogUtils;
@@ -57,13 +58,14 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
 
         DurationItem di = durationItemList.get(position);
 
-        try {
+        if (di.getTracker() != null) {
             holder.trackerTitle.setText(di.getTracker().getTitle());
-        } catch (Exception e) {
-            LogUtils.e(TAG, "this durationItem is not bound to a tracker.");
-            e.printStackTrace();
         }
-        holder.tag.setText(di.getTagValue());
+        if (di.getComment() != null) {
+            holder.comment.setText(di.getComment());
+        } else {
+            holder.comment.setText(di.getTagValue());
+        }
         holder.diTag.setImageResource(getTagPic(di));
 
         holder.startTime.setText(FormatUtils.formatDateTime(di.getStartDate()));
@@ -98,19 +100,31 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView trackerTitle, tag, startTime, duration;
+        public TextView trackerTitle, comment, startTime, duration;
         public ImageView diTag;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             trackerTitle = ((TextView) itemView.findViewById(R.id.di_cell_tracker_title));
-            tag = ((TextView) itemView.findViewById(R.id.di_cell_tag));
+            comment = ((TextView) itemView.findViewById(R.id.di_cell_comment));
             startTime = ((TextView) itemView.findViewById(R.id.di_cell_start_time));
             duration = ((TextView) itemView.findViewById(R.id.di_cell_duration));
             diTag = (ImageView) itemView.findViewById(R.id.di_cell_tag_img);
 
         }
+    }
+
+    public void addItem(int pos, DurationItem di) {
+        durationItemList.add(pos, di);
+        notifyItemInserted(pos);
+    }
+
+    public void removeItem(int pos) {
+        TrackerDB.getTrackerDB(mContext).removeDurationItem(durationItemList.get(pos));
+        durationItemList.remove(pos);
+        notifyItemRemoved(pos);
+
     }
 
     public void updateData(List<DurationItem> data) {
@@ -136,6 +150,8 @@ public class DurationItemAdapter extends RecyclerView.Adapter<DurationItemAdapte
                     return R.mipmap.ic_study;
                 case 5:
                     return R.mipmap.ic_hobby;
+                case 6:
+                    return R.mipmap.ic_rest;
                 default:
                     return 0;
             }

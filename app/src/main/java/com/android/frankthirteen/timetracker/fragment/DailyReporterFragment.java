@@ -1,6 +1,8 @@
 package com.android.frankthirteen.timetracker.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -107,7 +109,24 @@ public class DailyReporterFragment extends Fragment {
             }
 
             @Override
-            public void onLongClick(View v, int position) {
+            public void onLongClick(View v, final int position) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.title_delete_duration_item)
+                        .setMessage(R.string.message_delete_duration_item)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                adapter.removeItem(position);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
 
             }
         });

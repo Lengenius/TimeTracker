@@ -17,7 +17,7 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import java.util.UUID;
 
-public class ReporterActivity extends AppCompatActivity{
+public class TrackerReporterActivity extends AppCompatActivity{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide

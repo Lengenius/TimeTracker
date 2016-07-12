@@ -11,10 +11,11 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content" />
 
-    <Spinner
-        android:id="@+id/dialog_ensure_spinner"
+    <Button
+        android:id="@+id/choose_tracker"
+        android:text="@string/dialog_choose_the_tracker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <com.zhy.view.flowlayout.TagFlowLayout
         android:id="@+id/dialog_ensure_tags"

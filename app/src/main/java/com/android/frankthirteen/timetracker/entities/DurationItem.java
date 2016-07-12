@@ -122,7 +122,11 @@ public class DurationItem {
     }
 
     public Tracker getTracker() {
-        return TrackerLab.getTrackerLab(mContext).getTracker(trackerId);
+        if (trackerId!=null){
+         return TrackerLab.getTrackerLab(mContext).getTracker(trackerId);
+        }else {
+            return null;
+        }
     }
 
     public String getTagValue() {
@@ -140,6 +144,8 @@ public class DurationItem {
                 return mContext.getString(R.string.tag_study);
             case 5:
                 return mContext.getString(R.string.tag_hobby);
+            case 6:
+                return mContext.getString(R.string.tag_rest);
             default:
                 return null;
         }

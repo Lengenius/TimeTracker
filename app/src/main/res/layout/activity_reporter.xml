@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context="com.android.frankthirteen.timetracker.activity.ReporterActivity">
+    tools:context=".activity.TrackerReporterActivity">
 
     <include layout="@layout/title_bar" />
 

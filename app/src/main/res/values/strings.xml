@@ -60,5 +60,16 @@
     <string name="message_dialog_delete_tracker">Are you sure you want to delete the tracker?</string>
     <string name="toast_quit_message">Double click to quit TimeTracker.</string>
     <string name="reporter_chart_title">chart title</string>
+    <string name="checkbox_tracker_finished">Is this tracker finished?</string>
+    <string name="tag_rest">rest</string>
+    <string name="title_delete_duration_item">Delete record</string>
+    <string name="message_delete_duration_item">Are you sure you want to delete this record?</string>
+    <string name="tracker_title_sequence">" item."</string>
+    <string name="dialog_title_choose_tracker">Choose a tracker to bound.</string>
+    <string name="dialog_choose_the_tracker">Choose the tracker.</string>
+    <string name="toast_too_shor_duration">You\'d better focus more next time.</string>
+    <string name="duration_added">Duration added</string>
+    <string name="tutorial_start">"Start "</string>
+    <string name="tutorial_start_content">Press start button to start.</string>
 
 </resources>

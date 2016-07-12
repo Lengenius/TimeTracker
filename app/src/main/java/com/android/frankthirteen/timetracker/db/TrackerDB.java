@@ -169,26 +169,9 @@ public class TrackerDB {
     }
 
 
-    /**
-     * public boolean updateDurationItem(DurationItem di) {
-     * if (di != null) {
-     * ContentValues contentValues = new ContentValues();
-     * try {
-     * contentValues.put(DURATION_UID, di.getId().toString());
-     * contentValues.put(DURATION_TRACKER_ID, di.getTrackerId().toString());
-     * contentValues.put(DURATION_PERIOD, di.getDuration());
-     * contentValues.put(DURATION_DATE, di.getDate().getTime());
-     * contentValues.put(DURATION_COMMENT, di.getComment());
-     * db.update(TABLE_DURATION, contentValues, DURATION_UID + "=?", new String[]{di.getId().toString()});
-     * return true;
-     * } catch (Exception e) {
-     * e.printStackTrace();
-     * return false;
-     * }
-     * }
-     * return false;
-     * }
-     */
+    public void removeDurationItem(DurationItem di) {
+        db.delete(TABLE_DURATION, DURATION_UID + "=?", new String[]{di.getId().toString()});
+    }
 
     public List<DurationItem> getDurationItemsByTracker(Tracker tracker) {
         List<DurationItem> durationItems = new ArrayList<DurationItem>();
@@ -223,8 +206,10 @@ public class TrackerDB {
         if (c.moveToFirst()) {
             do {
                 DurationItem di = assemblyDurationItem(c);
-                di.setTrackerId(
-                        UUID.fromString(c.getString(c.getColumnIndex(DURATION_TRACKER_ID))));
+                if (c.getString(c.getColumnIndex(DURATION_TRACKER_ID)) != null) {
+                    di.setTrackerId(
+                            UUID.fromString(c.getString(c.getColumnIndex(DURATION_TRACKER_ID))));
+                }
                 durationItems.add(di);
             } while (c.moveToNext());
             c.close();

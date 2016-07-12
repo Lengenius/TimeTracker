@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -39,11 +40,12 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
     private static final String EXTRA_TIME =
             "com.android.frankthirteen.timetracker.fragment.Extra_Time";
     private static final String TAG = "EnsureDialogFragment";
+    private static final int REQUEST_TRACKER = 0x0000;
     private Context mContext;
 
     public String[] tagsValues;
 
-    private Spinner spinner;
+    private Button btnChooseTracker;
     private EditText edContent;
     private int elapsedTime;
     private DurationItem mDurationItem;
@@ -62,27 +64,20 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
         return fragment;
     }
 
-    public static EnsureDialogFragment newInstance(DurationItem durationItem) {
-
-        Bundle args = new Bundle();
-        args.putSerializable(DurationItem.EXTRA_DI_ID, durationItem.getId());
-        EnsureDialogFragment fragment = new EnsureDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
-        tagsValues= new String[]{
+        tagsValues = new String[]{
                 mContext.getString(R.string.tag_sport),
                 mContext.getString(R.string.tag_Entertainment),
                 mContext.getString(R.string.tag_work),
                 mContext.getString(R.string.tag_traffic),
                 mContext.getString(R.string.tag_study),
-                mContext.getString(R.string.tag_hobby)};
+                mContext.getString(R.string.tag_hobby),
+                mContext.getString(R.string.tag_rest)};
         if (getArguments().getInt(EXTRA_TIME) != 0) {
             elapsedTime = getArguments().getInt(EXTRA_TIME);
             mDurationItem = new DurationItem(getActivity());
@@ -119,22 +114,33 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
             }
         });
 
-        spinner = ((Spinner) view.findViewById(R.id.dialog_ensure_spinner));
-        List<Tracker> trackers = TrackerLab.getTrackerLab(getActivity()).getTrackingTrackers();
-        final ArrayAdapter<Tracker> adapter = new ArrayAdapter<Tracker>(getActivity(),
-                android.R.layout.simple_list_item_1,
-                trackers);
+//        spinner = ((Spinner) view.findViewById(R.id.dialog_ensure_spinner));
+//        List<Tracker> trackers = TrackerLab.getTrackerLab(getActivity()).getTrackingTrackers();
+//        final ArrayAdapter<Tracker> adapter = new ArrayAdapter<Tracker>(getActivity(),
+//                android.R.layout.simple_list_item_1,
+//                trackers);
+//
+//        spinner.setAdapter(adapter);
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                trackerId = ((Tracker) parent.getItemAtPosition(position)).getId();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        btnChooseTracker = ((Button) view.findViewById(R.id.choose_tracker));
+        btnChooseTracker.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                trackerId = ((Tracker) parent.getItemAtPosition(position)).getId();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onClick(View v) {
+                TrackerChooseFragment chooseTracker = TrackerChooseFragment.newInstance();
+                chooseTracker.setTargetFragment(EnsureDialogFragment.this,REQUEST_TRACKER);
+                chooseTracker.show(getFragmentManager(),"Choose Tag");
+                chooseTracker.setCancelable(false);
             }
         });
 
@@ -170,7 +176,9 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case AlertDialog.BUTTON_POSITIVE:
-                TrackerLab.getTrackerLab(getActivity()).getTracker(trackerId).addDuration(mDurationItem);
+                if (trackerId != null) {
+                    TrackerLab.getTrackerLab(getActivity()).getTracker(trackerId).addDuration(mDurationItem);
+                }
                 saveDurationItem();
 //                The order matters.
 //                LogUtils.d(TAG,"Duration item tracker id" + mDurationItem.getTrackerId().toString());
@@ -204,4 +212,22 @@ public class EnsureDialogFragment extends android.support.v4.app.DialogFragment
                 .onActivityResult(getTargetRequestCode(), resultCode, i);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode!=Activity.RESULT_OK){
+            return;
+        }
+        switch (requestCode){
+            case REQUEST_TRACKER:
+                trackerId = (UUID) data.getSerializableExtra(Tracker.EXTRA_ID);
+                String trTitle = data.getStringExtra(Tracker.TITLE);
+                btnChooseTracker.setText(trTitle);
+                break;
+            default:
+
+                break;
+
+        }
+    }
 }

@@ -29,7 +29,7 @@ public class FormatUtils {
     }
 
     public static String formatDateTime(Date date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd EEE \nHH:mm:ss", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         return dateFormat.format(date);
     }
 

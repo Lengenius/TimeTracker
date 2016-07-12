@@ -96,9 +96,11 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        DurationItem durationItem = new DurationItem(getActivity());
-        durationItem.setDuration(elapsedTime);
-        TrackerDB.getTrackerDB(getActivity()).insertDurationItem(durationItem);
+        if (elapsedTime > 0) {
+            DurationItem durationItem = new DurationItem(getActivity());
+            durationItem.setDuration(elapsedTime);
+            TrackerDB.getTrackerDB(getActivity()).insertDurationItem(durationItem);
+        }
 
     }
 
@@ -112,7 +114,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
         switch (requestCode) {
             case REQUEST_TRACKER:
 
-                Toast.makeText(getActivity(),"Duration added",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.duration_added, Toast.LENGTH_SHORT).show();
                 elapsedTime = 0;
                 break;
             default:
@@ -129,10 +131,17 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
      */
     private void stopTimer() {
         started = false;
-        DialogFragment dialog = EnsureDialogFragment.newInstance(elapsedTime);
-        dialog.setTargetFragment(WorkFocusFragment.this, REQUEST_TRACKER);
-        dialog.show(getFragmentManager(), ADD_TO);
-
+        if (elapsedTime > 60) {
+            DialogFragment dialog = EnsureDialogFragment.newInstance(elapsedTime);
+            dialog.setTargetFragment(WorkFocusFragment.this, REQUEST_TRACKER);
+            dialog.show(getFragmentManager(), ADD_TO);
+            dialog.setCancelable(false);
+        } else {
+            Toast.makeText(getActivity(), R.string.toast_too_shor_duration, Toast.LENGTH_SHORT)
+                    .show();
+            elapsedTime = 0;
+            updateTimer();
+        }
     }
 
 
@@ -141,7 +150,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
      */
     private void startTimer() {
         started = true;
-        mHandler.postDelayed(new TimerThread(),1000);
+        mHandler.postDelayed(new TimerThread(), 1000);
         LogUtils.d(TAG, "start timer method");
     }
 
@@ -168,7 +177,8 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
                 elapsedTime++;
                 Message msg = Message.obtain(mHandler, WorkFocusFragment.UPDATE_TIMER);
                 msg.sendToTarget();
-                mHandler.postDelayed(this, 1000);
+                // TODO: 7/12/16 reset this before release.
+                mHandler.postDelayed(this, 10);
             }
 
         }

@@ -89,8 +89,8 @@ public class GuideStartActivity extends AppCompatActivity
     private ShowcaseView firstLaunch(Target target) {
 
         return new ShowcaseView.Builder(this)
-                .setContentTitle("Start ")
-                .setContentText("Press start button to start.")
+                .setContentTitle(getString(R.string.tutorial_start))
+                .setContentText(getString(R.string.tutorial_start_content))
                 .setTarget(target)
                 .setStyle(R.style.CustomShowcaseTheme)
                 .hideOnTouchOutside()

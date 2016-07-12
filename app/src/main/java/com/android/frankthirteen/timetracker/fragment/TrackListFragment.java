@@ -19,12 +19,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.frankthirteen.timetracker.R;
-import com.android.frankthirteen.timetracker.activity.ReporterActivity;
+import com.android.frankthirteen.timetracker.activity.TrackerReporterActivity;
 import com.android.frankthirteen.timetracker.adapter.DividerItemDecoration;
 import com.android.frankthirteen.timetracker.adapter.TrackerListAdapter;
 import com.android.frankthirteen.timetracker.entities.Tracker;
 import com.android.frankthirteen.timetracker.entities.TrackerLab;
-import com.android.frankthirteen.timetracker.utils.LogUtils;
 
 import java.util.ArrayList;
 
@@ -97,7 +96,7 @@ public class TrackListFragment extends Fragment {
         adapter.setOnItemClickListener(new TrackerListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), ReporterActivity.class);
+                Intent intent = new Intent(getActivity(), TrackerReporterActivity.class);
                 intent.putExtra(Tracker.EXTRA_ID, trackers.get(position).getId());
                 startActivity(intent);
             }
@@ -166,6 +165,7 @@ public class TrackListFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             adapter.addItem(trackers.size(), trackerLab.getLastTracker());
+//            adapter.updateItems();
         }
     }
 }

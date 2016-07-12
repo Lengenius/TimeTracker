@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="8dp"
-        tools:context="com.android.frankthirteen.timetracker.activity.ReporterActivity">
+        tools:context=".activity.TrackerReporterActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:progress="40" />
+                android:progress="100" />
 
         </LinearLayout>
 
@@ -163,12 +163,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:progress="25" />
+                android:progress="100" />
 
         </LinearLayout>
 
         <CheckBox
-            android:text="Is this tracker finished?"
+            android:text="@string/checkbox_tracker_finished"
             android:id="@+id/checkbox_tracking_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
