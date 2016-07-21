@@ -160,7 +160,6 @@ public class DailyReporterFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // TODO: 7/6/16 save date info.
         super.onSaveInstanceState(outState);
         outState.putSerializable(SAVED_DATE, date);
     }

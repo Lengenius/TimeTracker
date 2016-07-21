@@ -1,7 +1,10 @@
 package com.android.frankthirteen.timetracker.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,6 +39,9 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
     private Button btnStart, btnStop;
     private boolean started = false;
     private int elapsedTime = 0;
+    private long startTime;
+
+    private ScreenOnReceiver screenOnReceiver;
 
     private Handler mHandler;
 
@@ -64,6 +70,11 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
                 }
             }
         };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        screenOnReceiver = new ScreenOnReceiver();
+        getActivity().registerReceiver(screenOnReceiver,intentFilter);
     }
 
     @Nullable
@@ -101,6 +112,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
             durationItem.setDuration(elapsedTime);
             TrackerDB.getTrackerDB(getActivity()).insertDurationItem(durationItem);
         }
+        getActivity().unregisterReceiver(screenOnReceiver);
 
     }
 
@@ -150,6 +162,7 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
      */
     private void startTimer() {
         started = true;
+        startTime = System.currentTimeMillis();
         mHandler.postDelayed(new TimerThread(), 1000);
         LogUtils.d(TAG, "start timer method");
     }
@@ -178,9 +191,18 @@ public class WorkFocusFragment extends Fragment implements View.OnClickListener 
                 Message msg = Message.obtain(mHandler, WorkFocusFragment.UPDATE_TIMER);
                 msg.sendToTarget();
                 // TODO: 7/12/16 reset this before release.
-                mHandler.postDelayed(this, 10);
+                mHandler.postDelayed(this, 1000);
             }
 
+        }
+    }
+
+    class ScreenOnReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.d(TAG,"screen on intent received.");
+            elapsedTime = (int) (System.currentTimeMillis() - startTime) / 1000;
         }
     }
 }
