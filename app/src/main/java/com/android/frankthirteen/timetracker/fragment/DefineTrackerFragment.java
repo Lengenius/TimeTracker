@@ -258,7 +258,7 @@ public class DefineTrackerFragment extends Fragment {
         String photoName = tracker.getId().toString();
         String photoFileName = "JPEG_" + photoName;
         File dir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(photoFileName,"jpt",dir);
+        File image = File.createTempFile(photoFileName,"jpg",dir);
 
         currentPhotoPath = image.getAbsolutePath();
         return image;

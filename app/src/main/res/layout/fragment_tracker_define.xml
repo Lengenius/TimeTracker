@@ -13,6 +13,7 @@
         android:paddingRight="4dp">
 
         <ImageView
+            android:contentDescription="default pic holder."
             android:id="@+id/tracker_photo"
             android:layout_width="160dp"
             android:layout_height="160dp"
